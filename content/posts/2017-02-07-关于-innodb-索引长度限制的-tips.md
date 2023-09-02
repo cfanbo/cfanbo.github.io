@@ -1,0 +1,48 @@
+---
+title: 关于 InnoDB 索引长度限制的 tips
+author: admin
+type: post
+date: 2017-02-07T02:42:21+00:00
+url: /archives/17396
+categories:
+ - MySQL
+
+---
+有同学问到InnoDB的索引长度问题，简单说几个tips。
+
+**关于3072**
+
+大家经常碰到InnoDB单列索引长度不能超过767bytes，实际上联合索引还有一个限制是3072。
+
+[![](http://blog.haohtml.com/wp-content/uploads/2017/02/19130103_qFJc.jpg)][1]
+
+可以看到，由于每个字段占用255\*3, 因此这个索引的大小是3825(255\*3*5)>3072，报错。
+
+**为什么3072**
+
+我们知道InnoDB一个page的默认大小是16k。由于是Btree组织，要求叶子节点上一个page至少要包含两条记录（否则就退化链表了）。
+
+所以一个记录最多不能超过8k。
+又由于InnoDB的聚簇索引结构，一个二级索引要包含主键索引，因此每个单个索引不能超过4k （极端情况，pk和某个二级索引都达到这个限制）。
+由于需要预留和辅助空间，扣掉后不能超过3500，取个“整数”就是(1024*3)。
+
+**单列索引限制**
+
+上面有提到单列索引限制767，起因是256×3-1。这个3是字符最大占用空间（utf8）。但是在5.6以后，开始支持4个字节的uutf8。255×4>767, 于是增加了一个参数叫做 innodb\_large\_prefix。
+
+这个参数默认值是OFF。当改为ON时，允许列索引最大达到3072。
+
+但是MySQL有点着急，在5.5的时候就引入这个参数，在加索引的入口处没有这个限制，但是内部的限制没有去掉。
+
+因此导致如下效果(5.5)：
+
+[![](http://blog.haohtml.com/wp-content/uploads/2017/02/19130104_eWuF.jpg)][2]
+
+可以看到默认行为是建表成功，报一个warning，并且将长度阶段为255。
+
+使用large_prefix后，报的是error，建表不成功。这个参数要等到 5.6才有效。
+
+原文地址: [关于InnoDB索引长度限制的tips](http://www.mysqlops.com/2012/09/19/%e5%85%b3%e4%ba%8einnodb%e7%b4%a2%e5%bc%95%e9%95%bf%e5%ba%a6%e9%99%90%e5%88%b6%e7%9a%84tips.html)
+
+ [1]: http://blog.haohtml.com/wp-content/uploads/2017/02/19130103_qFJc.jpg
+ [2]: http://blog.haohtml.com/wp-content/uploads/2017/02/19130104_eWuF.jpg

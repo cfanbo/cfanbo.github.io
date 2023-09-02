@@ -1,0 +1,31 @@
+baseURL = 'https://blog.haohtml.com/'
+languageCode = 'en-us'
+title = "学习笔记"
+Subtitle = '系统架构 高性能 云原生 Golang kubernetes MySQL'
+theme = 'ananke'
+
+[[menu.main]]
+identifier = "linux"
+name = "Linux"
+url = "/linux/"
+weight = 2
+[[menu.main]]
+identifier = "mysql"
+name = "MySQL"
+url = "/mysql/"
+weight = 3
+[[menu.main]]
+identifier = "golang"
+name = "Golang"
+url = "/golang/"
+weight = 4
+[[menu.main]]
+identifier = "kubernetes"
+name = "Kubernetes"
+url = "https://kubernetes.io/zh-cn/docs/home/"
+weight = 5
+[[menu.main]]
+identifier = "IETF"
+name = "IETF"
+url = "https://datatracker.ietf.org/"
+weight = 6
