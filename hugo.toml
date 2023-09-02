@@ -3,6 +3,10 @@ languageCode = 'en-us'
 title = "学习笔记"
 Subtitle = '系统架构 高性能 云原生 Golang kubernetes MySQL'
 theme = 'ananke'
+[params]
+  recent_posts_number = 5
+
+show_reading_time = true
 
 [[menu.main]]
 identifier = "linux"
