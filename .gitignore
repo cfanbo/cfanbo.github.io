@@ -1,1 +1,3 @@
-content/wp-content
+content/wp-content/*
+public/
+!public/config.yaml
