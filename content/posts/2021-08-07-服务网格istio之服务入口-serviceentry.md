@@ -20,7 +20,7 @@ tags:
 
 为了更好的理解这一块的内容，我们先看一下普通POD发送请求的流程图![](https://blogstatic.haohtml.com/uploads/2021/08/d2b5ca33bd970f64a6301fa75ae2eb22.png)普通 Pod 请求
 
-# 创建 ServiceEntry 资源 {#%E5%88%9B%E5%BB%BA-serviceentry-%E8%B5%84%E6%BA%90.wp-block-heading}
+# 创建 ServiceEntry 资源
 
 举例来说：
 
@@ -67,7 +67,7 @@ default     svc-entry   ["www.baidu.com"]   MESH_EXTERNAL   DNS          13s
 
 为了测试这个效果，我们再创建一个pod，然后在pod里访问上面创建的 ServiceEntry。
 
-# 创建请求客户端资源 {#%E5%88%9B%E5%BB%BA%E8%AF%B7%E6%B1%82%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B5%84%E6%BA%90.wp-block-heading}
+# 创建请求客户端资源
 
 为了测试这里创建一个 deployment，并指定了pod数量1个,将其添加到服务网格中
 
@@ -141,7 +141,7 @@ Containers:
 
 此时的 client 已经处于服务网络之中。对于上面的 istio-init 这个容器是什么什么的，有兴趣的话，可以参考相关文档。
 
-# 测试效果 {#%E6%B5%8B%E8%AF%95%E6%95%88%E6%9E%9C.wp-block-heading}
+# 测试效果
 
 我们在pod 里测试一下效果。
 
@@ -210,7 +210,7 @@ command terminated with exit code 1
 >
 > 对于 NONE 模式来说，要小心使用，在这种模式下，如果未指定任何IP地址的话，则默认将允许发送到任意IP上。
 
-# 清理 {#%E6%B8%85%E7%90%86.wp-block-heading}
+# 清理 
 
 ```
 $ kubectl delete -f svc-entry-client.yaml
@@ -218,13 +218,13 @@ $ kubectl delete -f svc-entry.yaml
 
 ```
 
-# 总结 {#%E6%80%BB%E7%BB%93.wp-block-heading}
+# 总结 
 
 ServiceEntry 主要用来将一些从内部流向外部的流量进行拦截，并根据配置进行流量转发。如果想要以更细粒度的方式控制到服务入口的流量，可能通过配置虚拟服务和目标规则来实现。
 
 推荐阅读： [Envoy中查看ServiceEntry注入信息](https://mp.weixin.qq.com/s/qrjWHks9Zc2WjAl9WWPEDA)
 
-# 参考 {#%E5%8F%82%E8%80%83.wp-block-heading}
+# 参考
 
  * [https://istio.io/latest/zh/docs/concepts/traffic-management/#service-entry-example](https://istio.io/latest/zh/docs/concepts/traffic-management/#service-entry-example)
  * [https://istio.io/latest/zh/docs/reference/config/networking/service-entry/#ServiceEntry-Endpoint](https://istio.io/latest/zh/docs/reference/config/networking/service-entry/#ServiceEntry-Endpoint)

@@ -20,7 +20,7 @@ Kubernetes v1.21.3
 
 为了解决国内访问一些国外网站慢的问题，本文使用了国内阿里云的镜像。
 
-# 更换apt包源 {#%E6%9B%B4%E6%8D%A2apt%E5%8C%85%E6%BA%90.wp-block-heading}
+# 更换apt包源
 
 这里使用aliyun镜像 , 为了安全起见，建议备份原来系统默认的 /etc/apt/sources.list 文件
 
@@ -34,11 +34,11 @@ $ sudo apt-get update
 
 ```
 
-# 安装Docker {#%E5%AE%89%E8%A3%85docker.wp-block-heading}
+# 安装Docker
 
 参考官方文档  或 aliyun 文档
 
-### 安装 docker {#%E8%AE%BE%E7%BD%AEdocker%E4%BB%93%E5%BA%93.wp-block-heading}
+### 安装 docker
 
  1. 安装基础工具
 
@@ -119,7 +119,7 @@ Server: Docker Engine - Community
 
 如果看到以上信息则表示安装成功
 
-### 设置 docker 源镜像 {#%E6%B7%BB%E5%8A%A0docker%E6%BA%90%E9%95%9C%E5%83%8F.wp-block-heading}
+### 设置 docker 源镜像
 
 由于默认的docker源镜像是国外，国内用户访问太慢，所以我们这里使用aliyun提供的docker镜像源.
 
@@ -145,9 +145,9 @@ $ sudo docker info
 
 ```
 
-# 安装 k8s {#%E5%AE%89%E8%A3%85-k8s.wp-block-heading}
+# 安装 k8s
 
-### 关闭交换分区 {#2-%E5%85%B3%E9%97%AD%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA.wp-block-heading}
+### 关闭交换分区
 
 ```
 $ sudo swapoff -a
@@ -161,7 +161,7 @@ $ sudo swapoff -a
 
 ```
 
-### 安装工具 kubectl、 kubelet 和 kubeadm {#1-%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7-kubectl-kubelet-%E5%92%8C-kubeadm.wp-block-heading}
+### 安装工具 kubectl、 kubelet 和 kubeadm
 
 这里使用aliyun 镜像，参考
 
@@ -201,7 +201,7 @@ $ apt install kubeadm=1.21.3-00
 $ apt-cache madison kubelet
 ```
 
-### 使用 kubeadm 创建k8s集群 {#3-%E4%BD%BF%E7%94%A8-kubeadm-%E5%88%9B%E5%BB%BAk8s%E9%9B%86%E7%BE%A4.wp-block-heading}
+### 使用 kubeadm 创建k8s集群
 
 参考官方教程
 
@@ -448,7 +448,7 @@ kube-system   kube-scheduler-ubuntu            1/1     Running   0          93s
 
 同时这里有两个污点，一个是 `node-role.kubernetes.io/master`, 另一个是 \`node.kubernetes.io/not-ready\` 。
 
-### 安装 pod 网络插件 {#%E5%AE%89%E8%A3%85-pod-%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6.wp-block-heading}
+### 安装 pod 网络插件 
 
 你必须部署一个基于 Pod 网络插件的 容器网络接口 (CNI)，以便你的 Pod 可以相互通信。 在安装网络之前，集群 DNS (CoreDNS) 将不会启动。
 
@@ -506,7 +506,7 @@ kube-system   kube-scheduler-ubuntu            1/1     Running   0          10m
 
 ```
 
-# 常见问题 {#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.wp-block-heading}
+# 常见问题 
 
  1. 安装过程中会提示 “[registry.aliyuncs.com/google_containers/coredns:v1.8.0”][9] 这个镜像无法下载，解决办法：
 
@@ -580,7 +580,7 @@ sudo apt install -y linux-modules-extra-raspi
 
 9. 从 k8s v24.0 版本以后，默认删除了 Dockershim（ [shim 介绍](https://kubernetes.io/zh-cn/blog/2022/05/03/dockershim-historical-context/)） 移除了对 docker 运行时的支持，一般采用  [containerd][1]  运行时，这已是一个从 CNCF 毕业的项目。如果仍想使用 docker 运行时，则需要安装一个 [cri-dockerd](https://github.com/Mirantis/cri-dockerd)， 它是 Dockershim 的代替品，官方对此支持变更介绍 [https://kubernetes.io/zh-cn/blog/2022/03/31/ready-for-dockershim-removal/](https://kubernetes.io/zh-cn/blog/2022/03/31/ready-for-dockershim-removal/)。幸运的是，Kubernetes 项目已经以 containerd 为例， 提供了[更改节点容器运行时][10]的过程文档。仍有疑问，请先查看[弃用 Dockershim 的常见问题][11]。
 
-# 参考资料 {#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99.wp-block-heading}
+# 参考资料
 
  *
  *
