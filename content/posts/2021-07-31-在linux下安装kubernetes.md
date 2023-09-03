@@ -513,36 +513,33 @@ kube-system   kube-scheduler-ubuntu            1/1     Running   0          10m
 ```
 $ sudo docker pull coredns/coredns:1.8.0
 $ sudo docker tag coredns/coredns:1.8.0 registry.aliyuncs.com/google_containers/coredns:v1.8.0
-
 ```
 
 再次执行初始化命令即可
 
-1. 安装集群失败，请检查是否工具版本不匹配原因，见 [https://kubernetes.io/zh/docs/setup/release/version-skew-policy/#supported-versions](https://kubernetes.io/zh/docs/setup/release/version-skew-policy/#supported-versions)
-2. 查看 kubectl 日志
+2. 安装集群失败，请检查是否工具版本不匹配原因，见 [https://kubernetes.io/zh/docs/setup/release/version-skew-policy/#supported-versions](https://kubernetes.io/zh/docs/setup/release/version-skew-policy/#supported-versions)
+
+3. 查看 kubectl 日志
 
 
 ```
 $ journalctl -f -u kubelet
-
 ```
 
-1. 查看 POD 调度日志
+4. 查看 POD 调度日志
 
 
 ```
 $ sudo kubectl logs kube-flannel-ds-gfhf2 -n kube-system
-
 ```
 
-1. 集群初始化如果遇到问题，可以使用 `kubeadm reset` 命令进行清理然后重新执行初始化。
+5. 集群初始化如果遇到问题，可以使用 `kubeadm reset` 命令进行清理然后重新执行初始化。
 
-2. flannel pod 一直处于 `CrashLoopBackOff` 状态，可通过修改文件
+6. flannel pod 一直处于 `CrashLoopBackOff` 状态，可通过修改文件
 
 
 ```
 $ vim /etc/kubernetes/manifests/kube-controller-manager.yaml
-
 ```
 
 在 `spec.containers.command` 命令后面添加以两个参数
@@ -550,22 +547,19 @@ $ vim /etc/kubernetes/manifests/kube-controller-manager.yaml
 ```
 --allocate-node-cidrs=true
 --cluster-cidr=10.244.0.0/16
-
 ```
 
-1. 如果在安装网络插件后，显示 coredns 的POD 处于 STATUS:RUNNING READY:0/1, 可参考方法 [https://www.programmersought.com/article/14857690636/](https://www.programmersought.com/article/14857690636/) 或 [https://stackoverflow.com/questions/60782064/coredns-has-problems-getting-endpoints-services-namespaces](https://stackoverflow.com/questions/60782064/coredns-has-problems-getting-endpoints-services-namespaces)
+ 如果在安装网络插件后，显示 coredns 的POD 处于 STATUS:RUNNING READY:0/1, 可参考方法 [https://www.programmersought.com/article/14857690636/](https://www.programmersought.com/article/14857690636/) 或 [https://stackoverflow.com/questions/60782064/coredns-has-problems-getting-endpoints-services-namespaces](https://stackoverflow.com/questions/60782064/coredns-has-problems-getting-endpoints-services-namespaces)
 
 ```
 $ iptables -P INPUT ACCEPT
 $ kubectl rollout restart deployment coredns --namespace kube-system
-
 ```
 
 重启 kubectl
 
 ```
 $ sudo systemctl restart kubelet
-
 ```
 
 主要原因是我们在 `kubeadm init` 的时候没有指定 `CIDR` 网络。
@@ -582,12 +576,12 @@ sudo apt install -y linux-modules-extra-raspi
 
 # 参考资料
 
- *
- *
- *
- *
- *
- *
+* https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+* https://kubernetes.io/zh/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model
+* https://github.com/flannel-io/flannel
+* https://github.com/flannel-io/flannel/blob/master/Documentation/kubernetes.md
+* https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/kubeadm-init/
+* https://zhuanlan.zhihu.com/p/46341911
 
  [1]: https://containerd.io/
  [2]: https://github.com/Mirantis/cri-dockerd
