@@ -569,10 +569,10 @@ ast.Equal.Expr(
 
 # 参考文档： 
 
- *
- *
- *
- * [https://www.openpolicyagent.org/docs/latest/integration/#integrating-with-the-go-sdk](https://www.openpolicyagent.org/docs/latest/integration/#integrating-with-the-go-sdk)
+* https://www.openpolicyagent.org/
+* https://blog.openpolicyagent.org/
+* https://pkg.go.dev/github.com/open-policy-agent/opa/rego
+* https://www.openpolicyagent.org/docs/latest/integration/ #integrating-with-the-go-sdk
 
  [1]: https://en.wikipedia.org/wiki/Datalog
  [2]: https://play.openpolicyagent.org/p/qUkvgJRpIU

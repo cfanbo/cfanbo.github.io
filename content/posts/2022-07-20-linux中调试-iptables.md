@@ -174,5 +174,5 @@ modprobe: FATAL: Module nf_log_syslog is in use.
 
 # 参考资料 
 
- *
- *
+* https://www.ibm.com/docs/en/qsip/7.4?topic=applications-icmp-type-code-ids
+* https://www.rfc-editor.org/rfc/rfc792.html

@@ -250,10 +250,10 @@ PING 192.168.3.12 (192.168.3.12) 56(84) bytes of data.
 
 # 参考资料 
 
- *
- *
- *
- *
- *
- *
- *
+* https://www.kernel.org/doc/Documentation/networking/tuntap.txt
+* https://backreference.org/2010/03/26/tuntap-interface-tutorial/
+* https://zhaohuabing.com/post/2020-02-24-linux-taptun/
+* https://blog.csdn.net/Michaelwubo/article/details/110424445
+* https://zhuanlan.zhihu.com/p/260405786
+* https://paper.seebug.org/1648/
+* https://time.geekbang.org/column/article/65287
