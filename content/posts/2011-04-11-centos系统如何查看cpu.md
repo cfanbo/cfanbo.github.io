@@ -51,10 +51,10 @@ Intel(R) Xeon(R) CPU          X3220 @ 2.40GHz
 
 Intel(R) Xeon(R) CPU          X3220 @ 2.40GHz
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/04/1147240.gif)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/1147240.gif)][1]
 
 这样，我们就查看了CentOS系统的CPU。你也就了解了你的电脑。
 
 更多信息请参考：
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2011/04/1147240.gif
+[1]: http://blog.haohtml.com/wp-content/uploads/2011/04/1147240.gif

@@ -42,10 +42,11 @@ tags:
 
 重启WEB服务，再执行phpinfo(),惊喜发现：
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/10/bcmath.png)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/bcmath.png)][1]
 
 互此bcmath扩展已经安装成功！
 
 这里也有一篇安装php扩展的文章,” [Linux下 安装XCache 扩展”,安装方法点击查看](http://blog.haohtml.com/index.php/archives/6128)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2010/10/bcmath.png
+
+

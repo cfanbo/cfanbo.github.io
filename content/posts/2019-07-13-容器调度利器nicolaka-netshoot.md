@@ -16,11 +16,11 @@ tags:
 
 ## 解决方案 
 
-今天发现一篇文章（[简化 Pod 故障诊断：kubectl-debug 介绍][2]）介绍针对此类问题的解决方案的，这里介绍的是一个叫做 `kubectl-debug` 的命令，主要由国内知名的PingCAP公司出品的，主要是用在k8s环境中的。我们知道容器里主要两大技术，一个是用**cgroup来实现容器资源的限制**，一个是用**Namespace来实现容器的资源隔离的**）。（kubectl-debug 命令是基于一个工具包（） 来实现的，其原理是利用将一个工具包容器添加到目标容器所在的Pod里，实现和目标容器的Network Namespace一致，从而达到对新旧容器进程的相互可见性，这样我们就可以直接在目标容器里操作这些命令。所以在平时开发环境中，可以很方便的利用此原理直接使用这个工具包来实现对容器的排障。
+今天发现一篇文章（[简化 Pod 故障诊断：kubectl-debug 介绍][2]）介绍针对此类问题的解决方案的，这里介绍的是一个叫做 `kubectl-debug` 的命令，由国内知名的PingCAP公司出品的，主要用在k8s环境中的。我们知道容器里主要两大技术，一个是用**cgroup来实现容器资源的限制**，一个是用**Namespace来实现容器的资源隔离的**）。（kubectl-debug 命令是基于一个工具包（） 来实现的，其原理是利用将一个工具包容器添加到目标容器所在的Pod里，实现和目标容器的Network Namespace一致，从而达到对新旧容器进程的相互可见性，这样我们就可以直接在目标容器里操作这些命令。所以在平时开发环境中，可以很方便的利用此原理直接使用这个工具包来实现对容器的排障。
 
 > 在 Kubernetes 项目中，这些容器则会被划分为一个“Pod”，Pod 里的容器共享同一个 Network Namespace、同一组数据卷，从而达到高效率交换信息的目的。这些容器应用就可以通过 Localhost 通信，通过本地磁盘目录交换文件。
 
-netshoot包含一组强大的工具，如图所示![](https://blog.haohtml.com/wp-content/uploads/2019/07/netshoot-1024x717.png)
+netshoot包含一组强大的工具，如图所示![](https://blogstatic.haohtml.com//uploads/2023/09/netshoot-1024x717.png)
 
 工具包清单
 
@@ -157,5 +157,5 @@ bash-5.0#
 
 把一个进程分配到一个指定的Namespace下的原理请参考 https://time.geekbang.org/column/article/18119 
 
- [1]: https://mp.weixin.qq.com/s/S1Ib08SpQbf1SCbCutUoqQ
- [2]: http://www.dockone.io/article/9032
+[1]: https://mp.weixin.qq.com/s/S1Ib08SpQbf1SCbCutUoqQ
+[2]: http://www.dockone.io/article/9032

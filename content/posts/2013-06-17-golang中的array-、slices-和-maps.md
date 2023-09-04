@@ -113,36 +113,36 @@ s5 := s2[:]  // 5
 
 数组指针类型 \*[n]T，指针数组类型 [n]\*T 。
 
-```
-[java]
+```go
+
 x, y := 1, 2
 var p1 *[2]int = [2]int{x, y}
 var p2 [2]*int = [2]*int{x, y}
 fmt.Printf("%#vn", p1)
 fmt.Printf("%#vn", p2)
-[/java]
+
 ```
 
 输出:
 
 ```
-[java]
+
 [2]int{1, 2}
 [2]*int{(*int)(0x4212f100), (*int)(0x4212f108)}
-[/java]
+
 ```
 
 支持 “==”、”!=” 相等操作符 (因为 Go 对象所使用的内存都被初始化为 0，按字节比较是可以的)，
 但不支持 “>” 、”<” 等比较操作符。
 
 ```
-[java]println([1]string{"a"} == [1]string{"a"})[/java]
+println([1]string{"a"} == [1]string{"a"})
 ```
 
 数组是值类型，也就是说会拷贝整个数组内存进行值传递。可用 slice 或指针代替。
 
 ```
-[java]
+
 func test(x *[4]int) {
 for i := 0; i < len(x); i++ {
 println(x[i]) // 用指针访问数组语法并没有什么不同，比 C 更直观。
@@ -154,13 +154,13 @@ x := [4]int{ 2:100, 1:200 }
 test(x)
 println(x[3])
 }
-[/java]
+
 ```
 
 可以用 new() 创建数组，返回数组指针。
 
 ```
-[java]
+
 func test(a *[10]int) {
 a[2] = 100 // 用指针直接操作没有压力。
 }
@@ -169,21 +169,21 @@ var a = new([10]int)  // 返回指针。
 test(a)
 fmt.Println(a, len(a))
 }
-[/java]
+
 ```
 
 输出:
 
 ```
-[java]
-&amp;amp;amp;[0 0 100 0 0 0 0 0 0 0] 10
-[/java]
+
+[0 0 100 0 0 0 0 0 0 0] 10
+
 ```
 
 多维数组和 C 类似，一种数组的数组。
 
 ```
-[java]
+
 func main() {
 var a = [3][2]int{ [...]int{1, 2}, [...]int{3, 4} }
 var b = [3][2]int{ {1, 2}, {3, 4} }
@@ -191,23 +191,23 @@ c := [...][2]int{ {1, 2}, {3, 4}, {5, 6} }   // 第二个维度不能用 "..." �
 c[1][1] = 100
 fmt.Println(a, "n", b, "n", c, len(c), len(c[0]))
 }
-[/java]
+
 ```
 
 输出：
 
 ```
-[java]
+
 [[1 2] [3 4] [0 0]]
 [[1 2] [3 4] [0 0]]
 [[1 2] [3 100] [5 6]] 3 2
-[/java]
+
 ```
 
 由于元素类型相同，因此可以使用复合字面值初始化数组成员。
 
 ```
-[java]
+
 type User struct {
 Id int
 Name string
@@ -224,17 +224,17 @@ b := [...]*User {
 fmt.Println(a)
 fmt.Println(b, b[1])
 }
-[/java]
+
 ```
 
 输出:
 
 ```
-[java]
+
 [{0 User0} {1 User1}]
 [0x42122340 0x42122320] {1 User1}
 3.2 Slices
-[/java]
+
 ```
 
 **3.2 Slices**
@@ -244,13 +244,13 @@ fmt.Println(b, b[1])
 src/pkg/runtime/runtime.h
 
 ```
-[java]struct  Slice
+struct  Slice
 { // must not move anything
 byte* array; // actual data
 uint32 len; // number of elements
 uint32 cap; // allocated number of elements
 };
-[/java]
+
 ```
 
  [http://blog.golang.org/2011/01/go-slices-usage-and-internals. html](http://blog.golang.org/2011/01/go-slices-usage-and-internals. html)
@@ -259,7 +259,7 @@ slice 是引⽤类型，默认值为 nil。可以⽤内置函数 len() 获取⻓
 在使方法上和 Python 类似，可惜不支持负数定义逆向索引。
 
 ```
-[java]
+
 func main() {
 x := [...]int{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 var s1 []int = x[1:3] // 内容包括 x[1], x[2]
@@ -270,23 +270,23 @@ s3 := x[:6] // x[0] ~ x[5]
 fmt.Println(s3)
 s4 := x[:] &amp;amp;nbsp;// x[0] ~ x[len - 1]
 fmt.Println(s4)
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 [1 2]
 [4 5 6 7 8 9]
 [0 1 2 3 4 5]
-[0 1 2 3 4 5 6 7 8 9][/java]
+[0 1 2 3 4 5 6 7 8 9]
 ```
 
 对 slice 的修改就是对底层数组的修改。
 
 ```
-[java]
+
 func main() {
 x := [...]int{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 s := x[1:3]
@@ -295,21 +295,21 @@ fmt.Println(x)
 x[2] = 200 // 对数组修改会影响 slice 。
 fmt.Println(s)
 }
-[/java]
+
 ```
 
 输出:
 
 ```
-[java]
+
 [0 100 2 3 4 5 6 7 8 9]
-[100 200][/java]
+[100 200]
 ```
 
 可以直接创建一个 slice 对象 (内部自动创建底层数组)，而不是从数组开始。
 
 ```
-[java]
+
 func test(s []int) {
 fmt.Println(s)
 s[1] = 100  // 内部总是指向同⼀个数组。
@@ -320,22 +320,22 @@ test(s)  // 引用类型，不用担心复制底层数组。
 
 fmt.Println(s)
 }
-[/java]
+
 ```
 
 输出:
 
 ```
-[java]
+
 [0 1 2]
-[0 100 2][/java]
+[0 100 2]
 ```
 
 不能使用 new()，而应该是 make([]T, len, cap)。因为除了分配内存，还需要设置相关的属性。如
 果忽略 cap 参数，则 cap = len 。
 
 ```
-[java]
+
 func main() {
 s1 := make([]int, 10)  // 相当于 [10]int{...}[:]
 s1[1] = 100
@@ -343,16 +343,16 @@ fmt.Println(s1, len(s1), cap(s1))
 s2 := make([]int, 5, 10)
 s2[4] = 200
 fmt.Println(s2, len(s2), cap(s2))
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 [0 100 0 0 0 0 0 0 0 0] 10 10
 [0 0 0 0 200] 5 10
-[/java]
+
 ```
 
 **3.2.1 reslice**
@@ -364,13 +364,13 @@ cap = array\_length – slice\_start_index ，也就是 slice 在数组上的开
 组重新分配，只会引发 “slice bounds out of range” 错误。
 
 ```
-[java]func main() {
+func main() {
  a := [...]int{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
  s1 := a[5:7] &amp;amp;nbsp;// [5 6], len = 2, cap = 5
  s1 = s1[0:4] // [5, 6, 7, 8], len = 4, cap = 5
 // 注意 reslice 不能超过 cap 的限制。
 // 是在 slice 上重新切分，不是 Array ，因此序号是以 slice 为准。
- }[/java]
+ }
 ```
 
 **3.2.2 append**
@@ -378,7 +378,7 @@ cap = array\_length – slice\_start_index ，也就是 slice 在数组上的开
 可以用 append() 向 slice 尾部添加新元素，这些元素保存到底层数组。append 并不会影响原 slice的属性，它返回变更后新的 slice 对象。如果超出 cap 限制，则会重新分配底层数组。
 
 ```
-[java]func main() {
+func main() {
  s1 := make([]int, 3, 6)
  // 添加数据，未超出底层数组容量限制。
  s2 := append(s1, 1, 2, 3)
@@ -406,24 +406,24 @@ cap = array\_length – slice\_start_index ，也就是 slice 在数组上的开
  // s2 == [0 0 0 1 2 3] len:6 cap:6
  fmt.Println(s1, len(s1), cap(s1))
  fmt.Println(s2, len(s2), cap(s2))
- }[/java]
+ }
 ```
 
 输出:
 
 ```
-[java][0 0 0] 3 6
+[0 0 0] 3 6
 [0 0 0 1 2 3] 6 6
 [0 0 0 1 2 3] 6 6
 [100 0 0 1 2 3 4 5 6] 9 12
 [0 0 0 1 2 3] 6 6
-[0 0 0 1 2 3] 6 6[/java]
+[0 0 0 1 2 3] 6 6
 ```
 
 因为 append 每次会创建新的 slice 对象，因此要优先考虑⽤序号操作。
 
 ```
-[java]
+
 func test1(n int) []int {
 datas := make([]int, 0, n)
 for i := 0; i &amp;amp;lt; n; i++ {
@@ -442,7 +442,7 @@ func main() {
 // datas := test1(10000)
 datas := test2(10000)
 println(len(datas))
-}[/java]
+}
 ```
 
 两种写法的性能差异很明显。虽然底层数组相同，但 test2 预先就 “填充” 了全部元素，演变为普通
@@ -453,7 +453,7 @@ println(len(datas))
 src 和 dst 的 len 值 (两者的最⼩值)。在同⼀底层数组的不同 slice 间拷贝时，元素位置可以重叠。
 
 ```
-[java]
+
 func main() {
 s1 := []int{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 s2 := make([]int, 3, 20)
@@ -463,16 +463,16 @@ fmt.Println(n, s2, len(s2), cap(s2)) // [0 1 2], len:3, cap:20
 s3 := s1[4:6] // s3 == [4 5] 。s3 和 s1 指向同一个底层数组。
 n = copy(s3, s1[1:5]) // n = 2。同一数组上拷贝，且存在重叠区域。
 fmt.Println(n, s1, s3) // [0 1 2 3 1 2 6 7 8 9] [1 2]
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 3 [0 1 2] 3 20
 2 [0 1 2 3 1 2 6 7 8 9] [1 2]
-[/java]
+
 ```
 
 **3.3 Maps**
@@ -480,7 +480,7 @@ fmt.Println(n, s1, s3) // [0 1 2 3 1 2 6 7 8 9] [1 2]
 map 查找操作比线性搜索快很多，但比起用序号访问 array、slice，大约慢 100x 左右。绝大多数时候，其操作性能要略好于 Python Dict 、C++ Map。
 
 ```
-[java]
+
 func test(d map[string]int) {
 d["x"] = 100
 }
@@ -492,22 +492,22 @@ fmt.Println(d, d2)
 d3 := make(map[string]string)
 d3["name"] = "Jack"
 fmt.Println(d3, len(d3))
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 map[a:1 b:2 x:100] map[1:a 2:b]
 map[name:Jack] 1
-[/java]
+
 ```
 
 使⽤ array/struct key 的例⼦。
 
 ```
-[java]
+
 type User struct {
 Name string
 }
@@ -520,22 +520,22 @@ u := User{ "User1" }
 u2 := u
 d2 := map[User]string { u: "xxxx" }
 fmt.Println(d2, d2[u2])
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 map[[0 1]:ssss] ssss
 map[{User1}:xxxx] xxxx
-[/java]
+
 ```
 
 value 的类型就很自由了，完全可以用匿名结构或者空接口。
 
 ```
-[java]
+
 type User struct {
 Name string
 }
@@ -545,22 +545,22 @@ d := map[*int]struct{ x, y float64 } { &amp;amp;amp;i: { 1.0, 2.0 } }
 fmt.Println(d, d[&amp;amp;amp;i], d[&amp;amp;amp;i].y)
 d2 := map[string]interface{} { "a": 1, "b": User{ "user1" } }
 fmt.Println(d2, d2["b"].(User).Name)
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 map[0x42132018:{1 2}] {1 2} 2
-map[a:1 b:{user1}] user1[/java]
+map[a:1 b:{user1}] user1
 ```
 
 使用 make() 创建 map 时，提供一个合理的初始容量有助于减少后续新增操作的内存分配次数。在需要时，map 会⾃动扩张容量。
 常用的判断和删除操作：
 
 ```
-[java]
+
 func main() {
 var d = map[string]int{ "a":1, "b":2 };
 v, ok := d["b"]  // key b 存在，v = ["b"], ok = true
@@ -571,25 +571,25 @@ d["c"] = 3   // 添加或修改
 fmt.Println(d)
 delete(d, "c")  // 删除。删除不存在的 key，不会引发错误。
 fmt.Println(d)
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 2 true
 0 false
 map[a:1 c:3 b:2]
-map[a:1 b:2][/java]
+map[a:1 b:2]
 ```
 
 迭代器用法:
 The Go 1 .1 hashmap iteration starts at a random bucket. However, it stores up to 8 key/value pairs in a bucket.
 And within a bucket, hashmap iteration always returns the values in the same order .
 
-```
-[java]func main() {
+```go
+func main() {
 d := map[string]int{ "a":1, "b":2 };
 for k, v := range d {  // 获取 key, value
 println(k, "=", v)
@@ -597,13 +597,12 @@ println(k, "=", v)
 for k := range d {  // 仅获取 key
 println(k, "=", d[k])
 }
-}[/java]
+}
 ```
 
 通过 map[key] 返回的只是一个 “临时值拷贝”，修改其自身状态没有任何意义，只能重新 value 赋值或改用指针修改所引用的内存。
 
 ```
-[java]
 type User struct {
 Id int
 Name string
@@ -626,22 +625,22 @@ users2 := map[string]*User{
 }
 users2["a2"].Name = "Tom"
 fmt.Println(users2["a2"])
-}[/java]
+}
 ```
 
 输出:
 
 ```
-[java]
+
 map[a:{1 user1}]
 {1 Jack}
-{2 Tom}[/java]
+{2 Tom}
 ```
 
 可以在 for range 迭代时安全删除和插入新的字典项。
 
 ```
-[java]func main() {
+func main() {
 d := map[string]int { "b":2, "c":3, "e":5 }
 for k, v := range d {
 println(k, v)
@@ -649,17 +648,17 @@ if k == "b" { delete(d, k) }
 if k == "c" { d["a"] = 1 }
 }
 fmt.Println(d)
-}[/java]
+}
 ```
 
 输出：
 
 ```
-[java]
+
 c 3
 b 2
 e 5
-map[a:1 c:3 e:5][/java]
+map[a:1 c:3 e:5]
 ```
 
 注：map 作为参数时，直接复制指针。

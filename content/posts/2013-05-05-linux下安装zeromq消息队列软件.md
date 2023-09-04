@@ -17,24 +17,28 @@ centos下安装zeromq消息队列软件．
 
 **一．安装服务端**
 
-[shell]
+```shell
 cd ~
 wget http://download.zeromq.org/zeromq-3.2.3.tar.gz
 tar zxvf zeromq-3.2.3.tar.gz
 cd zeromq-3.2.3
 ./configure # –prefix=/usr/local/zeromq
 make && make install
-[/shell]
+```
+
+
 
 **二．安装php扩展　**
 
-[shell]
+```shell
 git clone git://github.com/mkoppanen/php-zmq.git
 cd php-zmq
 phpize
 ./configure –with-php-config=/usr/local/php/bin/php-config
 make && make install
-[/shell]
+```
+
+
 
 执行完以后，会提示：
 
@@ -60,11 +64,15 @@ windows下zmq扩展： [http://valokuva.org/builds/](http://valokuva.org/builds/
 
 修改/usr/loal/php/etc/php.ini文件，在extension 区块添加一行
 
-[shell]extension=zmq.so[/shell]
+```
+extension=zmq.so
+```
+
+
 
 ，然后重启php-fpm．通过phpinfo()　查看zmq的php扩展是否已经安装成功．
 
-[![zmq-php-extension](http://blog.haohtml.com/wp-content/uploads/2013/05/zmq-php-extension.jpg)][2]
+[![zmq-php-extension](https://blogstatic.haohtml.com//uploads/2023/09/zmq-php-extension.jpg)][2]
 
 —————————————–
 
@@ -72,8 +80,12 @@ windows下zmq扩展： [http://valokuva.org/builds/](http://valokuva.org/builds/
 
 四．实例
 
-[shell]cd php-zmq
-mv examples/ /usr/local/nginx/html/[/shell]
+```
+cd php-zmq
+mv examples/ /usr/local/nginx/html/
+```
+
+
 
 访问http://localhost/examples/client.php,会看到 string(7) “Got it!” 字样，表示写入队列成功．
 
@@ -85,5 +97,5 @@ php使用手册可参考： [http://zguide.zeromq.org/php:all](http://zguide.zer
 
 另一篇相关zeroMQ的介绍文章：
 
- [1]: https://github.com/Polycademy/php_zmq_binaries/tree/master/php-zmq-20130203/php-zmq
- [2]: http://blog.haohtml.com/wp-content/uploads/2013/05/zmq-php-extension.jpg
+[1]: https://github.com/Polycademy/php_zmq_binaries/tree/master/php-zmq-20130203/php-zmq
+[2]: http://blog.haohtml.com/wp-content/uploads/2013/05/zmq-php-extension.jpg

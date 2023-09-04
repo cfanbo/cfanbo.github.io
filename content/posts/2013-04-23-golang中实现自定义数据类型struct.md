@@ -15,7 +15,7 @@ tags:
 
 **func.go**
 
-```
+```go
 package main
 
 import (
@@ -62,7 +62,7 @@ return s.age
 
 //========= 另一种写法
 
-```
+```go
 func (s *stu) setName(name string) {
 s.Name = name
 }
@@ -73,4 +73,4 @@ return s.Name
 
 ```
 
-对于结构体struct的初始化的几种方法，见：
+对于结构体struct的初始化的几种方法，见：http://blog.haohtml.com/archives/14239

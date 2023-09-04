@@ -14,7 +14,7 @@ tags:
 
 ---
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/06/3455232156_dc09e11b22_o.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/06/3455232156_dc09e11b22_o.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/3455232156_dc09e11b22_o.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/06/3455232156_dc09e11b22_o.jpg)
 
 [replication by orczhou, on Flickr](http://www.flickr.com/photos/26825745@N06/3455232156/ "replication by orczhou, on Flickr")
 

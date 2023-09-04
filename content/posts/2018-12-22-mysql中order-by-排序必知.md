@@ -34,7 +34,7 @@ SELECT city, name  FROM t WHERE city='杭州' ORDER BY name LIMIT 1000;
 
 通过Explain命令查看执行情况
 
-- ![](https://blog.haohtml.com/wp-content/uploads/2018/12/explain-1024x119.jpg)
+- ![](https://blogstatic.haohtml.com//uploads/2023/09/explain-1024x119.jpg)
 
 
 
@@ -62,7 +62,7 @@ alter table t drop index city;
 alter table t add index (city,name);
 ```
 
-这里我们将city索引包含了city和name两个字段。现在我们再用Explain查看一下执行结果.![](https://blog.haohtml.com/wp-content/uploads/2018/12/explain_2-1024x144.jpg)
+这里我们将city索引包含了city和name两个字段。现在我们再用Explain查看一下执行结果.![](https://blogstatic.haohtml.com//uploads/2023/09/explain_2-1024x144.jpg)
 
 发现Extra字段变成了 “Using where; Using index”，原来的”Using filesort”消失了，多了一个 “Using index”。说明没有了排序操作，并且使用到了索引，这里使用的是覆盖索引。索引中已经包含了我们所需要的city和name字段，且**索引都是已经排序过的**，正好符合了我们的要求，即不需要进行回表操作，也不需要用到sort_buffer排序操作了。所以这里不需要用到排序操作。
 

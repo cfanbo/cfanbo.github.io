@@ -79,4 +79,4 @@ innodb_file_per_table is dynamic and can be set ON or OFF using SET GLOBAL
 
 Dynamically changing the value of this parameter requires the SUPER privilege and immediately affects the operation of all connections.
 
-## 关于各个参数的详细介绍，请参见官方文档 
+关于各个参数的详细介绍，请参见官方文档。

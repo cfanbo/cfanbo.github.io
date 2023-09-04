@@ -4,10 +4,6 @@ author: admin
 type: post
 date: 2011-04-01T02:20:07+00:00
 url: /archives/8830
-IM_data:
- - 'a:3:{s:85:"http://code.google.com/intl/zh-CN/webtoolkit/speedtracer/images/windows-cmdline-1.png";s:85:"http://code.google.com/intl/zh-CN/webtoolkit/speedtracer/images/windows-cmdline-1.png";s:85:"http://code.google.com/intl/zh-CN/webtoolkit/speedtracer/images/windows-cmdline-2.png";s:77:"http://blog.haohtml.com/wp-content/uploads/2011/04/edfe_windows-cmdline-2.png";s:87:"http://code.google.com/intl/zh-CN/webtoolkit/speedtracer/images/install-speedtracer.png";s:79:"http://blog.haohtml.com/wp-content/uploads/2011/04/5985_install-speedtracer.png";}'
-IM_contentdowned:
- - 1
 categories:
  - 前端设计
 
@@ -16,7 +12,7 @@ categories:
 
 **1.安装”Speed Tracer 速度追踪器”插件**
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/04/speed-tracer-by-google.bmp)][1]**2.配置chrome浏览器**
+[![](https://blogstatic.haohtml.com//uploads/2023/09/speed-tracer-by-google.bmp)][1]**2.配置chrome浏览器**
 
 安装完插件以后,将chorme浏览器关闭,记得要全部关闭.下面直接将官方的安装过程贴出来了,虽然是英文的,不过有图片很容易懂的.
 
@@ -29,13 +25,11 @@ Start Google Chrome with the following flag, either from the command line or by 
 
 To modify your desktop shortcut for Google Chrome, right-click on the Google Chrome shortcut icon and choose Properties:
 
-
-[![](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-1.png)](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-1.png)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/windows-cmdline-1.png)](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-1.png)
 
 Then, paste the `--enable-extension-timeline-api` flag into the Target field at the very end of the string (with a space separating it from chrome.exe).
 
-
-[![](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-2.png)](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-2.png)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/windows-cmdline-2.png)](http://blog.haohtml.com/wp-content/uploads/2011/04/windows-cmdline-2.png)
 
 Click OK to save the setting and dismiss the dialog. To start Google Chrome, double-click on the shortcut icon you just modified.
 
@@ -57,8 +51,8 @@ $ /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-extens
 
 
  * **Install Speed Tracer** – Now Google Chrome is ready for you to add Speed Tracer extension. Click on this install button:
- [![](http://blog.haohtml.com/wp-content/uploads/2011/04/install-speedtracer.png)][3]
- By installing this extension, you agree to the [Google Chrome Extension Gallery Terms of Service][4].
+ [![](https://blogstatic.haohtml.com//uploads/2023/09/install-speedtracer.png)][3]
+  By installing this extension, you agree to the [Google Chrome Extension Gallery Terms of Service][4].
 
  官方地址:
 
@@ -68,7 +62,7 @@ $ /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-extens
 
  对于MAX OSX的情况应该都一样的.
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2011/04/speed-tracer-by-google.bmp
- [2]: http://dl.google.com/gwt/speedtracer/ChromeWithSpeedTracer.dmg
- [3]: http://blog.haohtml.com/wp-content/uploads/2011/04/install-speedtracer.png
- [4]: https://chrome.google.com/extensions/intl/en/gallery_tos.html
+[1]: http://blog.haohtml.com/wp-content/uploads/2011/04/speed-tracer-by-google.bmp
+[2]: http://dl.google.com/gwt/speedtracer/ChromeWithSpeedTracer.dmg
+[3]: http://blog.haohtml.com/wp-content/uploads/2011/04/install-speedtracer.png
+[4]: https://chrome.google.com/extensions/intl/en/gallery_tos.html

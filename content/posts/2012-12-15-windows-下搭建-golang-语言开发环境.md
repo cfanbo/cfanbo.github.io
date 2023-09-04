@@ -35,13 +35,14 @@ $GOBIN     指向安装之后根目录下的bin目录，即$GOROOT/bin，windo
 测试安装结果：
 创建hello.go文件，内容如下：
 
-```
+```go
 package main
-import "fmt"
-func main() {
-fmt.Printf(“hello, world\n”)
-}
 
+import "fmt"
+
+func main() {
+    fmt.Printf(“hello, world\n”)
+}
 ```
 
 执行命令并显示结果
@@ -67,15 +68,12 @@ hello, world
 
 更新重启 eclipse 然后配置 golang 目录：
 
-[![goclipse](http://blog.haohtml.com/wp-content/uploads/2012/12/goclipse.jpg)][1]
+[![goclipse](https://blogstatic.haohtml.com//uploads/2023/09/goclipse.jpg)][1]
 
 创建一个工程。写一个helloworld 如下：
 
-[![eclipse_golang](http://blog.haohtml.com/wp-content/uploads/2012/12/eclipse_golang.jpg)][2]
+[![eclipse_golang](https://blogstatic.haohtml.com//uploads/2023/09/eclipse_golang.jpg)][2]
 
 都可以了。然后就可以开发 自己的应用了。
 
-继续研究中。
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2012/12/goclipse.jpg
- [2]: http://blog.haohtml.com/wp-content/uploads/2012/12/eclipse_golang.jpg
+继续研究中。 

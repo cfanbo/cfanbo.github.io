@@ -21,46 +21,45 @@ tags:
 
 #### 1.说明
 
-#### realserver:192.168.1.11
+realserver:192.168.1.11
 
-#### realserver:192.168.1.12
+realserver:192.168.1.12
 
-#### lvs控制机 MASTER:192.168.1.100
+lvs控制机 MASTER:192.168.1.100
 
-#### BACKUP:192.168.1.101
+BACKUP:192.168.1.101
 
-#### 虚拟VIP：192.168.1.200
+虚拟VIP：192.168.1.200
 
-#### 其中：realserver上只需要简单的安装apache即可
+其中：realserver上只需要简单的安装apache即可
 
-#### lvs控制机需要安装：ipvsadm，keepalived
+lvs控制机需要安装：ipvsadm，keepalived
 
 #### 2.lvs控制机安装，主备机分别安装ipvsadm
 
-#### 实现LVS/DR最重要的两个东西是ipvs内核模块和ipvsadm工具包，现在的系统已经包含ip_vs模块
+实现LVS/DR最重要的两个东西是ipvs内核模块和ipvsadm工具包，现在的系统已经包含ip_vs模块
 
 #### 1）检查内核模块，看一下ip_vs 是否被加载
 
-> #### # lsmod |grep ip_vs
+> # lsmod |grep ip_vs
 
->
-> #### ip_vs    35009    0
+>ip_vs    35009    0
 
-#### 如果没有显示，则说明没有加载，执行命令 modprobe ip_vs 就可以把ip_vs模块加载到内核
+如果没有显示，则说明没有加载，执行命令 modprobe ip_vs 就可以把ip_vs模块加载到内核
 
-> #### #modprobe ip_vs
+> #modprobe ip_vs
 
 #### 2）安装ipvsadm
 
-#### 先把目录/usr/src/kernels/2.6.18-164.el5-x86_64链接为/usr/src/linux，命令如下
+先把目录/usr/src/kernels/2.6.18-164.el5-x86_64链接为/usr/src/linux，命令如下
 
-> #### ln –s /usr/src/kernels/2.6.18-164.el5-x86_64 /usr/src/linux
+> ln –s /usr/src/kernels/2.6.18-164.el5-x86_64 /usr/src/linux
 
-#### 解压ipvsadm-1.24.tar.gz,执行”make;make install”完成安装。
+解压ipvsadm-1.24.tar.gz,执行”make;make install”完成安装。
 
 #### 3）lvs/dr脚本，在主备机上备份部署
 
-#### vi lvsdr
+vi lvsdr
 
 > #### #!/bin/bash
 

@@ -93,7 +93,7 @@ freebsd下安装：
 
 下载 memcache: [http://pecl.php.net/get/memcache-2.2.5.tgz](http://pecl.php.net/get/memcache-2.2.5.tgz)
 
-> `<span style="font-family: NSimsun;">tar -zvxf memcache-2.2.5.tgz</span>`
+> tar -zvxf memcache-2.2.5.tgz
 >
 > cd memcache-2.2.5
 >
@@ -179,11 +179,9 @@ freebsd下安装：
 以下是使用：
 
 
-> `<span style="font-family: NSimsun;">include "memcache-client.php";</span>`
+> include "memcache-client.php
 >
-> `<span style="font-family: NSimsun;">文件下载地址: </span><a href="http://www.lifecrunch.biz/wp-content/uploads/2010/06/memcached-client-php-0.1.2.tar.gz"><span style="color: #2970a6; font-family: NSimsun;">memcached-client-php-0.1.2.tar</span></a><br />
-> <span style="font-family: NSimsun;"><br />
-> </span>`
+> 文件下载地址: http://www.lifecrunch.biz/wp-content/uploads/2010/06/memcached-client-php-0.1.2.tar.gz
 
 个人推荐使用第一种 memcached 扩展，毕竟性能不错，新手的话推荐使用 第三种 客户端类库，方便实用。第二种方式没有尝试成功，不知道是什么原因，编译安装出错，以后有空再解决吧。
 

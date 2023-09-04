@@ -24,7 +24,7 @@ tags:
 > #cd /usr/ports/ftp/proftpd-mysql
 > #make install clean
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/03/proftpd-mysql-quota.png)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/proftpd-mysql-quota.png)][1]
 
 安装的时候会要求选择proftpd要安装的模块，选择好mysql和quota，其他的根据情况选择.这里系统默认安装的是proftpd-1.3.3d.tar.bz2.
 
@@ -564,5 +564,5 @@ files_xfer_avail： – 允许传输的文件数（包括上传/下载）
 
 [http://www.chinaunix.net/jh/15/3028.html](http://www.chinaunix.net/jh/15/3028.html)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2011/03/proftpd-mysql-quota.png
- [2]: #quota
+[1]: http://blog.haohtml.com/wp-content/uploads/2011/03/proftpd-mysql-quota.png
+[2]: #quota

@@ -26,7 +26,7 @@ tags:
 
 再看一个查询计划的例子：
 
-[![](https://blog.haohtml.com/wp-content/uploads/2010/06/mysql_explain.png)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/mysql_explain.png)][1]
 
 **执行顺序依次为 4 -> 3 -> 2 > 1 > NULL**
 
@@ -54,4 +54,4 @@ Using temporary（表示MySQL需要使用临时表来存储结果集，常见于
 
 [https://blog.csdn.net/xifeijian/article/details/19773795](https://blog.csdn.net/xifeijian/article/details/19773795)
 
- [1]: https://blog.haohtml.com/wp-content/uploads/2010/06/mysql_explain.png
+[1]: https://blog.haohtml.com/wp-content/uploads/2010/06/mysql_explain.png

@@ -35,7 +35,7 @@ datetime: 为8个字节,同样是低位在前,高位在后, 将其转化为long�
 
 知道了数据储存的格式, 就可以分析数据文件来读取记录了.
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/02/601793500207797865.jpg)](http://blog.haohtml.com/wp-content/uploads/2011/02/601793500207797865.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/601793500207797865.jpg)](http://blog.haohtml.com/wp-content/uploads/2011/02/601793500207797865.jpg)
 
 需要注意一点就是如果你在删除数据库插入了新的数据, 那么就有可能将原来的数据覆盖掉. 所以应该在删除出错后立即恢复才能恢复出大部分数据.
 

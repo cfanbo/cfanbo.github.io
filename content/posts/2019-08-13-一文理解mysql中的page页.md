@@ -10,7 +10,7 @@ tags:
  - mysql
 
 ---
-在介绍InnoDB中的页的时候，很有必要先让大家了解一下InnoDB中的存储结构![](https://blog.haohtml.com/wp-content/uploads/2019/08/innodb_engine_struct.png)
+在介绍InnoDB中的页的时候，很有必要先让大家了解一下InnoDB中的存储结构![](https://blogstatic.haohtml.com//uploads/2023/09/innodb_engine_struct.png)
 
 从InnoDB存储引擎的逻辑结构看，所有数据都被逻辑地存放在一个空间内，称为表空间(tablespace)，而表空间由段（sengment）、区（extent）、页（page）组成。 在一些文档中extend又称块（block）。
 
@@ -64,21 +64,21 @@ InnoDB存储引擎是按行进行存放的，每个页存放的行记录也是�
 
 了解了整体架构，下面我们开始详细对Page来做一些介绍。
 
-先贴一张Page完整的结构图![](https://blog.haohtml.com/wp-content/uploads/2019/08/1d49c975639e53fe92466f0b1ebe2b2a99672e8b-1024x828.jpeg)Innodb引擎中的Page完整结构图（注意箭头）
+先贴一张Page完整的结构图![](https://blogstatic.haohtml.com//uploads/2023/09/1d49c975639e53fe92466f0b1ebe2b2a99672e8b-1024x828.jpeg)Innodb引擎中的Page完整结构图（注意箭头)
 
-上较的概念实在太多了，为了方便理解，可以按下面的分解一下Page的结构![](https://blog.haohtml.com/wp-content/uploads/2019/08/page_struct.jpg)Page结构示意图1
+上较的概念实在太多了，为了方便理解，可以按下面的分解一下Page的结构![](https://blogstatic.haohtml.com//uploads/2023/09/page_struct.jpg)Page结构示意图1
 
-每部分的意义![](https://blog.haohtml.com/wp-content/uploads/2019/08/page-struct2-1024x423.png)![](https://blog.haohtml.com/wp-content/uploads/2019/08/innodb-page-struct.jpg)Page结构示意图2
+每部分的意义![](http://blogx.haohtml.com/wp-content/uploads/2019/08/page-struct2-1024x423.png)![](https://blogstatic.haohtml.com//uploads/2023/09/innodb-page-struct.jpg)Page结构示意图2
 
 页结构整体上可以分为三大部分，分别为通用部分(文件头、文件尾)、存储记录空间、索引部分。
 
 **第一部分通用部分**，主要指文件头和文件尾，将页的内容进行封装，通过文件头和文件尾校验的CheckSum方式来确保页的传输是完整的。
 
-在文件头中有两个字段，分别是 FIL\_PAGE\_PREV 和 FIL\_PAGE\_NEXT，它们的作用相当于指针，分别指向上一个数据页和下一个数据页。连接起来的页相当于一个双向的链表，如下图所示：![](https://blog.haohtml.com/wp-content/uploads/2019/08/innodb-page-struct3-1024x237.jpg)
+在文件头中有两个字段，分别是 FIL\_PAGE\_PREV 和 FIL\_PAGE\_NEXT，它们的作用相当于指针，分别指向上一个数据页和下一个数据页。连接起来的页相当于一个双向的链表，如下图所示：![](https://blogstatic.haohtml.com//uploads/2023/09/innodb-page-struct3-1024x237.jpg)
 
 **需要说明的是采用链表的结构让数据页之间不需要是物理上的连续，而是逻辑上的连续**。
 
-**第二个部分是记录部分**，页的主要作用是存储记录，所以“最小和最大记录”和“用户记录”部分占了页结构的主要空间。另外空闲空间是个灵活的部分，当有新的记录插入时，会从空闲空间中进行分配用于存储新记录，如下图所示：![](https://blog.haohtml.com/wp-content/uploads/2019/08/innodb-page-struct2-1024x415.jpg)Page结构示意图3
+**第二个部分是记录部分**，页的主要作用是存储记录，所以“最小和最大记录”和“用户记录”部分占了页结构的主要空间。另外空闲空间是个灵活的部分，当有新的记录插入时，会从空闲空间中进行分配用于存储新记录，如下图所示：![](https://blogstatic.haohtml.com//uploads/2023/09/innodb-page-struct2-1024x415.jpg)Page结构示意图3
 
 **一个页内必须存储2行记录，否则就不是B+tree，而是链表了。**
 
@@ -90,7 +90,7 @@ InnoDB存储引擎是按行进行存放的，每个页存放的行记录也是�
 其余的组记录数量在 4-8 条之间。
 这样做的好处是，除了第 1 组（最小记录所在组）以外，其余组的记录数会尽量平分。
 在每个组中最后一条记录的头信息中会存储该组一共有多少条记录，作为 **n_owned** 字段。
-页目录用来存储每组最后一条记录的地址偏移量，这些地址偏移量会按照先后顺序存储起来，每组的地址偏移量也被称之为槽（slot），每个槽相当于指针指向了不同组的最后一个记录。如下图所示：![](https://blog.haohtml.com/wp-content/uploads/2019/08/innodb-page-dir-1024x959.jpg)
+页目录用来存储每组最后一条记录的地址偏移量，这些地址偏移量会按照先后顺序存储起来，每组的地址偏移量也被称之为槽（slot），每个槽相当于指针指向了不同组的最后一个记录。如下图所示：![](https://blogstatic.haohtml.com//uploads/2023/09/innodb-page-dir-1024x959.jpg)
 
 页目录存储的是槽，槽相当于分组记录的索引。我们通过槽查找记录，实际上就是在做二分查找。这里我以上面的图示进行举例，5 个槽的编号分别为 0，1，2，3，4，我想查找主键为 9 的用户记录，我们初始化查找的槽的下限编号，设置为 low=0，然后设置查找的槽的上限编号 high=4，然后采用二分查找法进行查找。
 

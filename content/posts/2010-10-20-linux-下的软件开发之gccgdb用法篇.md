@@ -38,59 +38,27 @@ GCC提供了30多条警告信息和三个警告级别，使用它们有助于增
 
 清单1：hello.c
 
->
-
-> #include
->
-
->
->
+>#include
 
 > int main(void)
 >
 
->
->
-
-> {
+>{
 >
 
->
->
-
-> printf (“Hello world, Linux programming!n”);
+>printf (“Hello world, Linux programming!n”);
 >
 
->
->
-
-> return 0;
->
-
->
+>return 0;
 >
 
 > }
->
 
 然后执行下面的命令编译和运行这段程序：
 
->
-
-> # gcc hello.c -o hello
->
-
->
->
-
-> # ./hello
->
-
->
->
-
-> Hello world, Linux programming!
->
+>gcc hello.c -o hello
+>./hello
+>Hello world, Linux programming!
 
 从程序员的角度看，只需简单地执行一条GCC命令就可以了，但从编译器的角度来看，却需要完成一系列非常繁杂的工作。首先，GCC需要调用预处理程序 cpp，由它负责展开在源文件中定义的宏，并向其中插入“#include”语句所包含的内容；接着，GCC会调用ccl和as将处理后的源代码编译成目标代码；最后，GCC会调用链接程序ld，把生成的目标代码链 接成一个可执行程序。
 
@@ -160,33 +128,17 @@ GCC包含完整的出错检查和警告提示功能，它们可以帮助Linux程
 >
 
 > #include
->
-
->
->
 
 > void main(void)
->
-
->
 >
 
 > {
 >
 
->
->
-
 > long long int var = 1;
 >
 
->
->
-
 > printf(“It is not standard C code!n”);
->
-
->
 >
 
 > }
@@ -205,13 +157,7 @@ GCC包含完整的出错检查和警告提示功能，它们可以帮助Linux程
 > illcode.c: In function `main’:
 >
 
->
->
-
 > illcode.c:9: ISO C89 does not support `long long’
->
-
->
 >
 
 > illcode.c:8: return type of `main’ is not `int’
@@ -259,13 +205,7 @@ GCC给出的警告信息虽然从严格意义上说不能算作是错误，但�
 > cc1: warnings being treated as errors
 >
 
->
->
-
-> illcode.c:8: warning: return type of `main’ is not `int’
->
-
->
+>illcode.c:8: warning: return type of `main’ is not `int’
 >
 
 > illcode.c: In function `main’:
@@ -327,61 +267,25 @@ Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾
 > int main(void)
 >
 
->
->
-
 > {
->
-
->
 >
 
 > double counter;
 >
 
->
->
-
 > double result
->
-
->
 >
 
 > double temp;
 >
 
->
->
-
-> for (counter = 0;
->
-
->
->
-
-> counter < 2000.0 * 2000.0 * 2000.0 / 20.0 + 2020;
->
-
->
->
-
-> counter += (5 – 1) / 4) {
->
-
->
+> for (counter = 0;counter < 2000.0 * 2000.0 * 2000.0 / 20.0 + 2020;counter += (5 – 1) / 4) {
 >
 
 > temp = counter / 1979;
 >
 
->
->
-
 > result = counter;
->
-
->
 >
 
 > }
@@ -393,13 +297,7 @@ Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾
 > printf(“Result is %lfn”, result);
 >
 
->
->
-
 > return 0;
->
-
->
 >
 
 > }
@@ -425,19 +323,10 @@ Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾
 > Result is 400002019.000000
 >
 
->
->
-
 > real 0m14.942s
 >
 
->
->
-
-> user 0m14.940s
->
-
->
+>user 0m14.940s
 >
 
 > sys 0m0.000s
@@ -463,19 +352,10 @@ Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾
 > Result is 400002019.000000
 >
 
->
->
-
 > real 0m3.256s
 >
 
->
->
-
 > user 0m3.240s
->
-
->
 >
 
 > sys 0m0.000s
@@ -505,34 +385,15 @@ GCC产生的调试符号具有普遍的适应性，可以被许多调试器加�
 
 >
 
-> # gcc optimize.c -o optimize
->
+> gcc optimize.c -o optimize
 
->
->
-
-> # ls optimize -l
->
-
->
->
+> ls optimize -l
 
 > -rwxrwxr-x 1 xiaowp xiaowp 11649 Nov 20 08:53 optimize (未加调试选项)
->
 
->
->
+> gcc -g optimize.c -o optimize
 
-> # gcc -g optimize.c -o optimize
->
-
->
->
-
-> # ls optimize -l
->
-
->
+>ls optimize -l
 >
 
 > -rwxrwxr-x 1 xiaowp xiaowp 15889 Nov 20 08:54 optimize (加入调试选项)
@@ -544,70 +405,39 @@ GCC产生的调试符号具有普遍的适应性，可以被许多调试器加�
 
 清单4：crash.c
 
->
-
-> #include
->
-
->
->
+>#include
 
 > int main(void)
->
-
->
 >
 
 > {
 >
 
->
->
-
 > int input =0;
 >
 
->
->
-
-> printf(“Input an integer:”);
+>printf(“Input an integer:”);
 >
 
->
->
-
-> scanf(“%d”, input);
+>scanf(“%d”, input);
 >
 
->
->
-
-> printf(“The integer you input is %dn”, input);
+>printf(“The integer you input is %dn”, input);
 >
 
->
->
-
-> return 0;
+>return 0;
 >
 
->
->
-
-> }
+>}
 >
 
 编译并运行上述代码，会产生一个严重的段错误（Segmentation fault）如下：
 
 >
 
-> # gcc -g crash.c -o crash
->
+> gcc -g crash.c -o crash
 
->
->
-
-> # ./crash
+>./crash
 >
 
 >
@@ -626,8 +456,7 @@ GCC产生的调试符号具有普遍的适应性，可以被许多调试器加�
 
 >
 
-> # gdb crash
->
+> gdb crash
 
 >
 >
@@ -755,17 +584,9 @@ GDB的功能远远不止如此，它还可以单步跟踪程序、检查内存�
 
 >
 
-> # gcc -save-temps foo.c -o foo
->
+> gcc -save-temps foo.c -o foo
 
->
->
-
-> # ls foo*
->
-
->
->
+> ls foo*
 
 > foo foo.c foo.i foo.s
 >

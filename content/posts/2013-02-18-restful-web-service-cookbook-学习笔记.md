@@ -20,11 +20,11 @@ POST　用于创建多个新资源或者对资源进行多种其它变更
 
 在所有上述方法中，GET被滥用的情况最少，因为GET既安全又幂等。
 
-[![crud](http://blog.haohtml.com/wp-content/uploads/2013/02/crud.png)][1]
+[![crud](https://blogstatic.haohtml.com//uploads/2023/09/crud.png)][1]
 
 参考：
 
-[![rest-mi](http://blog.haohtml.com/wp-content/uploads/2013/02/rest-mi.png)][2]
+[![rest-mi](https://blogstatic.haohtml.com//uploads/2023/09/rest-mi-20230904211219008.png)][2]
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2013/02/crud.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2013/02/rest-mi.png
+[1]: http://blog.haohtml.com/wp-content/uploads/2013/02/crud.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2013/02/rest-mi.png

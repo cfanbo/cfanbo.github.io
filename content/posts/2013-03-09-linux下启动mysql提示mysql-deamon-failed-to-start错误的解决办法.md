@@ -16,22 +16,11 @@ tags:
 
 网站突然连接不上数据库,于是朋友直接重启了一下服务器。进到cli模式下，执行 service myqsld start 发现还是提示”mysql deamon failed to start”错误信息.
 
->
-
-> # /etc/init.d/mysqld start
->
-
->
->
+>/etc/init.d/mysqld start
 
 > MySQL Daemon failed to start.
->
-
->
->
 
 > Starting mysqld:                                           [FAILED]
->
 
 查看mysqld的log文件
 
@@ -51,7 +40,7 @@ tags:
 mysqld started
 
 
-> ### [Warning] Can’t create test file xxx.lower-test   [Warning] Can’t create test file xxx.lower-test   /usr/libexec/mysqld: Can’t change dir to ‘/xxx’ (Errcode: 13)
+> [Warning] Can’t create test file xxx.lower-test   [Warning] Can’t create test file xxx.lower-test   /usr/libexec/mysqld: Can’t change dir to ‘/xxx’ (Errcode: 13)
 >
 > [ERROR] Aborting
 

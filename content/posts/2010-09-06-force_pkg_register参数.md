@@ -46,8 +46,6 @@ make reinstall
 
 上面两种方法不起作用的时候可以用下面的命令强制安装注册：
 
->
-
 ```
 make install FORCE_PKG_REGISTER="yes"
 ```

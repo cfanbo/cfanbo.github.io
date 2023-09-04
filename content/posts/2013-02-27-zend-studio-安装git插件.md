@@ -14,13 +14,13 @@ tags:
 
 zend studio菜单：Help -> Install new software…
 
-[![zendstudio_install_git_plugins](http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins.png)][1]
+[![zendstudio_install_git_plugins](https://blogstatic.haohtml.com//uploads/2023/09/zendstudio_install_git_plugins.png)][1]
 
-[![zendstudio_install_git_plugins_detail](http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins_detail.png)][2]
+[![zendstudio_install_git_plugins_detail](https://blogstatic.haohtml.com//uploads/2023/09/zendstudio_install_git_plugins_detail.png)][2]
 
 下一步会提示一些是否授受协议之类的。直接选择 我同意(i agree)就可以了。
 
 [下面我们来讲一下如何在zend stuido下使用git插件](http://blog.haohtml.com/archives/13689)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins_detail.png
+[1]: http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2013/02/zendstudio_install_git_plugins_detail.png

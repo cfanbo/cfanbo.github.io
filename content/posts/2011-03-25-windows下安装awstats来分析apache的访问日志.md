@@ -21,13 +21,13 @@ tags:
 
 打开D:/site/awstats-7.0/tools文件夹,双击执行awstats_configure.pl,根据提示输入自己apache的安装环境和httpd.conf文件所在的位置,以下为我本机的环境,如图所示:
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_1.png)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/awstats_install_1.png)][1]
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_2.png)][2]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/awstats_install_2.png)][2]
 
 回车后,提示
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_3.png)][3]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/awstats_install_3.png)][3]
 
 这里直接输入”n”,我们手动来配置就可以了,接着是两次回车就可以了.
 
@@ -79,7 +79,7 @@ tags:
 
 重启apache,输入 [http://localhost/awstats/awstats.pl?config=www.haohtml.com](http://localhost/awstats/awstats.pl?config=www.haohtml.com),就可以看到网站日志查看界面了.
 
-[![](http://blog.haohtml.com/wp-content/uploads/2011/03/awstats.pl_www.haohtml.com_.gif)][4]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/awstats.pl_www.haohtml.com_.gif)][4]
 
 如果有添加新站点,只需要按上面的操作再次复制一个,修改一下相关配置信息就可以了.为了管理方面这里提供了另一个方面的管理方法,使用配置文件包含的功能，所以我们可以配置一个通用配置，比如：awstats.common.conf
 
@@ -141,8 +141,8 @@ awstats.pl -config=www.haohtml.com -update
 
 
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_1.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_2.png
- [3]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_3.png
- [4]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats.pl_www.haohtml.com_.gif
- [5]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_apache_htpasswd.gif
+[1]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_1.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_2.png
+[3]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_install_3.png
+[4]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats.pl_www.haohtml.com_.gif
+[5]: http://blog.haohtml.com/wp-content/uploads/2011/03/awstats_apache_htpasswd.gif

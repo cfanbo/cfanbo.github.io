@@ -57,7 +57,7 @@ apt-get install cacti rrdtool snmp
 
 附件里有个Cacti_SNMP_INFORMANT_STD_W32_Metrics.zip的包，里面包含的文件就是脚本文件，其中snmp_informant_.xml开头的文件是需要放到cacti服务端的snmp_queries目录下，如果你的debian 的话，目录地址是/usr/share/cacti/resource/snmp_queries/。cacti_data_query开头的文件全都通过cacti页面导入。
 
-[![](http://blogx.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/1434563418-0.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)
 
 2.在Devices中新建立个服务器，填写名称和ip地址，还有snmp信息，最下面的地方add如下东西：
 

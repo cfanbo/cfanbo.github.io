@@ -19,11 +19,10 @@ tags:
 
 组成LVS最重要的部分有三个：请求分发服务器、处理服务器、共享存储。
 
-
 典型的Web集群并不需要共享存储，只有请求分发服务器和处理服务器，如下图所示：
-[![](http://blog.haohtml.com/wp-content/uploads/2010/06/LVS_WEB-300x245.jpg)][2]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/LVS_WEB-300x245.jpg)][2]
 如果完成请求需要基于数据，那么共享存储就是LVS必须的组件了。LVS邮件服务器集群如下所示：
-[![](http://blog.haohtml.com/wp-content/uploads/2010/06/LVS_MAIL.jpg)][3]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/LVS_MAIL.jpg)][3]
 目前能应用于LVS的MySQL集群只能是NDB Cluster，因为MySQL众多的存储引擎中，只有NDB Cluster实现了共享存储的功能。
 在NDB Cluster中，SQL Node相当于处理服务器，Data Node相当于共享存储。LVS可以让应用程序的开发更加简单，开发人员并不需要知道执行SQL的数据库服务器到底是哪一个，但是可以获得自己想要的数 据。而NDB Cluster提供的数据拆分和扩容功能，保证了数据库的可扩展性。
 
@@ -32,6 +31,4 @@ tags:
 
 非常感谢章博士的分享，NDB Cluster终于让我觉得不那么鸡肋了。
 
- [1]: http://www.linuxvirtualserver.org/whatis.html
- [2]: http://blog.haohtml.com/wp-content/uploads/2010/06/LVS_WEB.jpg
- [3]: http://blog.haohtml.com/wp-content/uploads/2010/06/LVS_MAIL.jpg
+[1]: http://www.linuxvirtualserver.org/whatis.html

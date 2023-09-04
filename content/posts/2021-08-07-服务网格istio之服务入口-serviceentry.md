@@ -26,7 +26,7 @@ tags:
 
 svc-entry.yaml
 
-```
+```yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -50,7 +50,7 @@ spec:
 
 创建资源
 
-```
+```shell
 $ kubectl apply -f svc-entry.yaml
 serviceentry.networking.istio.io/svc-entry created
 
@@ -58,7 +58,7 @@ serviceentry.networking.istio.io/svc-entry created
 
 现在我们已经创建了一个 ServiceEntry, 默认在 default 命名空间。
 
-```
+```shell
 root@vm:/home/sxf/service-entry# kubectl get se
 NAMESPACE   NAME        HOSTS               LOCATION        RESOLUTION   AGE
 default     svc-entry   ["www.baidu.com"]   MESH_EXTERNAL   DNS          13s
@@ -73,7 +73,7 @@ default     svc-entry   ["www.baidu.com"]   MESH_EXTERNAL   DNS          13s
 
 svc-entry-client.yaml
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -98,7 +98,7 @@ spec:
 
 创建资源：
 
-```
+```shell
 root@vm:/home/sxf/service-entry# kubectl apply -f svc-entry-client.yaml
 deployment.apps/svc-entry-client created
 
@@ -106,7 +106,7 @@ deployment.apps/svc-entry-client created
 
 默认使用的 default 命名空间，且已默认启用了自动注入功能，否则需要手动注入，执行命令为
 
-```
+```shell
 $ istioctl kube-inject -f svc-entry-client.yaml | kubectl apply -f -
 ```
 
@@ -230,4 +230,4 @@ ServiceEntry 主要用来将一些从内部流向外部的流量进行拦截，�
  * [https://istio.io/latest/zh/docs/reference/config/networking/service-entry/#ServiceEntry-Endpoint](https://istio.io/latest/zh/docs/reference/config/networking/service-entry/#ServiceEntry-Endpoint)
  * [https://www.cnblogs.com/haoyunlaile/p/12937978.html](https://www.c)
 
- [1]: http://www.baidu.com/
+[1]: http://www.baidu.com/

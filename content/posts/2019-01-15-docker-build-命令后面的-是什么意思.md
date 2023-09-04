@@ -42,7 +42,7 @@ Docker 在运行时分为 Docker引擎（服务端守护进程） 以及 客户�
 
 这里就有了一个镜像构建上下文的概念，当构建的时候，由用户指定构建镜像的上下文路径，而 docker build 会将这个路径下所有的文件都打包上传给 Docker 引擎，引擎内将这些内容展开后，就能获取到所有指定上下文中的文件了(参考下方docker架构图)。
 
-比如说 dockerfile 中的 COPY ./package.json /project，其实拷贝的并不是本机目录下的 package.json 文件，而是 docker引擎中展开的构建上下文中的文件，所以如果拷贝的文件超出了构建上下文的范围，Docker引擎是找不到那些文件的。![](https://blog.haohtml.com/wp-content/uploads/2019/01/docker-architecture.jpg)
+比如说 dockerfile 中的 COPY ./package.json /project，其实拷贝的并不是本机目录下的 package.json 文件，而是 docker引擎中展开的构建上下文中的文件，所以如果拷贝的文件超出了构建上下文的范围，Docker引擎是找不到那些文件的。![](https://blogstatic.haohtml.com//uploads/2023/09/docker-architecture.jpg)
 Docker构架
 
 **所以 docker build . 最后的 . 号，其实是在指定镜像构建过程中的上下文环境的目录。**
