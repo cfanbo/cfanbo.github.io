@@ -69,7 +69,7 @@ brew install brew-cask
 [LaunchRocket](https://github.com/jimbojsb/launchrocket) 是一个管理 brew 安装的 service 的工具，安装之后可以看所有的 service 的运行状态，如下图所示：
 
 
-![](http://blog.devtang.com/images/LaunchRocketUI.png)
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/LaunchRocketUI.png)
 
 安装 `LaunchRocket` 就要用到我刚刚提的 `brew cask`，用如下命令即可：
 
@@ -83,7 +83,7 @@ brew cask install launchrocket
 之后 LauchRocket 设置页面找到（如下图所示），它的启动项同时也保存在 `/opt/homebrew-cask/Caskroom/launchrocket` 目录中。
 
 
-![](http://blog.devtang.com/images/launchRocket.jpg)
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/launchRocket.jpg)
 
 启动 LauchRocket 有点麻烦，需要切换设置页面去手工启动。我自己想到一个办法，方法是把 `/opt/homebrew-cask` 增加到 alfred 的 search 目录中，然后就可以用 alfred 来启动了，如下所示：
 
@@ -91,18 +91,15 @@ brew cask install launchrocket
 1. 设置 alfred
 
 
-![](http://blog.devtang.com/images/launch-cask-1.jpg)
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/launch-cask-1.jpg)
 
 1. 用 alfred 启动 LauchRocket
 
 
-![](http://blog.devtang.com/images/launch-cask-2.jpg)
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/launch-cask-2.jpg)
 
 大家玩得开心～
 
 
-Posted by 唐巧Feb 26th, 2014[mac](http://blog.devtang.com/blog/categories/mac/)
-
-原创文章，版权声明：自由转载-非商用-非衍生-保持署名 | [Creative Commons BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh)
 
 转自： [http://blog.devtang.com/blog/2014/02/26/the-introduction-of-homebrew-and-brewcask/](http://blog.devtang.com/blog/2014/02/26/the-introduction-of-homebrew-and-brewcask/)

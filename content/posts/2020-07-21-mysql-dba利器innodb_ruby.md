@@ -556,3 +556,7 @@ Record 238: (id=5) → (num=5, age=13)
 我们发现输出的内容与page 3 的有些不一样，这里输出的是完整的详情记录，但page 3是一个一条记录与页的对应关系，我们一般称其为页目录。
 
 ## 推荐阅读 
+* http://vlambda.com/wz_xeipHG6Q3r.html
+* https://www.cnblogs.com/cnzeno/p/6322842.html
+* https://blog.csdn.net/weixin_34368949/article/details/91381989
+* https://www.jianshu.com/p/c51873ea129a

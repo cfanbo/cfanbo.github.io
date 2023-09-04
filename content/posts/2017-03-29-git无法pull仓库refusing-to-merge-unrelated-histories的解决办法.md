@@ -20,4 +20,4 @@ git pull origin master --allow-unrelated-histories
 
 然后再执行git pull origin master 即可。
 
-参考：
+参考： http://stackoverflow.com/questions/37937984/git-refusing-to-merge-unrelated-histories

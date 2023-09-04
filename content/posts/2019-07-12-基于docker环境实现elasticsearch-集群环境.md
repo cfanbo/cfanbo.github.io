@@ -14,7 +14,7 @@ tags:
 
 以下基于最新版本 es7.2.0进行, 配置文件目录为 es, 所以docker 在创建网络的时候，网络名称会以 es_ 前缀开始，如本例中我们在docker-composer.yaml文件中指定了网络名称为esnet,但docker生成的实例名称为 es_esnet，至于网络相关的信息可以通过 `docker network --help` 查看。
 
-## 搭建es集群 
+## 搭建es集群 
 
 // docker-compose.yaml 集群配置文件
 
@@ -208,6 +208,6 @@ $ docker-compose -f 配置文件.yaml down -v
 
 以上命令会将容器及容器关联的数据卷 volume 信息进行一并删除。否则容易出现新启动的节点又单独变成了一个集群，这时会出现跨集群节点加入被拒绝的错误。我在搭建环境的时候，创建用的 docker-compose up 命令，但修改配置文件后，手动执行 “docker rm 容器ID” 将容器删除，再次执行了 docker-compose up命令时，会出现上面说的这个问题，在这个坑里呆了好久才算出来。如果一定要想用docker rm 命令删除容器的话，添加添加-f参数，将volume 一并删除，如 `docker rm -f es03`。
 
-### 三、参数 discovery.zen.minimum\_master\_nodes 
+### 三、参数 discovery.zen.minimum_master_nodes 
 
 这里用的是es7.2.0的版本，服务启动时提示参数项`discovery.zen.minimum_master_nodes` 在下一个版本中即将废除的，但在官方文档里没有找到说明信息，这一点待确认。

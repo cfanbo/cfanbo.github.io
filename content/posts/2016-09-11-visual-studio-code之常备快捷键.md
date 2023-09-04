@@ -123,35 +123,6 @@ File -> Preferences -> Keyboard Shortcuts
 
 修改`keybindings.json`，我的显示在这里`C:\Users\Administrator\AppData\Roaming\Code\User\keybindings.json`
 
-```
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-
-```
 
 ```
 // Place your key bindings in this file to overwrite the defaults
@@ -187,10 +158,7 @@ File -> Preferences -> Keyboard Shortcuts
 
 # 插件 {#插件}
 
-* * *
-
 新版本支持插件安装了
-
 插件市场 [https://marketplace.visualstudio.com/#VSCode](https://marketplace.visualstudio.com/#VSCode)
 
 ## 安装插件 {#安装插件}

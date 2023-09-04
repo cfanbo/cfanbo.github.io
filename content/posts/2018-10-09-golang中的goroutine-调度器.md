@@ -10,7 +10,7 @@ tags:
  - golang
 
 ---
-![](https://blog.haohtml.com/wp-content/uploads/2018/10/go-mpg-1.jpg)
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/go-mpg-1.jpg)
 
 golang实现的协程调度器，其实就是在维护一个G、P、M三者间关系的队列。
 
@@ -26,7 +26,7 @@ Go 1.1最大的特色之一就是这个新的调度器，由Dmitry Vyukov贡献�
 ——————————————————————————-
 但是在我们开始看新调度器之前，我们需要理解为什么需要调度器。为什么既然操作系统能为我们调度线程了，我们又创造了一个**用户空间调度器**？
 
-POSIX线程API是对现有Unix进程模型的一个非常大的逻辑扩展，而且线程获得了非常多的跟进程相同的控制。比如，线程有它自己的信号掩码，线程能够被赋予CPU affinity功能(就是指定线程只能在某个CPU上运行），线程能被添加到\[cgroups\]( [http://en.wikipedia.org/wiki/Cgroup](http://en.wikipedia.org/wiki/Cgroup))中，线程所用到的资源也可以被查询到。所有的这些控制增大了Go程序使用goroutine时根本不需要的特性（features）的开销，当你的程序有100,000个线程的时候，这些开销会急剧增长。
+POSIX线程API是对现有Unix进程模型的一个非常大的逻辑扩展，而且线程获得了非常多的跟进程相同的控制。比如，线程有它自己的信号掩码，线程能够被赋予CPU affinity功能(就是指定线程只能在某个CPU上运行），线程能被添加到[cgroups]( [http://en.wikipedia.org/wiki/Cgroup](http://en.wikipedia.org/wiki/Cgroup))中，线程所用到的资源也可以被查询到。所有的这些控制增大了Go程序使用goroutine时根本不需要的特性（features）的开销，当你的程序有100,000个线程的时候，这些开销会急剧增长。
 
 另外一个问题是，基于Go模型，操作系统不能给出特别好的决策。比如，当运行一次垃圾收集的时候，Go的垃圾收集器要求所有线程都被停止而且要求内存要处于一致状态（consistent state）。这个涉及到要等待全部运行时线程（running threads）到达一个点（point），我们事先知道在这个地方内存是一致的。
 
@@ -40,7 +40,7 @@ Go试图通过M：N的调度器去获取这两个世界的全部优势。它在�
 
 为了完成调度任务，Go调度器使用了三个实体：
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/10/go-mpg.jpg)](https://blog.haohtml.com/wp-content/uploads/2018/10/go-mpg.jpg)
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/go-mpg.jpg)
 
 三角形M 表示**OS线程**，\`它是由OS管理的可执行程序的一个线程\`，就是平常提到的操作系统中的线程，而且工作起来特别像你的标准POSIX线程。在运行时代码里，它被成为**M**，即机器（machine）。
 
@@ -48,7 +48,7 @@ Go试图通过M：N的调度器去获取这两个世界的全部优势。它在�
 
 矩形P 表示用于调用的上下文。你可以把它看作在一个单线程上运行代码的调度器的一个本地化版本。**它是让我们从N：1调度器转到M：N调度器的重要部分。**在运行时代码里，它被叫做**P**，即处理器（processor）。这部分后面会多说点。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/10/in-motion.jpg)](https://blog.haohtml.com/wp-content/uploads/2018/10/in-motion.jpg)
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/in-motion.jpg)
 
 我们可以从上面的图里看到两个**系统线程**（M），每个线程都拥有一个上下文（P），每个线程都正在运行一个goroutine（G）。为了运行goroutines，一个线程必须拥有一个上下文。
 
@@ -71,7 +71,7 @@ Go试图通过M：N的调度器去获取这两个世界的全部优势。它在�
 
 我们需要阻塞的一个例子是，当我们需要调用一个系统调用的时候。因为一个线程不能既执行代码同时又**阻塞到一个系统调用上**，我们需要移交给对应于这个线程的上下文，以让这个上下文进行调度。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/10/syscall.jpg)](https://blog.haohtml.com/wp-content/uploads/2018/10/syscall.jpg)
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/syscall.jpg)
 
 从上图我们能够看出，一个线程**放弃了它的上下文**以让另外的线程可以运行它。调度器确保有足够的线程来运行所有的上下文。上图中的M1 可能仅仅为了让它处理图中的系统调用而被创建出来，或者它可能来自一个线程池（thread cache）。这个处于系统调用中的线程将会保持在这个导致系统调用的goroutine上，因为从技术上来说，它仍然在执行，虽然阻塞在OS里了。
 
@@ -85,7 +85,7 @@ Go试图通过M：N的调度器去获取这两个世界的全部优势。它在�
 —————————–
 系统的稳定状态改变的另外一个方法是，当一个上下文运行完要被调度的所有goroutines的时候。如果各个上下文的runqueue里的工作的数目不均衡，改变就会发生了，否则会导致一个上下文在执行完它的runqueue后就会结束，尽管系统中仍然有许多工作要执行。所以为了保持运行Go代码，一个上下文能够从全局runqueue中获取goroutines，但是如果全局runqueue中也没有goroutines了，那么上下文就不得不从其它地方获取goroutines了。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/10/steal.jpg)](https://blog.haohtml.com/wp-content/uploads/2018/10/steal.jpg)
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/steal.jpg)
 
 这个“其它地方”指的是其它上下文！当一个上下文完成自己的任务后，它就会尝试“盗取”另一个上下文runqueue中工作量的 **一半**。这将确保每个上下文总是有活干，然后反过来确保所有线程尽可能处于最大负荷。
 
@@ -117,7 +117,7 @@ Golang能够拥有强大的并发能力需要归功于G-P-M调度模型，首先
 
 golang采用了m:n线程模型, 即m个gorountine（简称为G）映射到n个P,每个P对应一个内核态线程（简称为M）。
 
-[![底层实现](https://blog.haohtml.com/wp-content/uploads/2018/10/go-mpg-1.jpg)](https://blog.haohtml.com/wp-content/uploads/2018/10/go-mpg-1.jpg)
+[![底层实现](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/go-mpg-1-20230904190500719.jpg)
 
 底层实现
 
@@ -164,4 +164,4 @@ Go语言的并发机制还有很多值得探讨的，比如Go语言和Scala并�
  * [http://morsmachine.dk/go-scheduler](http://morsmachine.dk/go-scheduler)
  *
 
- [1]: https://mp.weixin.qq.com/s/rpCf5vm9xYFXjmR98vanfQ
+[1]: https://mp.weixin.qq.com/s/rpCf5vm9xYFXjmR98vanfQ

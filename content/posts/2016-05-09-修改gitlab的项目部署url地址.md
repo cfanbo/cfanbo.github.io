@@ -10,7 +10,7 @@ tags:
  - gitlab
 
 ---
-<刚在centos7上部署了最新版本的gitlab 8.7.3，发现在创建的git项目地址为http://localhost/username/www.git ，外网无法访问，这时我们只需要修改一个配置文件即可。我安装的时候全部使用的默认配置，路径为 /var/opt/gitlab/gitlab-rails/etc/，配置文件为 gitlab.yml ,文件顶部配置如下：
+<刚在centos7上部署了最新版本的gitlab 8.7.3，发现在创建的git项目地址为http://localhost/username/www.git ，外网无法访问，这时我们只需要修改一个配置文件即可。我安装的时候全部使用的默认配置，路径为 /var/opt/gitlab/gitlab-rails/etc/，配置文件为 gitlab.yml ,文件顶部配置如下：
 
 ```
 host: localhost

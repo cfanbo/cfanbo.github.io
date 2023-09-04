@@ -11,154 +11,52 @@ tags:
 
 ---
 首先我们对切片有一个大概的理解，先看一下slice的内部结构，共分三部分，一个是指向底层数组的时候，一个是长度len，另一个就是slice的容量cap了。如cap不足以放在新值的时候，会产生新的内存地址申请。
-[![](https://blog.haohtml.com/wp-content/uploads/2018/08/slice_struct.png)][1]
-[![](https://blog.haohtml.com/wp-content/uploads/2018/08/slice_struct_2.png)][2]
+
+![image-20230904182516517](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/image-20230904182516517.png)
+
+
+
+![image-20230904182527333](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/image-20230904182527333.png)
 
 先看代码
 
-1
+```
+package main
 
+import "fmt"
 
-2
+func main() {
 
+    // 创建一个切片，长度为9，容量为10
+    fmt.Println("----- 1.测试切片变量append的影响（未申请新的内存空间）-----")
+    a := make([]int, 9,10)
+    fmt.Printf( "%p len=%d cap=%d %vn" , a, len(a), cap(a), a)
 
-3
+    // 切片进行append操作，由于原来len(a)长度为9,而cap(a)容量为10，未达到扩展内存的要求，此时新创建的切片变量还指向原来的底层数组，只是数组的后面添加一个新值
+    // 此时一共两个切片变量，一个是a，另一个是s4。但共指向的一个内存地址
+    s4 := append(a,4)
+    fmt.Printf("%p len=%d cap=%d %vnn" , s4, len(s4), cap(s4), s4)
 
+    // 测试上面提到的切片变量a和s4共指向同一个内存地址, 发现切片数组的第一个值都为7，而唯一不同的是len的长度，而cap仍为10
+    fmt.Println("----- 2.测试切片变量共用一个底层数组（内存地址一样）-----")
 
-4
+    a[0] =  7
+    fmt.Printf("%p len=%d cap=%d %vn" , a, len(a), cap(a), a)
+    fmt.Printf("%p len=%d cap=%d %vnn" , s4, len(s4), cap(s4), s4)
 
+    // 切片进行append操作后，发现原来的cap(a)的长度已用完了(因为a和s4共用一个底层数组，你也可以理解为cap(s4))，此时系统需要重新申请原cap*2大小的内存空间,所以cap值为10*2=20，将把原来底层数组的值复制到新的内存地址
 
-5
+    // 此时有两个底层数组，一个是切片变量a和s4指向的数组，另一个就是新的切片变量s4
+    fmt.Println("----- 3.测试切片变量append的影响（申请了新的内存空间，内存地址不一样了）-----" )
+    s4 = append(s4,  5 )
+    fmt.Printf("%p len=%d cap=%d %vnn" , s4, len(s4), cap(s4), s4)
 
+    // 注意：原切片未发生任何变化，(打印a[0]=7是因为上面第3段落代码已把默认的0值改为了7）
+    fmt.Println("----- 4.测试原切片变量a未发生变化-----" )
+    fmt.Printf("%p len=%d cap=%d %vnn" , a, len(a), cap(a), a)
 
-6
-
-
-7
-
-
-8
-
-
-9
-
-
-10
-
-
-11
-
-
-12
-
-
-13
-
-
-14
-
-
-15
-
-
-16
-
-
-17
-
-
-18
-
-
-19
-
-
-20
-
-
-21
-
-
-22
-
-
-23
-
-
-24
-
-
-25
-
-
-26
-
-
-27
-
-
-28
-
-
-29
-
-
-30
-
-
-31
-
-
-`package` `main`
-
-`import` `"fmt"`
-
-`func main() {`
-
-`    ``// 创建一个切片，长度为9，容量为10`
-
-`    ``fmt.Println(` `"----- 1.测试切片变量append的影响（未申请新的内存空间）-----"` `)`
-
-`    ``a := make([]` `int` `, ` `9` `, ` `10` `)`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vn"` `, a, len(a), cap(a), a)`
-
-`    ``// 切片进行append操作，由于原来len(a)长度为9,而cap(a)容量为10，未达到扩展内存的要求，此时新创建的切片变量还指向原来的底层数组，只是数组的后面添加一个新值`
-
-`    ``// 此时一共两个切片变量，一个是a，另一个是s4。但共指向的一个内存地址`
-
-`    ``s4 := append(a, ` `4` `)`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vnn"` `, s4, len(s4), cap(s4), s4)`
-
-`    ``// 测试上面提到的切片变量a和s4共指向同一个内存地址, 发现切片数组的第一个值都为7，而唯一不同的是len的长度，而cap仍为10`
-
-`    ``fmt.Println(` `"----- 2.测试切片变量共用一个底层数组（内存地址一样）-----"` `)`
-
-`    ``a[` `` `] = ` `7`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vn"` `, a, len(a), cap(a), a)`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vnn"` `, s4, len(s4), cap(s4), s4)`
-
-`    ``// 切片进行append操作后，发现原来的cap(a)的长度已用完了(因为a和s4共用一个底层数组，你也可以理解为cap(s4))，此时系统需要重新申请原cap*2大小的内存空间,所以cap值为10*2=20，将把原来底层数组的值复制到新的内存地址`
-
-`    ``// 此时有两个底层数组，一个是切片变量a和s4指向的数组，另一个就是新的切片变量s4`
-
-`    ``fmt.Println(` `"----- 3.测试切片变量append的影响（申请了新的内存空间，内存地址不一样了）-----"` `)`
-
-`    ``s4 = append(s4, ` `5` `)`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vnn"` `, s4, len(s4), cap(s4), s4)`
-
-`    ``// 注意：原切片未发生任何变化，(打印a[0]=7是因为上面第3段落代码已把默认的0值改为了7）`
-
-`    ``fmt.Println(` `"----- 4.测试原切片变量a未发生变化-----"` `)`
-
-`    ``fmt.Printf(` `"%p len=%d cap=%d %vnn"` `, a, len(a), cap(a), a)`
-
-`}`
-
+}
+```
 运行结果：
 
 ```
@@ -175,8 +73,8 @@ tags:
 
 ----- 4.测试原切片变量a未发生变化-----
 0x10450030 len=9 cap=10 [7 0 0 0 0 0 0 0 0]
-
 ```
+
 
 在线运行代码： [https://play.golang.org/p/pfxZa8T0H1_g](https://play.golang.org/p/pfxZa8T0H1_g)
 
@@ -201,9 +99,9 @@ func main() {
 }
 ```
 
-执行结果里的cap会是多少呢？5 还是8？其实结果为 **`6`** 。主要是golang 为了节省内容，在上面扩容大小后，还需要进行二次检查，以达到减少内存浪费的效果。
+执行结果里的cap会是多少呢？5 还是8？其实结果为 **6** 。主要是golang 为了节省内容，在上面扩容大小后，还需要进行二次检查，以达到减少内存浪费的效果。
 
-主要相关函数是 [`roundupsize()`][3] 和 [`divRoundUp()`][4]，还有一些数组字典，根据计算结果选择不同大小的内存使用，可参考 [`src/runtime/sizeclasses.go`](https://github.com/golang/go/blob/go1.15.6/src/runtime/sizeclasses.go)
+主要相关函数是 [roundupsize()][3] 和 [divRoundUp()][4]，还有一些数组字典，根据计算结果选择不同大小的内存使用，可参考 [src/runtime/sizeclasses.go](https://github.com/golang/go/blob/go1.15.6/src/runtime/sizeclasses.go)
 
 **总结：**
 1.当对slice进行append的时候，如果原slice可以存放下新增加的值，则不会申请新的内存空间，否则会申请**cap*2**大小基准申请内存空间。而当cap>=1024的时候，会以**cap*1.25**倍的大小空间基准申请内存空间。
@@ -212,7 +110,5 @@ func main() {
 
 请参考golang开发源码包 src/runtime/slice.go 中的**growslice**函数，可以看到对于cap的增长处理逻辑。
 
- [1]: https://blog.haohtml.com/wp-content/uploads/2018/08/slice_struct.png
- [2]: https://blog.haohtml.com/wp-content/uploads/2018/08/slice_struct_2.png
- [3]: https://github.com/golang/go/blob/go1.15.6/src/runtime/msize.go#L12-L25
- [4]: https://github.com/golang/go/blob/go1.15.6/src/runtime/stubs.go#L313-L318
+[3]: https://github.com/golang/go/blob/go1.15.6/src/runtime/msize.go#L12-L25
+[4]: https://github.com/golang/go/blob/go1.15.6/src/runtime/stubs.go#L313-L318

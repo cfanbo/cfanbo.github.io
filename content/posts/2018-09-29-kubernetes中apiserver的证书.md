@@ -27,13 +27,13 @@ admin.conf controller-manager.conf kubelet.conf scheduler.conf
 
 这里可以看到这四个配置文件，分别 为不同的组件之间提供配置。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-master.jpg)][1]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/kubernetes-master.jpg)][1]
 
 这些配置文件中存储的是Master节点的ip地址、端口号、证书目录等信息。这样对应的客户端（scheduler，kubelet, controller-manager等）就可以直接加载并读取相应的配置文件来与kube-apiserver 建立安全连接，实现通讯。
 
 附kubernetes架构图
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-arvhitecture.jpg)][2]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/kubernetes-arvhitecture.jpg)][2]
 
- [1]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-master.jpg
- [2]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-arvhitecture.jpg
+[1]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-master.jpg
+[2]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-arvhitecture.jpg

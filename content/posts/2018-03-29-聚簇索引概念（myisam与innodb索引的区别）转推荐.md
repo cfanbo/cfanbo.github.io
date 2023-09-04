@@ -17,11 +17,11 @@ innodb的主键下存储该行的数据，此索引指向对主键的引用
 
 myisam的索引存储图如下，可以看出，无论是id还是cat_id，**下面都存储有存储物理地址的值。通过主键索引或者次索引来查询数据的时候，都是先查找到数据地址，然后再到物理位置上去寻找数据**。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/03/myisam-index-struct.png)][1]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/myisam-index-struct.png)][1]
 
 innodb的索引存储图如下，我们会发现，**主键索引下面直接存储有数据，而次索引下，存储的是主键的id(不同于MyISAM，存储的是内容数据的物理地址）**。通过主键查找数据的时候，就会很快查找到数据，但是通过次索引查找数据的时候，需要先查找到对应的主键id，然后才能查找到对应的数据。
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/03/innodb-index-struct.png)][2]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/innodb-index-struct.png)][2]
 
 **总结：**
 InnoDB的主索引文件上 直接存放该行数据,称为聚簇索引,次索引指向对**主键的引用**.
@@ -35,7 +35,4 @@ Myisam中, 主索引和次索引,都指向物理行(**磁盘位置**).
 
 参考： [https://blog.csdn.net/lisuyibmd/article/details/53004848](https://blog.csdn.net/lisuyibmd/article/details/53004848)
 
-转自： [https://blog.csdn.net/qq_25551295/article/details/48901317](https://blog.csdn.net/qq_25551295/article/details/48901317)
-
- [1]: https://blog.haohtml.com/wp-content/uploads/2018/03/myisam-index-struct.png
- [2]: https://blog.haohtml.com/wp-content/uploads/2018/03/innodb-index-struct.png
+转自： [https://blog.csdn.net/qq_25551295/article/details/48901317

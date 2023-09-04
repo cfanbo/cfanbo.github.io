@@ -28,7 +28,6 @@ services:
     volumes:
       - /Users/sxf/sites/msgserve:/usr/src/myapp
     command: "php /usr/src/myapp/src/wx_push_server.php start"
-
 ```
 
-对于 wx\_push\_server.php文件里redis的主机地址应该写成docker-compose配置文件里的容器服务名(redis)
+对于 wx_push_server.php文件里redis的主机地址应该写成docker-compose配置文件里的容器服务名(redis)

@@ -31,4 +31,4 @@ firewalld/ufw 自身并不具备防火墙的功能，而是和 iptables 一样�
 
 以上就是他们四者的关系。
 
-参考资料
+参考资料 https://www.cnblogs.com/kevingrace/p/6265113.html

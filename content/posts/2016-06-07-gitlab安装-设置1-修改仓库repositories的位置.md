@@ -21,7 +21,7 @@ mkdir -p /mnt/application/gitlab/git-data
 ```
 
 2：修改配置文件 sudo vi /etc/gitlab/gitlab.rb
-搜索：git\_data\_dir 修改成：git\_data\_dir “新目录”
+搜索：git_data_dir 修改成：git_data_dir “新目录”
 如：
 
 ```

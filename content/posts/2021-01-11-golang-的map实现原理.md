@@ -952,7 +952,7 @@ h.flags ^= hashWriting
 
 ## 参考 
 
- *
+ * https://blog.csdn.net/u010853261/article/details/99699350
  * [map 的底层实现原理是什么][3]
  * [https://studygolang.com/articles/22236](https://studygolang.com/articles/22236)
  * [https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/)

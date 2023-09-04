@@ -20,10 +20,10 @@ categories:
 NSAppTransportSecurityNSAllowsArbitraryLoads
 <true/>
 
-[![20150629175005991](http://blog.haohtml.com/wp-content/uploads/2015/09/20150629175005991.png)][1]
+[![20150629175005991](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/20150629175005991.png)][1]
 
 官方文档：
 
 [https://developer.apple.com/library/prerelease/ios/releasenotes/General/WhatsNewIniOS/Articles/iOS9.html#//apple_ref/doc/uid/TP40016198-DontLinkElementID_13](https://developer.apple.com/library/prerelease/ios/releasenotes/General/WhatsNewIniOS/Articles/iOS9.html#//apple_ref/doc/uid/TP40016198-DontLinkElementID_13)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2015/09/20150629175005991.png
+[1]: http://blog.haohtml.com/wp-content/uploads/2015/09/20150629175005991.png

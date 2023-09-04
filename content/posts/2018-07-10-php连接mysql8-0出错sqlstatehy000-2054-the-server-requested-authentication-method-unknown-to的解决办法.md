@@ -43,7 +43,7 @@ $ service mysqld restart
 
 ```
 
-**解决方法二：修改密码认证方式**
+**解决方法二：修改密码认证方式**
 
 ```
 ALTER USER 'YOURUSERNAME'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YOURPASSWORD';

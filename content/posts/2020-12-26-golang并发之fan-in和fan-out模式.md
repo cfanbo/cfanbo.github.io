@@ -301,4 +301,4 @@ duration: 12s</pre>
 ## 参考 
 
  * [https://go.dev/blog/pipelines](https://go.dev/blog/pipelines)
- *
+ * https://coolshell.cn/articles/21228.html#Fan_in/Out

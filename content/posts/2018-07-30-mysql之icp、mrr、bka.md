@@ -60,7 +60,7 @@ l  5.6 中只支持 MyISAM与InnoDB引擎
 
 l  5.6中不支持分区表的ICP;从MySQL 5.7.3开始支持分区表的ICP
 
-l  ICP的优化策略可用于range、ref、eq\_ref、ref\_or_null 类型的访问数据方法；
+l  ICP的优化策略可用于range、ref、eq_ref、ref_or_null 类型的访问数据方法；
 
 l  不支持主建索引的ICP（对于Innodb的聚集索引，完整的记录已经被读取到Innodb Buffer，此时使用ICP并不能降低IO操作）
 
@@ -134,13 +134,13 @@ select non_key_column fromtb where pk_column in (rest_sort)
 SELECT * FROM tWHERE key_part1 >= 1000 AND key_part1 < 2000AND key_part2 = 10000;
 ```
 
-表t上有二级索引(key\_part1, key\_part2)，索引根据key\_part1,key\_part2的顺序排序。
+表t上有二级索引(key_part1, key_part2)，索引根据key_part1,key_part2的顺序排序。
 
-**若不使用MRR**：索引扫描会将key\_part1在1000到2000的索引元组，而不管key\_part2的值，这样对key_part2不等于10000的索引元组也做了额外的扫描。此时扫描的范围是：
+**若不使用MRR**：索引扫描会将key_part1在1000到2000的索引元组，而不管key_part2的值，这样对key_part2不等于10000的索引元组也做了额外的扫描。此时扫描的范围是：
 
-[{1000, 10000}, {2000, MIN\_INT}]此间隔可能包含key\_part2不等于10000的部分
+[{1000, 10000}, {2000, MIN_INT}]此间隔可能包含key_part2不等于10000的部分
 
-**若使用MRR**：扫描则分为多个范围，对于每一个Key\_part1(1000,1001…,1999)单个值的扫描只需要扫描索引中key\_part2为10000的元组。如果索引中包含很多key\_part2不为10000的元组，最终MRR的效果越好。MRR扫描的范围是多个单点间隔[{1000, 10000}], …, [{1999, 10000}] 此间隔只包含key\_part2=10000的部分。
+**若使用MRR**：扫描则分为多个范围，对于每一个Key_part1(1000,1001…,1999)单个值的扫描只需要扫描索引中key_part2为10000的元组。如果索引中包含很多key_part2不为10000的元组，最终MRR的效果越好。MRR扫描的范围是多个单点间隔[{1000, 10000}], …, [{1999, 10000}] 此间隔只包含key_part2=10000的部分。
 
 ### MRR标识 
 
@@ -150,27 +150,27 @@ SELECT * FROM tWHERE key_part1 >= 1000 AND key_part1 < 2000AND key_part2 = 10000
 
 用optimizer_switch 的标记来控制是否使用MRR.设置mrr=on时，表示启用MRR优化。
 
-mrr\_cost\_based表示是否通过cost base的方式来启用MRR.
+mrr_cost_based表示是否通过cost base的方式来启用MRR.
 
-当mrr=on,mrr\_cost\_based=on,则表示cost base的方式还选择启用MRR优化,当发现优化后的代价过高时就会不使用该项优化
+当mrr=on,mrr_cost_based=on,则表示cost base的方式还选择启用MRR优化,当发现优化后的代价过高时就会不使用该项优化
 
-当mrr=on,mrr\_cost\_based=off,则表示总是开启MRR优化
+当mrr=on,mrr_cost_based=off,则表示总是开启MRR优化
 
 ```
 SET  @@optimizer_switch='mrr=on,mrr_cost_based=on';
 ```
 
-参数read\_rnd\_buffer_size 用来控制键值缓冲区的大小。二级索引扫描到文件的末尾或者缓冲区已满，则使用快速排序对缓冲区中的内容按照主键进行排序
+参数read_rnd_buffer_size 用来控制键值缓冲区的大小。二级索引扫描到文件的末尾或者缓冲区已满，则使用快速排序对缓冲区中的内容按照主键进行排序
 
 ### 适用场景 
 
-#辅助索引key\_part1，查询key\_part1在1000到2000范围内的数据
+#辅助索引key_part1，查询key_part1在1000到2000范围内的数据
 
-SELECT * FROM t WHERE key\_part1 >= 1000 AND key\_part1 < 2000
+SELECT * FROM t WHERE key_part1 >= 1000 AND key_part1 < 2000
 
-**不使用MRR**：先通过二级索引的key\_part1字段取出满足条件的key\_part1,pk\_col order by key\_part1.然后通过pk\_col去表中取出满足条件的数据，此时，因为取出的pk\_col是乱序的，而表又是pk_col存放数据的，当去表中取数据时，则会产生大量的随机IO
+**不使用MRR**：先通过二级索引的key_part1字段取出满足条件的key_part1,pk_col order by key_part1.然后通过pk_col去表中取出满足条件的数据，此时，因为取出的pk_col是乱序的，而表又是pk_col存放数据的，当去表中取数据时，则会产生大量的随机IO
 
-**使用MRR**：先通过二级索引的key\_part1字段取出满足条件的key\_part1,pk\_col order by key\_part1.放到缓存中（read\_rnd\_buffer\_size），当对应的缓冲满了以后，将这部分key值按照pk\_col排序，最后再按照排序后的reset去取表中数据，此时pk_col1是顺序的，将随机IO转化为顺序IO，多页数据记录可一次性读入或根据此次的主键范围分次读入，以减少IO操作，提高查询效率
+**使用MRR**：先通过二级索引的key_part1字段取出满足条件的key_part1,pk_col order by key_part1.放到缓存中（read_rnd_buffer_size），当对应的缓冲满了以后，将这部分key值按照pk_col排序，最后再按照排序后的reset去取表中数据，此时pk_col1是顺序的，将随机IO转化为顺序IO，多页数据记录可一次性读入或根据此次的主键范围分次读入，以减少IO操作，提高查询效率
 
 ### 使用限制 
 
@@ -210,7 +210,7 @@ Using join buffer (Batched Key Access)和Using join buffer (Block Nested Loop)
 
 ### 相关参数 
 
-BAK使用了MRR，要想使用BAK必须打开MRR功能，而MRR基于mrr\_cost\_based的成本估算并不能保证总是使用MRR，官方推荐设置mrr\_cost\_based=off来总是开启MRR功能。打开BAK功能(BAK默认OFF)：
+BAK使用了MRR，要想使用BAK必须打开MRR功能，而MRR基于mrr_cost_based的成本估算并不能保证总是使用MRR，官方推荐设置mrr_cost_based=off来总是开启MRR功能。打开BAK功能(BAK默认OFF)：
 
 ```
 SET optimizer_switch='mrr=on,mrr_cost_based=off,batched_key_access=on';
@@ -246,7 +246,7 @@ Multi-Range Read 多范围读(MRR) 它的作用是基于辅助/第二索引的
 
 **在没有MRR之前**(MySQL5.6之前)，先根据where条件中的辅助索引获取辅助索引与主键的集合，再通过主键来获取对应的值。辅助索引获取的主键来访问表中的数据会导致随机的IO(辅助索引的存储顺序并非与主键的顺序一致)，不同主键不在同一个page里面时必然导致多次IO 和随机读。
 
-**使用MRR优化**(MySQL5.6之后)，先根据where条件中的辅助索引获取辅助索引与主键的集合，再将结果集放在buffer里面(read\_rnd\_buffer\_size 大小直到buffer满了)，然后对结果集按照pk\_column排序，得到有序的结果集rest_sort。最后利用已经排序过的结果集，访问表中的数据，此时是顺序IO。即MySQL 将根据辅助索引获取的结果集根据主键进行排序，将无序化为有序，可以用主键顺序访问基表，将随机读转化为顺序读，多页数据记录可一次性读入或根据此次的主键范围分次读入，以减少IO操作，提高查询效率。
+**使用MRR优化**(MySQL5.6之后)，先根据where条件中的辅助索引获取辅助索引与主键的集合，再将结果集放在buffer里面(read_rnd_buffer_size 大小直到buffer满了)，然后对结果集按照pk_column排序，得到有序的结果集rest_sort。最后利用已经排序过的结果集，访问表中的数据，此时是顺序IO。即MySQL 将根据辅助索引获取的结果集根据主键进行排序，将无序化为有序，可以用主键顺序访问基表，将随机读转化为顺序读，多页数据记录可一次性读入或根据此次的主键范围分次读入，以减少IO操作，提高查询效率。
 
 **
 Nested Loop Join**算法：

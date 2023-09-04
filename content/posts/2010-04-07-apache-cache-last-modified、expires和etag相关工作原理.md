@@ -500,14 +500,12 @@ http://mikewest.org/2008/11/generating-etags-for-static-content-using-nginx
 
 11. [exit](http://www.php.net/exit);
 
-
-12. }
+}
 
 
 13. else [header](http://www.php.net/header)(’Etag:’.$etag);
 
-
-14. }
+}
 
 
 15. ?>

@@ -10,9 +10,9 @@ categories:
 ---
 线上用的MySQL版本为5.7.11，线下用的5.6版本，发现将程序上线后，有些地方报这个错误
 
-> [Err] 1055 – Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column ‘information\_schema.PROFILING.SEQ’ which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql\_mode=only\_full\_group_by
+> [Err] 1055 – Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column ‘information_schema.PROFILING.SEQ’ which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
 
-**ONLY\_FULL\_GROUP_BY：**
+**ONLY_FULL_GROUP_BY：**
 对于GROUP BY聚合操作，若select中的列没有在group by中出现，那么这句SQL是不合法的。
 
 解决办法下my.cnf中添加以下几行
@@ -23,7 +23,7 @@ sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY
 
 ```
 
-在sql\_mode 中去掉only\_full\_group\_by
+在sql_mode 中去掉only_full_group_by
 
 然后重启MySQL Server即可。
 

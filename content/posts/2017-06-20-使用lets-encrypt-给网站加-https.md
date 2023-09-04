@@ -251,7 +251,6 @@ listen 80;
 server_name www.abc.cn;
 rewrite ^(.*) https://$server_name$1 permanent;
 }
-
 ```
 
 Apache的配置(在虚拟主机或者.htaccess文件配置)：
@@ -260,7 +259,6 @@ Apache的配置(在虚拟主机或者.htaccess文件配置)：
 RewriteEngine on
 RewriteCond %{HTTP_HOST} !^443$ [NC]
 RewriteRule ^(.*) https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
-
 ```
 
 .用专业在线工具测试你的服务器 SSL 安全性

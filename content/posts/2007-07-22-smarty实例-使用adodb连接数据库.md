@@ -52,22 +52,36 @@ $conn = new ADONewConnection($dsn);
 4.GetAll($sql):返回所有的数据。这个函数可是大有用处，记得不记的我在以前的教程中写关于新闻列表的输入时要将需要在页面显示的
 
 新闻列表做成一个二维数组？就是这样的语句：
-=====================================================================================
+
+```php
 while($db->next_record())
 {
 $array[] = array(“NewsID” => $db->f(“iNewsID”),
 “NewsTitle” => csubstr($db->f(“vcNewsTitle”), 0, 20));
 }
-=====================================================================================
+```
+
+
+
 这一行是什么意思呢？就是将要显示的新闻例表生成
+````php
 $array[0] = array(“NewsID”=>1, “NewsTitle”=>”这里新闻的第一条”);
 $array[1] = array(“NewsID”=>2, “NewsTitle”=>”这里新闻的第二条”);
 …
+````
+
+
+
 这样的形式，但如果我们不需要对标题进行控制，在ADODB中我们就有福了，我们可以这样写：
-==================================================================================
+
+```php
 $strQuery = “select iNews, vcNewsTitle from tb\_news\_ch”;
 $array = &$conn->GetAll($strQuery);//注意这条语句
 $smarty->assign(“News_CH”, $array);
+```
+
+
+
 unset($array);
 ==================================================================================
 当然，这里的$conn应该进行初始化过了，不知大家看明白了没有？原来我要手工创建的二维数据在这里直接使用GetAll就行了！！！这也是为什么有人会说ADODB+Smarty是无敌组合的原因之一了…
@@ -81,35 +95,39 @@ $rs = $conn->SelectLimit(“select iNewsID, vcNewsTitle from tb\_news\_CH”, 5,
 2. RecordCount():所包含的记录数.这个记录确定数据集的记录总数.
 3. GetMenu($name, [$default\_str=”], [$blank1stItem=true], [$multiple\_select=false], [$size=0], [$moreAttr=”])非常好的一个函数,使用它可以返回一个name=$name的下拉菜单(或多选框)!!!当然,它是一个HTML的字符串,这是一个令人激动的好东西,$name指的是option的name属性,$default\_str是默认选中的字串,$blank1stItem指出第一项是否为空,$multiple\_select指出是否为多选框,而我们得到这个字串后就可以使用$smarty->(“TemplateVar”, “GetMenuStr”)来在模板的”TemplateVar” 处输入一个下拉列表(或是多先框)
 4. MoveNext():来看一段代码:
-=========================================================
-$rs = &$conn->Exceute($sql);
-if($rs)
-{
-while($rs->EOF)
-{
-$array[] = array(“NewsID” => $rs->fields[“iNewsID”],
-“NewsTitle” => csubstr($rs->fields[“vcNewsTitle”]), 0, 20);
 
-$rs->MoveNext();
-}
-}
-=========================================================
+  ```php
+  $rs = &$conn->Exceute($sql);
+  if($rs){
+     while($rs->EOF){
+     	$array[] = array(“NewsID” => $rs->fields[“iNewsID”],
+     	“NewsTitle” => csubstr($rs->fields[“vcNewsTitle”]), 0, 20);
+  
+    	$rs->MoveNext();
+    }
+  }
+  ```
+
+  
+
 明白了吗?很像MS ADODB中的那一套嘛!
 5. MoveFirst(),MoveLast(), Move($to):一样的,看函数名大家就可以知道它是什么意思了.
 6. FetchRow():返回一行,看代码:
-=========================================================
-$rs = &$conn->Exceute($sql);
-if($rs)
-{
-while($row = $rs-&g
-t;FetchRow())
-{
-$array[] = array(“NewsID” => $row[“iNewsID”],
-“NewsTitle” => csubstr($row[“vcNewsTitle”]), 0, 20);
-}
-}
-=========================================================
-它实现了与4一样的功能,但看起来更符合PHP的习惯,而4的习惯看起来更像是MS ADODB的办法．
+
+  ```php
+  $rs = &$conn->Exceute($sql);
+  if($rs) {
+    while($row = $rs->FetchRow())
+    {
+      $array[] = array(“NewsID” => $row[“iNewsID”],
+      “NewsTitle” => csubstr($row[“vcNewsTitle”]), 0, 20);
+    }
+  }
+  ```
+
+  
+
+  它实现了与4一样的功能,但看起来更符合PHP的习惯,而4的习惯看起来更像是MS ADODB的办法．
 
 7.GetArray($num):返回数据集中的$num行数据,将其组合成二维数组.这个方法我们在例子index.php要用到.
 
@@ -187,7 +205,7 @@ unset($rs);
 //编译并显示位于./templates下的index.tpl模板
 $smarty->display(“index.tpl”);
 ?>
-=============================================================================
+
 同样,我在关键的地方加了数标,下面来说明一下它们的含义:
 
 1. 建立一个连接对象$conn,大家在这里要注意的是它的初始不是以$conn = new ADONewConnection($dbType)这样的形式出现的,也就是说,ADONewConnection不是一个class,你不能使用new 对它进行初始化.看看它的源码你就会明白,这只不过是一个函数.
@@ -209,8 +227,9 @@ $smarty->display(“index.tpl”);
 再来看看新闻页吧
 
 =============================================================
-news.php
-=============================================================
+`news.php`
+
+```
 Connect(“localhost”, “root”, “”, “News”); //连接数据库
 
 $NewsID = $_GET[“id”]; //获取新闻编号
@@ -228,14 +247,19 @@ break;
 }
 
 $strQuery = “Select vcNewsTitle AS NewsTitle, ltNewsContent AS NewsContent FROM ” . $dbName;
+
 1. $row = &$conn->GetRow($strQuery); //返回一个一维数组,下标为模板变量名
 
 $smarty->display($row);
 unset($row);
 
 $conn->Close();
+
 ?>
-=============================================================
+```
+
+
+
 说明一下关键的地方,其实在news.php中也只有一个地方值的说明一下了.
 
 1. $conn->GetRow($strQuery):这一句返回一个一维数组,返回的形式为:
@@ -250,7 +274,8 @@ $smarty->assign(“NewsContent”, “yyyyy…”);
 下面再来看看新闻列表:
 ================================================================
 newsList.php
-================================================================
+
+```php
 Connect(“localhost”, “root”, “”, “News”); //连接数据库
 
 $NewsID = $_GET[“id”]; //获取新闻编号
@@ -258,26 +283,31 @@ $NewsType = $_GET[“type”]; //要显示的新闻类型
 switch($NewsType)
 {
 case 1:
-$tbName = “tb\_news\_CH”;
+$tbName = “tb_news_CH”;
 break;
 case 2:
-$tbName = “tb\_news\_IN”;
+$tbName = “tb_news_IN”;
 break;
 case 3:
-$tbName = “tb\_news\_MU”;
+$tbName = “tb_news_MU”;
 break;
 }
 
 $strQuery = “Select iNewsID AS NewsID, vcNewsTitle AS NewsTitle FROM ” . $tbName;
-1. $rs = &$conn->GetAll($strQuery);
-2. $smarty->assign(“NewsType”, $NewsType); //这一句为新闻列表中的链接服务
-3. $smarty->assign(“NewsList”, $rs);
-unset($rs);
-$conn->close();
+
+$rs = &$conn->GetAll($strQuery);
+$smarty->assign(“NewsType”, $NewsType); //这一句为新闻列表中的链接服务
+$smarty->assign(“NewsList”, $rs);
+ unset($rs);
+ $conn->close();
 
 $smarty->display(“newsList.tpl”);
+
 ?>
-================================================================
+```
+
+
+
 分别来说明一下:
 
 1. GetAll($strQuery):这个函数可是个好东东,它的作用是将$strQuery查询到的所有数据组合成为一个能够被Smarty所识别的二维数组,记住:它返回的是一个二维数组而不是一个RecordSet,所在你可以程序中直接在3处使用.
@@ -288,4 +318,4 @@ $smarty->display(“newsList.tpl”);
 1. 初始化: 初始化的方式不是使用new,因为它不是一个对象
 2. 方 法: 基本上每个方法都是以大写字母开头大小写混合的名称,这一点好像与*NIX的习惯有些不同,也不同于PHP的整体风格,所以注意这里的大小写问题.
 
- [1]: http://smarty.php.net
+[1]: http://smarty.php.net

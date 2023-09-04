@@ -29,7 +29,7 @@ InnoDB是一个支持行锁的存储引擎，锁的类型有：共享锁（S）�
 
 # **参考资料**
 
- * （推荐）
+ * https://mp.weixin.qq.com/s/DhMy6fsdlFj3dGqRE_0JMg
  * [https://blog.csdn.net/zhanghongzheng3213/article/details/51721903](https://blog.csdn.net/zhanghongzheng3213/article/details/51721903)
  * [http://blog.sina.com.cn/s/blog_a1e9c7910102vnrj.html](http://blog.sina.com.cn/s/blog_a1e9c7910102vnrj.html)
  * [https://www.cnblogs.com/zhoujinyi/p/3435982.html](https://www.cnblogs.com/zhoujinyi/p/3435982.html)

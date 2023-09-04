@@ -244,9 +244,7 @@ go tool compile -S main.go
 
 从输出结果中可以看到调用的 convXXX 函数。
 
-# 类型断言 
 
-TODO
 
 # 参考资料 
 

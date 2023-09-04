@@ -33,4 +33,4 @@ Linux 内核文档： [https://www.kernel.org/doc/html/latest/index.html](https:
  <2> **copy参数次数不同**：无论是select/poll/epoll都是有对应的系统调用，其参数都会从userspace拷贝到kernelspace,如果监控的文件句柄数很大，select/poll在这方面的耗时会明显多于epoll,因为每次调用select/poll都要重新拷贝一次所有的监控句柄，而epoll则在sys\_epoll\_ctrl的时候添加一次存储在内核数据结构中，后续的sys\_epoll\_wait会通过内核数据找到监控的文件句柄对应的file和监控得到的event.
  <3> **轮询方式的差异**：select 会传入监控句柄的最大句柄，从而监控查询0 ~~ max\_fd之间的所有file的驱动状态来获取想要的文件句柄中想要的event，而poll则只会轮询用户传入的文件句柄集，相比select会少轮询很多file的状态，这点上poll明显优于select.而epoll则是完全异步的方式，哪个有更新会添加到ep->rdlist中,epoll\_wait来取走.当连接数不是很多且每个client都非常活跃的情况下,poll > select > epoll,而当连接数巨大且大多数client都是潜水状态的情况下，epoll > poll > select。
 
-版权声明：本文为博主原创文章，遵循 [CC 4.0 BY-SA](https://creativecommons.org/licenses/by-sa/4.0/) 版权协议，转载请附上原文出处链接和本声明。本文链接： [https://blog.csdn.net/weixin_38537730/article/details/104100468](https://blog.csdn.net/weixin_38537730/article/details/104100468)
+本文摘自： https://blog.csdn.net/weixin_38537730/article/details/104100468

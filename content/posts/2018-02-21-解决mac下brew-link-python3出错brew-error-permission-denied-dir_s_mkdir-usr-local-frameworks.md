@@ -18,23 +18,23 @@ $brew install python3
 
 提示错误
 
-> $ brew install python3 Warning: python3 3.6.3is already installed, it‘s just not linked. You can use \`brew link python3\` to link this version. $ brew link python3 Linking /usr/local/Cellar/python3/3.6.3… Error: Permission denied @ dir\_s\_mkdir
+> $ brew install python3 Warning: python3 3.6.3is already installed, it‘s just not linked. You can use `brew link python3` to link this version. $ brew link python3 Linking /usr/local/Cellar/python3/3.6.3… Error: Permission denied @ dir_s_mkdir
 
 发现`/usr/local/`下没有路径`/usr/local/Frameworks`
 需要新建该路径，并修改权限
 
 解决：
 
-```hljs ruby has-numbering
-<span class="hljs-variable">$ </span>sudo mkdir /usr/local/<span class="hljs-constant">Frameworks</span>
-<span class="hljs-variable">$ </span>sudo chown <span class="hljs-variable">$(</span>whoami)<span class="hljs-symbol">:admin</span> /usr/local/<span class="hljs-constant">Frameworks</span>
+```
+$ sudo mkdir /usr/local/Frameworks
+$ sudo chown $(whoami):admin /usr/local/Frameworks
 ```
 
 成功：
 
-```hljs r has-numbering
+```
 $ brew link python3
-Linking /usr/local/Cellar/python3/<span class="hljs-number">3.6</span><span class="hljs-number">.3</span><span class="hljs-keyword">...</span> <span class="hljs-number">1</span> symlinks created
+Linking /usr/local/Cellar/python3/3.6.3... 1 symlinks created
 ```
 
 参考：

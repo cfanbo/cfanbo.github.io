@@ -56,16 +56,14 @@ tags:
 #### JSON解码
 
 由于Golang自带的json包处理解码的过程较为复杂，所以这里使用一个第三方的包simplejson进行json数据的解码操作。
-
+```
  js, err := simplejson.NewJson(body)
  if err != nil {
  panic(err.Error())
  }
 
  fmt.Println(js)
-
-
-完！
+```
 
 有关simplejson的更多用法见： [http://1.guotie.sinaapp.com/?p=400](http://1.guotie.sinaapp.com/?p=400)
 

@@ -66,22 +66,18 @@ MESI 可参考 [https://mp.weixin.qq.com/s/vnm9yztpfYA4w-IM6XqyIA](https://mp.we
 
 ## 相关话题 
 
-[锁、内存屏障与缓存一致性](https://gocode.cc/project/9/article/128) [https://gocode.cc/project/9/article/128](https://gocode.cc/project/9/article/128)
+* [锁、内存屏障与缓存一致性](https://gocode.cc/project/9/article/128) 
 
-[memory barrier][3]
+* [memory barrier](https://github.com/cch123/golang-notes/blob/master/memory_barrier.md)
 
-[[译] 什么是缓存 false sharing 以及如何解决(Golang 示例) https://juejin.cn/post/6844903866270482445][4]
+* [[译] 什么是缓存 false sharing 以及如何解决(Golang 示例) ](https://juejin.cn/post/6844903866270482445#comment)
 
-[CPU缓存体系对Go程序的影响][5]
+* [CPU缓存体系对Go程序的影响](https://mp.weixin.qq.com/s/vnm9yztpfYA4w-IM6XqyIA)
 
 ## 参考 
 
-* [从 Memory Reordering 说起][1]
+* [从 Memory Reordering 说起](https://cch123.github.io/ooo)
 * [CPU指令重排/内存乱序](https://my.oschina.net/chuqq/blog/3020080)
-* [谈谈Go语言中的内存重排][2]
+* [谈谈Go语言中的内存重排](https://www.w3xue.com/exp/article/20196/40758.html)
 
- [1]: https://cch123.github.io/ooo
- [2]: https://www.w3xue.com/exp/article/20196/40758.html
- [3]: https://github.com/cch123/golang-notes/blob/master/memory_barrier.md
- [4]: https://juejin.cn/post/6844903866270482445#comment
- [5]: https://mp.weixin.qq.com/s/vnm9yztpfYA4w-IM6XqyIA
+ 

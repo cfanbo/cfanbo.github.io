@@ -22,7 +22,7 @@ MVCC (Multiversion Concurrency Control)，即多版本并发控制技术。InnoD
 
 理解这一块之前，我们必须先了解一下row的内部存储格式
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_1.jpg)][1]
+![image-20230904183143992](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/image-20230904183143992.png)
 
 字段说明：
 
@@ -32,13 +32,13 @@ MVCC (Multiversion Concurrency Control)，即多版本并发控制技术。InnoD
 
 **MySQL中的MVCC原理**
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_mvcc_3.24.44.png)][2]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/mysql_mvcc_3.24.44.png)][2]
 
 **首次 `insert`** 记录的`DB_ROLL_PTR`指针为**NULL**。修改新值后，记录的 `DB_ROLL_PTR` 回滚指针指向原始值在`Undo Log` 日志的位置，也就是说将原值在`Unde Log`的物理位置存储到原记录的 `DB_POLL_PTR` 字段。如果事务回滚的话，则从`Undo Log` 中把原始值读取出来再放到记录中去。如果直接commit的话，则直接保存即可。记录格式参考：
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_2.jpg)][3]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/mysql_trans_2.jpg)][3]
 
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_redo_log.png)][4]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/mysql_redo_log.png)][4]
 
 **InnoDB Undo Log的日志类型**
 MySQL数据库InnoDB存储引擎的undo log采用了**逻辑的日志**。
@@ -59,8 +59,7 @@ InnoDB undo log的格式可以概括为:<操作类型>++<数据>.  A. 从表中
 
 - 然后按照以下逻辑判断事务的可见性
 
-
-[![](https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_readview.jpg)][5]
+[![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/mysql_readview.jpg)][5]
 
 # MVCC解决了什么问题
 
@@ -81,8 +80,8 @@ SELECT * FROM INFORMATION_SCHEMA.INNODB_TRX
  * [MySQL数据库InnoDB存储引擎Log漫游(2)](https://mp.weixin.qq.com/s?timestamp=1537701178&src=3&ver=1&signature=WZFE75k0*co7M7wtc2aAbSqkeWqyo5KyqfCkU9KAG6b8KJrGt-vZZaXeLdlkTLKbb1wF1psN5sSlv-qCs0BYlYU9x-AMiLdK2KB5nm7tm1MFCuLFIz94Pjr8VmxQbkoQb6s3*hk-A-XyRG37cEnDnBngxPiZqu2PNeY0uqGtBUQ=)
  * [MySQL多版本并发控制分析](https://www.2cto.com/database/201503/381708.html)
 
- [1]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_1.jpg
- [2]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_mvcc_3.24.44.png
- [3]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_2.jpg
- [4]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_redo_log.png
- [5]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_readview.jpg
+[1]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_1.jpg
+[2]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_mvcc_3.24.44.png
+[3]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_trans_2.jpg
+[4]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_redo_log.png
+[5]: https://blog.haohtml.com/wp-content/uploads/2018/09/mysql_readview.jpg
