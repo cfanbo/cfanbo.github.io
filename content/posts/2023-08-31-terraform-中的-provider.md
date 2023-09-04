@@ -10,7 +10,7 @@ tags:
  - terraform
 
 ---
-本文主要对 [terraform][1] 中的 `Providers` 进行介绍，让刚刚接触 `terraform` 的用户对其有一个大概的了解，以下内容翻译自：
+本文主要对 [terraform][1] 中的 `Providers` 进行介绍，让刚刚接触 `terraform` 的用户对其有一个大概的了解，以下内容翻译自：https://developer.hashicorp.com/terraform/language/providers
 
 # 什么是 Providers 
 
@@ -73,16 +73,16 @@ providers 与 Terraform 本身分开发布并拥有自己的版本号。在生�
  * The [Plugin Development][12] documentation
  * The [Call APIs with Terraform Providers][13] tutorials
 
- [1]: https://www.terraform.io/
- [2]: https://developer.hashicorp.com/terraform/language/resources
- [3]: https://developer.hashicorp.com/terraform/language/data-sources
- [4]: https://registry.terraform.io/browse/providers
- [5]: https://developer.hashicorp.com/terraform/registry/providers/docs
- [6]: https://developer.hashicorp.com/terraform/language/providers/requirements
- [7]: https://developer.hashicorp.com/terraform/language/providers/configuration
- [8]: https://developer.hashicorp.com/terraform/language/files/dependency-lock
- [9]: https://developer.hashicorp.com/terraform/cli/init
- [10]: https://developer.hashicorp.com/terraform/cli/config/config-file
- [11]: https://www.hashicorp.com/ecosystem/become-a-partner/
- [12]: https://developer.hashicorp.com/terraform/plugin
- [13]: https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
+[1]: https://www.terraform.io/
+[2]: https://developer.hashicorp.com/terraform/language/resources
+[3]: https://developer.hashicorp.com/terraform/language/data-sources
+[4]: https://registry.terraform.io/browse/providers
+[5]: https://developer.hashicorp.com/terraform/registry/providers/docs
+[6]: https://developer.hashicorp.com/terraform/language/providers/requirements
+[7]: https://developer.hashicorp.com/terraform/language/providers/configuration
+[8]: https://developer.hashicorp.com/terraform/language/files/dependency-lock
+[9]: https://developer.hashicorp.com/terraform/cli/init
+[10]: https://developer.hashicorp.com/terraform/cli/config/config-file
+[11]: https://www.hashicorp.com/ecosystem/become-a-partner/
+[12]: https://developer.hashicorp.com/terraform/plugin
+[13]: https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
