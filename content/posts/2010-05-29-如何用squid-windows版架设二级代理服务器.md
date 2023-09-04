@@ -4,8 +4,6 @@ author: admin
 type: post
 date: 2010-05-29T07:45:47+00:00
 url: /archives/3706
-IM_contentdowned:
- - 1
 categories:
  - 服务器
 tags:

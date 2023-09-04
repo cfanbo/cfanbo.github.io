@@ -15,7 +15,7 @@ REPAIR [LOCAL | NO\_WRITE\_TO_BINLOG] TABLE
 
 REPAIR TABLE用于修复被破坏的表。默认情况下，REPAIR TABLE与 myisamchk –recovertbl_name具有相同的效果。REPAIR TABLE对MyISAM和ARCHIVE表起作用。    通 常，您基本上不必运行此语句。但是，如果灾难发生，REPAIR TABLE很有可能从MyISAM表中找回所有数据。如果您的表经常被破坏，您应该尽力 找到原因，以避免使用REPAIR TALBE。请参见A.4.2节，“如果MySQL依然崩溃，应作些什么”。同时也见15.1.4节，“MyISAM 表方面的问题”。
 本语句会返回一个含有以下列的表：
-![20094147086](http://blog.haohtml.com/wp-content/uploads/2010/01/20094147086.jpg)
+![20094147086](https://blogstatic.haohtml.com//uploads/2023/09/20094147086.jpg)
 
 对 于每个被修复的表，REPAIR TABLE语句会产生多行的信息。上一行含有一个Msg\_type状态值。Msg\_test通常应为OK。如果您没有得 到OK，您应该尝试使用myisamchk –safe-recover修复表，因为REPAIR TABLE尚不会执行所有的myisamchk选 项。我们计划在将来使它的灵活性更强。
 如果给定了QUICK，则REPAIR TABLE会尝试只修复索引树。这种类型的修复与使用myisamchk –recover –quick相似。

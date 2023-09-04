@@ -22,7 +22,7 @@ MySQL Proxy就是这么一个中间层代理，简单的说，MySQL Proxy就是�
 
 安装教程请参考: [http://blog.haohtml.com/archives/9465](http://blog.haohtml.com/archives/9465)
 
-[![](http://blog.haohtml.com/wp-content/uploads/2009/05/lim98ihh.png)](/wp-content/uploads/2009/05/lim98ihh.png)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/lim98ihh.png)](/wp-content/uploads/2009/05/lim98ihh.png)
 
 [MySQL Proxy](http://forge.mysql.com/wiki/MySQL_Proxy) 是2007年6月由 [Jan Kneschke](http://jan.kneschke.de/) 发布的一个项目，基于 [GPL](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)，目前还处于Alpha测试阶段，最新版本0.6.1，可以从 [这里下载](http://dev.mysql.com/downloads/mysql-proxy/)。使用MySQL Proxy需要MySQL 5.0.x以上版本，详细的安装使用手册可以参考 [MySQL 5.1手册第27章](http://dev.mysql.com/doc/refman/5.1/en/mysql-proxy.html)。
 

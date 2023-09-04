@@ -12,13 +12,13 @@ categories:
 ---
 php脚本:
 
+```
 $Action= array(“article”,”soft”,”news”);
-
-
 $smarty = new Smarty();
-
-
 $smarty->assign(“Action”,$Action);
+```
+
+
 
 
 模板:

@@ -57,7 +57,7 @@ The domain set in the cookies for WordPress can be specified for those with unus
 然后进入Wordpress 管理后台设置：控制面板–设置–杂项–文件的完整URL地址填写http://haohtmlimg.com/，设置如下图：
 
 
-[![2015320T960](http://blog.haohtml.com/wp-content/uploads/2010/05/2015320T960.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/05/2015320T960.jpg)
+[![2015320T960](https://blogstatic.haohtml.com//uploads/2023/09/2015320T960.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/05/2015320T960.jpg)
 
 在发表文章时上传图片，前台显示的图片域名地址就是 cookie-free domains （haohtmlimg.com）了。
 

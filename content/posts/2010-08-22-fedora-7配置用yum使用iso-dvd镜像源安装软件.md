@@ -31,18 +31,22 @@ CentOS有两个yum源，它们在/etc/yum.repos.d/下面有两个文件：CentOS
 然后，vi CentOS-Media.repo
 
 把以下三行的后两行删除
+```
 baseurl=file:///media/CentOS/
 file:///media/cdrom/
 file:///media/cdrecorder/
+```
+
+
 
 第一行修改为挂载光盘的路径，如下：
 
-baseurl=file:///mnt/cdrom/
+`baseurl=file:///mnt/cdrom/`
 
 然后，找到这个属性，将值改成1，这样就打开了本地源文件的使能开关。
-enabled=0
+`enabled=0`
 
-改成 enabled=1
+改成 `enabled=1`
 
 保存即可。
 
@@ -58,12 +62,15 @@ vi Centos-Media.repo
 
 将文件中的 file 位置修改为dvd的位置 /media/dvd，并打开本地源，如下：
 
+```
 [c5-media]
 name=CentOS-$releasever – Media
 baseurl=file:///media/dvd/
 gpgcheck=0
 enabled=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-5
-~
+```
+
+
 
 保存推出后就可以使用本地的dvd作为yum源了，当然，你要记得把光盘放进去哦

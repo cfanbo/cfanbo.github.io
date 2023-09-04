@@ -90,6 +90,4 @@ xextproto-7.0.4     XExt extension headers
 xproto-7.0.14       X11 protocol headers
 后来找到phpMyAdmin的安装，老提示少一个pdflib，后来加上-f参数强行跳过去了。
 
-来源:http://bbs2.chinaunix.net/thread-1370635-1-1.html 本
-
-原文地址：
+来源:http://bbs2.chinaunix.net/thread-1370635-1-1.html 

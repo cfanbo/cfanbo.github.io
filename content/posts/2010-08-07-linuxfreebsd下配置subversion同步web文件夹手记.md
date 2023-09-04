@@ -19,19 +19,19 @@ tags:
 
 1.1 创建仓库存放目录
 
-# mkdir -p /opt/svn/repos
+mkdir -p /opt/svn/repos
 
-# chown -R svn:svn /opt/svn/
+chown -R svn:svn /opt/svn/
 
 2> 启动svn
 
-# svnserve -d –listen-host=0.0.0.0 –listen-port=3190 -r /data/repos
+svnserve -d –listen-host=0.0.0.0 –listen-port=3190 -r /data/repos
 
 3> 创建SVN仓库
 
-# svnadmin create /opt/svn/repos/abc
+svnadmin create /opt/svn/repos/abc
 
-# vim /opt/svn/repos/abc/conf/passwd
+vim /opt/svn/repos/abc/conf/passwd
 
 4> 新增访问用户名和密码
 

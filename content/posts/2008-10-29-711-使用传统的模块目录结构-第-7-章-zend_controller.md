@@ -65,7 +65,6 @@ application/
 在这个范例中，模块名作为它所包含的控制器的前缀。上面的例子包含三个模块控制器：’Blog_IndexController’ ‘News_IndexController’ 和’News_ListController’。也定义了两个全局控制器：’IndexController’ 和 ‘FooController’。它们都将不需要命名空间前缀。这个目录结构在本章中用作为例子。
 
 
-![[注意]](http://blog.haohtml.com/wp-admin/images/note.png)
 在缺省模块中不用命名空间前缀
 
 注意在缺省模块中，控制器不需要一个命名空间前缀。这样，在上例中，在缺省模块中的控制器不需要’Default_’这样的前缀－－根据它们的基本控制器名’IndexController’ 和 ‘FooController’被简单地派遣。然而，命名空间前缀被用于所有其它模块。
@@ -138,10 +137,8 @@ $front->addModuleDirectory('/path/to/application/modules');
  */
 $front->setModuleControllerDirectoryName('con');
 $front->addModuleDirectory('/path/to/application/modules');
-```
-
-![[注意]](http://blog.haohtml.com/wp-admin/images/note.png)
 注意
+```
 
 你可以通过传递一个空值给 `setModuleControllerDirectoryName()` 来指定在你的模块中没有控制器子目录。
 

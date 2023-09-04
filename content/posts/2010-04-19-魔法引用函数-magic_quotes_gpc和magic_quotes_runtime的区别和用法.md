@@ -31,16 +31,17 @@ magic\_quotes\_runtime的设定值将会影响从文件中读取的数据或从�
 
 例子说明：
 
+```
 $data1 = $_POST[‘aaa’];
 $data2 = implode(file(‘1.txt’));
-if(get\_magic\_quotes_gpc()){
+if(get_magic_quotes_gpc()){
 //把数据$data1直接写入数据库 (自动转译)
 }else{
 $data1 = addslashes($data1);
 //把数据$data1写入数据库，用函数(addslashes()转译)
 }
 
-if(get\_magic\_quotes_runtime()){
+if(get_magic_quotes_runtime()){
 //把数据$data2直接写入数据库(自动转译)
 
 //从数据库读出的数据要经过一次stripslashes()之后输出stripslashes()的作用是去掉:\ ，和addslashes()作用相反
@@ -50,6 +51,9 @@ $data2 = addslashes($data2);
 
 //从数据库读出的数据直接输出
 }
+```
+
+
 
 最关键的区别是就是上面提到的2点:他们针对的处理对象不同
 **magic\_quotes\_gpc的设定值将会影响通过Get/Post/Cookies获得的数据

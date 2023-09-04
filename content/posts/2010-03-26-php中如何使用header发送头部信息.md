@@ -3,24 +3,6 @@ title: PHP中如何使用header发送头部信息
 author: admin
 type: post
 date: 2010-03-26T06:33:54+00:00
-excerpt: |
- |
- 在照彭武兴先生的《PHP BIBLE》中所述，header可以送出Status标头，如
-
- header("Status: 404 Not Found");
-
- ?>
-
- 就可以让用户浏览器出现文件找不到的404错误，但是我试了这样是不行的。
-
- 后 来我到w3.org上查了http的相关资料，终于试出来了如何Header出状态代码(Status)，与大家分享。
-
- 其实应该是这样 的:
-
- Header("http/1.1 403 Forbidden");
-url: /archives/3060
-IM_contentdowned:
- - 1
 categories:
  - 程序开发
 tags:

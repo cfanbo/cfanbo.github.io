@@ -22,7 +22,7 @@ categories:
 分发是取得请求对象，提取其中的模块名，控制器名，动作名以及可选参数，然后实例化控制器并调用其中的动作的整过过程。如果其中的模块、控制器或者动作没能找到，将使用它们的默认值。 `Zend_Controller_Dispatcher_Standard` 指定每个控制器和动作的默认值为 `index`，模块的默认值为 `default`，允许开发人通过 `setDefaultController()`、 `setDefaultAction()` 和 `setDefaultModule()` 改变默认值设定。
 
 
-![[注意]](http://blog.haohtml.com/wp-admin/images/note.png)
+
 缺省模块
 
 当创建模块程序，你可能也需要缺省模块的命名空间（缺省配置中，缺省模块_没有_命名空间）。从 1.5.0 开始，可以在前端控制器或你的派遣器里通过指定 `prefixDefaultModule` 为 true 来实现。

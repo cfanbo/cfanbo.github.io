@@ -40,6 +40,7 @@ tags:
 
 Apache：解决办法；
 
+```
 Options -Indexes   FollowSymLinks
 
 AllowOverride All
@@ -60,9 +61,10 @@ location ~* .(txt|doc)$ {
 
 
                    }
+}
+```
 
 
-                }
 
 
 Nginx下请大家注意标点符号的使用，不要漏掉后面的“;”！

@@ -113,9 +113,9 @@ The key’s randomart image is:
 
 ## 参考
 
- *
- *
- *
- *
- *
- *
+* https://help.github.com/en/articles/workflow-syntax-for-github-actions
+* https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
+* https://github.com/marketplace/actions/checkout
+* https://github.com/marketplace/actions/setup-go-for-use-with-actions
+* https://github.com/marketplace/actions/ssh-deploy
+* http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html

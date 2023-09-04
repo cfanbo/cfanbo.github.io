@@ -57,16 +57,15 @@ apt-get install cacti rrdtool snmp
 
 附件里有个Cacti_SNMP_INFORMANT_STD_W32_Metrics.zip的包，里面包含的文件就是脚本文件，其中snmp_informant_.xml开头的文件是需要放到cacti服务端的snmp_queries目录下，如果你的debian 的话，目录地址是/usr/share/cacti/resource/snmp_queries/。cacti_data_query开头的文件全都通过cacti页面导入。
 
-
-[![](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)
+[![](http://blogx.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563418-0.jpg)
 
 2.在Devices中新建立个服务器，填写名称和ip地址，还有snmp信息，最下面的地方add如下东西：
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563a8-1.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563a8-1.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/1434563a8-1.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/07/1434563a8-1.jpg)
 
 3.然后点最上面的Create Graphs for this Host ，选择Graphs Types，添加需要监控的项目。
 
-![](http://www.haohtml.com/uploads/allimg/100727/14345C392-2.jpg)
+
 
 这样基本上就可以了，然后设置windows服务器
 
@@ -88,12 +87,3 @@ apt-get install cacti rrdtool snmp
 
 
 上传的附件![文件类型: zip](http://www.haohtml.com/uploads/allimg/100727/1434563026-4.gif)[Cacti_SNMP_INFORMANT_STD_W32_Metrics.zip](http://www.linuxsir.org/bbs/attachment.php?s=7a0a60f2cdfb7c41805e04432d418772&attachmentid=51147&d=1236752610) (39.1 KB, 176 次查看)
-
-
-![](http://www.haohtml.com/uploads/allimg/100727/1434561638-5.jpg)
-
-![](http://www.haohtml.com/uploads/allimg/100727/1434562453-6.jpg)
-
-![](http://www.haohtml.com/uploads/allimg/100727/14345B1N-7.jpg)
-
-![](http://www.haohtml.com/uploads/allimg/100727/14345611S-8.jpg)

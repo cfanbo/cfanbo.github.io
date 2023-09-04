@@ -79,22 +79,23 @@ Expires: Thu, 01 Dec 1994 16:00:00 GMT （必须是GMT格式）
 这样客户端的请求就多了，尽管只是检查Last-modified状态的东西，但是请求一多对浏览速度必定有影响。
 ```
 
-```
 如果要对文件添加cache可以通过apache的mod_expire模块，写法为
+
+```
 <IfModule mod_expires.c>
 ExpiresActive On
 ExpiresDefault "access plus 1 days"
-```
-
-```
 </IfModule>
-记得ExpiresActive设为On，我起先没设置On，似乎怎样YSlow都查不到缓存机制。这样添加的话就是默认所有的。
-```
 
 ```
+
+记得ExpiresActive设为On，我起先没设置On，似乎怎样YSlow都查不到缓存机制。这样添加的话就是默认所有的。
+
 如果要针对个别MIME类型则可以：
-ExpiresByType image/gif "access plus 5 hours 3 minutes"
-见 Apache Module mod_expires
+
+```
+ExpiresByType image/gif "access plus 5 hours 3 minutes"见 Apache Module mod_expires
 另外，当点击浏览器上的刷新，客户端发送的请求中均是max-age=0，表示validate操作，发送请求到服务器
 要求检查cache，再更新cache，一般得到的是304 Not Modified，表示没变动。
 ```
+

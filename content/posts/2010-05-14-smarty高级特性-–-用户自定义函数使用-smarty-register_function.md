@@ -43,22 +43,34 @@ The php-function callback impl can be either (a) a string containing the functio
 我们可以直接使用SMARTY::register_function来注册一个程序 员自定义的php函数，只要这个函数所在的文件 已经被引入，就可以正确使用它。
 DEMO 1：
 
+```
 $smarty = set_smarty();
 $smarty->register\_function(‘example’,’format\_data’);
 $smarty->assign(‘time’,time());
 $smarty->display(‘demo.htm’);
+```
+
+
 
 自定义函数如下：
 
+```
 function format_data( $params )
 {
 extract($params);
 echo date($format,$time);
 }
+```
+
+
 
 模板文件如下：
 
+```
 {example time=”$time” format=”Y-m-d”}
+```
+
+
 
 不难看出，我们很轻松的就布署使用了我们的自定义函数了。有一点我们需要注意到的是，在format_data函数里，我们是以一个数组对值进行传入的， 而在模板文件里，我们可以任意的建一些关键字，只要你能记得住。当然，除了SMARTY的保留字之外。
 而后我们通过extract把这个数组里面的值释放放出来，当然这种方案是有多种多样的，你可以使用list，也可以使用explode，总之你能想到的办法 就是好办法，只要你用得熟悉。
@@ -76,19 +88,20 @@ $smarty->register\_function( ‘phpsoho’,’tags\_extends’ );
 include\_once \\_\_ROOT\_PATH\\_\_ . ‘/include/tags.func.php’;
 
 这里需要注意的是，我们注册的到phpsoho句柄中的函数为tags_extends，函数名是什么意思不做一一解释，具体可以看PHP函数命名规范这 样的文档。
-[php]
+```
 function tags_extends( $params )
 {
 $action = $params[‘action’];
 $optional = $params[‘optional’];
 
 /**
+
 * 关键词检测
-*/
-if ( !$action )
-{
-Error::putMsg(‘tags\_extends\_error’,’tags_extends action is null.’);
-}
+  */
+  if ( !$action )
+  {
+  Error::putMsg(‘tags\_extends\_error’,’tags_extends action is null.’);
+  }
 
 if( !function_exists($action) )
 {
@@ -96,7 +109,29 @@ Error::putMsg( ‘function\_exists’,’function null. class file.’.$extend\_
 }
 $action($optional);
 }
+```
+
+
+
+模板文件：
+[php]
+{phpsoho action=”getAffiche” optional=”fileds=id,title,post time&titlelen=17&and[stauts]=1&limit=5&order=id DESC&tpl=afiche.right”}
 [/php]
+上面的函数执行流程是这样子的：
+在模板文件里面，我们使用phpsoho这个资源句柄把请求定位到’tags_extends’函数中，在这个函数中，我们做了几种检查:
+Check Action:检查动作是否被设置 ，这个为必须的关键字.其实我是以这个action来进行下面的函数定位操作的.
+Check function_exists：检查相应执行的函数是否存在或者是否已经被加载进入
+这里我们不用检查optional，因为我们会在下一步里进行另一步检查.
+$action($optional)被执行，也就是说上例中的getAffiche被引入了，并且设置$optional的值为 fileds=id,title,posttime&titlelen=17&and[stauts]=1&limit=5& amp;order=id DESC&tpl=afiche.right，里面的一些一一对应的关系，我就不一一过多的讲解。我是有文档给小张的，你们谁想要，可以联系她。 她可是美女哟~！
+回过头来，我们看$action($optional)，为什么我说看$action而不是getAffiche呢？因为谁知道你将来会让他引入什么函数 呢？（狂笑，得意的笑）
+$action()DEMO：
+[php]
+function getAffiche($optional)
+{
+global $db;
+parse_str($optional);
+$res = $db->getFetchArray(‘litou_affiche’,$fileds,$and,$order,$limit);
+
 模板文件：
 [php]
 {phpsoho action=”getAffiche” optional=”fileds=id,title,post time&titlelen=17&and[stauts]=1&limit=5&order=id DESC&tpl=afiche.right”}
@@ -117,6 +152,7 @@ parse_str($optional);
 $res = $db->getFetchArray(‘litou_affiche’,$fileds,$and,$order,$limit);
 
 /**
+
 * 声明并发送到模板
 */
 $smarty = set_smarty();

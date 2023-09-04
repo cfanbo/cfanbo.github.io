@@ -3,14 +3,6 @@ title: windows下安装 Xdebug＋WinCacheGrind
 author: admin
 type: post
 date: 2010-03-26T07:41:23+00:00
-excerpt: |
- 以PHP5.1.4，Windows平台为例（其它PHP版本，其它平台请参看官网文档）：
- 1． 在http://www.xdebug.org/download.php下载适合自己php版本的php_xdebug- 2.0.1-5.1.2.dll【有附件提供下载，如果按照以下步骤完成后 phpinfo任无法显示xdebug，那么建议重新下载其他xdebug.dll文件试试 】；
- 2． 将下载的xdebug.dll放到php\ext目录里,可以重命名也可以不重命名，这里我没有重命名。
- 3． 编辑php.ini，加入下面几行：
-url: /archives/3096
-IM_contentdowned:
- - 1
 categories:
  - 程序开发
 tags:

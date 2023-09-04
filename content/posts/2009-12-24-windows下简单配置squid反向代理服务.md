@@ -3,24 +3,6 @@ title: windows下简单配置squid反向代理服务…
 author: admin
 type: post
 date: 2009-12-24T05:35:18+00:00
-excerpt: |
- 下载windwosNT版本的squid下载地址：
- http://squid.acmeconsulting.it/download/squid-2.6.STABLE13-bin.zip
- 1．把squid-2.6.STABLE13-bin.zip解压缩，把里面的squid文件夹拷到c:\下(squid默认的是c:\squid)
- 2．squid\etc目录下把
- squid.conf.default拷贝一份重新命名为squid.conf
- cachemgr.conf.default拷贝一份重新命名为cachemgr.conf
- mime.conf.default拷贝一份重新命名为mime.conf
- 3．用文本编辑器打开squid.conf，需要修改的地方：
- 找到http_port 3128在后面增加一行
- http_port 80 transparent
- 找到#cache_peer sib2.foo.net sibling 3128 3130 [proxy-only]在后面增加一行
- cache_peer 192.168.1.8 parent 7001 0 no-query originserver
- 找到# TAG: visible_hostname在后面增加一行
- visible_hostname volcano(任意命名)
-url: /archives/2766
-IM_contentdowned:
- - 1
 categories:
  - 服务器
 tags:

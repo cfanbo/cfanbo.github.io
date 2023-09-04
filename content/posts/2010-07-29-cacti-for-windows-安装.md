@@ -44,13 +44,13 @@ tags:
 
 通过浏览器打开cacti,自动将进入配置区，填写相应的文件的路径。如图：
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/07/cacti-for-win32.png)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/cacti-for-win32.png)][1]
 
 创建计划任务，每5分钟运行d:\PHP\php.exe -q d:\www\cacti\web\poller.php 监控采集
 
 余下的工作就是创建被监控的主机和图形显示菜单，这里就不多说了。
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/07/cacti-for-win32-1.png)][2]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/cacti-for-win32-1.png)][2]
 
 **说下容易遇到的问题：**
 
@@ -94,7 +94,4 @@ windows的cacti功能上还是很弱的，需要第3方插件完成。插件地�
 
 最后，如果大家监控的主机多的话，多功能有有所要求，请选择在linux主机上安装cacti吧。主要他无论监控linux还是windows效果都是很好的。
 
-如果要监控其它windows服务器的话，请参考：
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2010/07/cacti-for-win32.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2010/07/cacti-for-win32-1.png
+如果要监控其它windows服务器的话，请参考： http://blog.haohtml.com/index.php/archives/4880

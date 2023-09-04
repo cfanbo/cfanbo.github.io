@@ -4,8 +4,6 @@ author: admin
 type: post
 date: 2010-05-29T16:49:42+00:00
 url: /archives/3716
-IM_contentdowned:
- - 1
 categories:
  - 前端设计
 tags:

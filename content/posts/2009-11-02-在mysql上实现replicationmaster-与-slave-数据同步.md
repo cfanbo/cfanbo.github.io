@@ -79,7 +79,7 @@ mysql> **UNLOCK TABLES;**
 
 查看当前Master数据库上的一些我们将要使用的信息：
 
-[![mysql](http://blog.haohtml.com/wp-content/uploads/2009/11/clip_image002.jpg)][1]
+[![mysql](https://blogstatic.haohtml.com//uploads/2023/09/clip_image002.jpg)][1]
 
 File 表示 Master用于记录更新数据操作的日志文件，Position 表示当前日志的记录位置，这也是Slave 需要开始同步数据的位置。
 
@@ -149,4 +149,4 @@ show slave status 参数详解：**** [http://blog.haohtml.com/archives/6871](ht
 
 使用主从复制方案，最大的问题就是主从之间的复制延时问题，这个可以在使用mysql proxy (lua)脚本插件的时候，利用单独一个表来解决，方案请参考： [http://www.haohtml.com/database/mysql/46714.html](http://www.haohtml.com/database/mysql/46714.html)
 
- [1]: /wp-content/uploads/2009/11/clip_image002.jpg
+[1]: /wp-content/uploads/2009/11/clip_image002.jpg

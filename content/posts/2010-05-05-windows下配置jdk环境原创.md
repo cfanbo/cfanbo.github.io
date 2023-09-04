@@ -16,7 +16,7 @@ tags:
 
 **第一步：**下载JDK6，从官网下载(),如果下载的版不是1.6.0.14版本的,请根据情况修改下面的路径,这里提供另一个版本的下载地址: [http://www.newhua.com/softdown/61003_2.htm](http://www.newhua.com/softdown/61003_2.htm)
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/05/jdk_install.jpg)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/jdk_install.jpg)][1]
 
 **第二步：**安装JDK6,修改默认盘符C：为D:，具体按步骤进行就OK了
 
@@ -33,6 +33,4 @@ JAVA_HOME: **d:\Program Files\Java\jdk1.6.0_14
 
 好了，环境变量已经添加好了，现在我们检测是否配置成功的，在“命令”里输入”command“,在命令提示符下输入“java -version“命令，如果输出jdk的版本信息的话，则说明我们配置成功了，否则请根据上面的步骤检查操作是否有误.
 
-默认情况下需要重启电脑,才可以使系统变量生效,这里我们为了不重启电脑,采用了另外一种方法:
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2010/05/jdk_install.jpg
+默认情况下需要重启电脑,才可以使系统变量生效

@@ -17,26 +17,13 @@ tags:
 
 A、安装环境配置,为安装coreseek做准备
 
->
-
-> #pkg_add -r autoconf262 automake110 libtool mysql50-client libxml2 expat
->
+>#pkg_add -r autoconf262 automake110 libtool mysql50-client libxml2 expat
 
 B、下载整个安装包(内含mmseg,coreseek)：
 
->
-
-> #fetch http://www.coreseek.cn/uploads/csft/3.2/coreseek-3.2.13.tar.gz
->
-
->
->
+>#fetch http://www.coreseek.cn/uploads/csft/3.2/coreseek-3.2.13.tar.gz
 
 > #tar xzvf coreseek-3.2.13.tar.gz
->
-
->
->
 
 > #cd coreseek-3.2.13
 >
@@ -45,31 +32,13 @@ B、下载整个安装包(内含mmseg,coreseek)：
 
 C **、** 安装coreseek开发的mmseg，为coreseek提供中文分词功能
 
->
+>#cd mmseg-3.2.13
 
-> #cd mmseg-3.2.13
->
-
->
->
-
-> #./bootstrap
->
-
->
->
+>#./bootstrap
 
 > #./configure –prefix=/usr/local/mmseg3
->
-
->
->
 
 > #make
->
-
->
->
 
 > #make install
 >
@@ -153,8 +122,7 @@ D、安装coreseek
 
 > #cd testpack
 >
->
-> # /usr/local/coreseek/bin/indexer -c etc/csft.conf
+>/usr/local/coreseek/bin/indexer -c etc/csft.conf
 
 ##以下为正常情况下的提示信息：
 
@@ -176,7 +144,7 @@ D、安装coreseek
 >
 > total 0 writes, 0.000 sec, 0.0 kb/call avg, 0.0 msec/call avg
 
-> # /usr/local/coreseek/bin/indexer -c etc/csft.conf –all
+> /usr/local/coreseek/bin/indexer -c etc/csft.conf –all
 
 ##以下为正常索引全部数据时的提示信息：
 
@@ -213,7 +181,7 @@ D、安装coreseek
 >
 > total 7 writes, 0.000 sec, 3.9 kb/call avg, 0.0 msec/call avg
 
-> # /usr/local/coreseek/bin/indexer -c etc/csft.conf xml
+> /usr/local/coreseek/bin/indexer -c etc/csft.conf xml
 
 ##以下为正常索引指定数据时的提示信息：
 
@@ -250,7 +218,7 @@ D、安装coreseek
 >
 > total 7 writes, 0.000 sec, 3.9 kb/call avg, 0.0 msec/call avg
 
-> # /usr/local/coreseek/bin/search -c etc/csft.conf
+> /usr/local/coreseek/bin/search -c etc/csft.conf
 
 ##以下为正常测试搜索时的提示信息：
 
@@ -284,7 +252,7 @@ D、安装coreseek
 >
 > words:
 
-> # /usr/local/coreseek/bin/search -c etc/csft.conf -a Twittter和Opera都提供了搜索服务
+> /usr/local/coreseek/bin/search -c etc/csft.conf -a Twittter和Opera都提供了搜索服务
 
 ##以下为正常测试搜索关键词时的提示信息：
 
@@ -344,7 +312,7 @@ D、安装coreseek
 
 安装为系统服务
 
-> # **/usr/local/coreseek/bin/searchd -c etc/csft.conf**
+> **/usr/local/coreseek/bin/searchd -c etc/csft.conf**
 
 #以下为正常开启搜索服务时的提示信息：
 

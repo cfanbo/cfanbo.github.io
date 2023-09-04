@@ -15,17 +15,15 @@ categories:
 我们先举一个简单的例子，让大家对Output Control有一个大致的印象：
 Example 1.
 
-CODE
-
+```
 ob_start(); //打开缓冲区
-
 echo “Hellon”; //输出
-
 header(“location:index.php”); //把浏览器重定向到index.php
-
 ob_end_flush();//输出全部内容到浏览器
-
 ?>
+```
+
+
 
 所有对header()函数有了解的人都知道，这个函数会发送一段文件头给浏览器，但是如果在使用这个函数之前已经有了任何输出（包括空输出，比如空格，回车和换行）就会提示出错。如果我们去掉第一行的ob\_start()，再执行此程序，我们会发现得到了一条错误提示：”Header had all ready send by”！但是加上ob\_start，就不会提示出错，原因是当打开了缓冲区，echo后面的字符不会输出到浏览器，而是保留在服务器，直到你使用flush或者ob\_end\_flush才会输出，所以并不会有任何文件头输出的错误！
 
@@ -58,8 +56,7 @@ ob_end_flush();//输出全部内容到浏览器
 这个函数在PHP3中就出现了，是一个效率很高的函数，他有一个非常有用的功能就是刷新browser的cache.我们举一个运行效果非常明显的例子来说明flush.
 Example 2.
 
-CODE
-
+```
 for($i = 1; $i <= 300; $i++ ) print(” “);
 
 // 这一句话非常关键，cache的结构使得它的内容只有达到一定的大小才能从浏览器里输出
@@ -83,6 +80,11 @@ sleep(1); //让程序”睡”一秒钟，会让你把效果看得更清楚
 }
 
 ?>
+```
+
+
+
+
 
 具体效果你可以到这里看看 [http://www.php2000.com/~uchinaboy/out.php](http://www.php2000.com/~uchinaboy/out.php)
 PHP2000的最新的PHP聊天室就是用的这个技术，可惜的是源代码未公开 L
@@ -94,8 +96,7 @@ Example 3.
 
 比如你用得到服务器和客户端的设置信息，但是这个信息会因为客户端的不同而不同，如果想要保存phpinfo()函数的输出怎么办呢？在没有缓冲区控制之前，可以说一点办法也没有，但是有了缓冲区的控制，我们可以轻松的解决：
 
-CODE
-
+```
 ob_start(); //打开缓冲区
 
 phpinfo(); //使用phpinfo函数
@@ -109,6 +110,9 @@ fwrite($file,$info); //写入信息到info.txt
 fclose($file); //关闭文件info.txt
 
 ?>
+```
+
+
 
 用以上的方法，就可以把不同用户的phpinfo信息保存下来，这在以前恐怕没有办法办到！其实上面就是将一些”过程”转化为”函数”的方法！
 或许有人会问：”难道就这个样子吗？还有没有其他用途？”当然有了，比如笔者论坛的PHP 语法加亮显示就和这个有关（PHP默认的语法加亮显示函数会直接输出，不能保存结果，如果在每次调用都显示恐怕会很浪费CPU，笔者的论坛就把语法加亮函数显示的结果用控制缓冲区的方法保留了），大家如果感兴趣的话可以来看看 [http://www.zphp.com/bbs/](http://www.zphp.com/bbs/)！
@@ -139,6 +143,7 @@ ob_start();//打开缓冲区
 
 php页面的全部输出
 
+```
 $content = ob_get_contents();//取得php页面输出的全部内容
 
 $fp = fopen(“output00001.html”, “w”); //创建一个文件，并打开，准备写入
@@ -148,6 +153,9 @@ fwrite($fp, $content); //把php页面的内容全部写入output00001.html，然
 fclose($fp);
 
 ?>
+```
+
+
 
 这样，所谓的静态模版就很容易的被实现了……
 
@@ -157,8 +165,7 @@ fclose($fp);
 你可以设法捕捉一些关键字，然后去对它进行再处理，比如Example 3.所述的PHP语法高亮显示。个人认为，这个功能是此函数最大的精华所在，它可以解决各种各样的问题，但需要你有足够的想象力……
 Example 5.
 
-CODE
-
+```
 Function run_code($code) {
 
 If($code) {
@@ -182,6 +189,9 @@ exit();
 return $contents;
 
 }
+```
+
+
 
 以上这个例子的用途不是很大，不过很典型$code的本身就是一个含有变量的输出页面，而这个例子用eval把$code中的变量替换，然后对输出结果再进行输出捕捉，再一次的进行处理……
 
@@ -189,6 +199,7 @@ Example 6. 加快传输
 
 CODE
 
+```
 /*
 
 ** Title………: PHP4 HTTP Compression Speeds up the Web
@@ -338,5 +349,8 @@ exit;
 }
 
 ?>
+```
 
- [1]: /?tag=php
+
+
+[1]: /?tag=php

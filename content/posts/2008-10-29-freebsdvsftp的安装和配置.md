@@ -52,7 +52,7 @@ make
 make install
 安装的时候会弹出一个对话框,
 
-[![](/wp-content/uploads/2009/01/vsftp1.jpg)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/vsftp1.jpg)][1]
 选中第一个选项项
 三、配置
 1．配置VSFTP
@@ -249,4 +249,4 @@ FTP 数字代码的意义
 552 请求的文件终止，储存位溢出。
 553 未执行请求的的命令，名称不正确
 
- [1]: /wp-content/uploads/2009/01/vsftp1.jpg
+[1]: /wp-content/uploads/2009/01/vsftp1.jpg

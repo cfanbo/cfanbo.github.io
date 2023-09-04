@@ -3,17 +3,6 @@ title: Units specified don’t exist SHSUCDX can’t install
 author: admin
 type: post
 date: 2009-12-02T01:24:46+00:00
-excerpt: |
- |
- 用的是联想thinkpad品牌笔记本的，在dos下用光盘来ghost xp系统的时候，经常出现：Units specified don't exist SHSUCDX can't install，然后就没有反映了，试了三张安装盘都不行的，光盘也都没有什么问题的呀，真是奇了怪了！
-
- 网上有人说用PE进入到系统里，使用里面的ghost来恢复，找了几个安装盘，发现在PE系统里识别不到硬盘，巧的是也没有ghost安装文件，没有办法心想可能是品牌机本本设置的问题，后来在网上baidu了一下，发现了解决的办法，如下：
-
- BIOS里面硬盘模式AHＣI改为IDE~
- 要到BIOS将硬盘的模式改成compatibility模式 就可以装
-url: /archives/2651
-IM_contentdowned:
- - 1
 categories:
  - 其它
 tags:

@@ -17,58 +17,19 @@ tags:
 
 squid的2.5最新版本是squid-2.5.STABLE7,先下载安装包,再安装:
 
->
+```
+ #cd /tmp
+ #mkdir squidinstall
+ #cd squidinstall
+ #fetch http://www.squid-cache.org/Versions/v2/2.5/squid-2.5.STABLE7.tar.gz
+ #tar xzvf squid-2.5.STABLE7.tar.gz
+ #cd squid-2.5.STABLE7
+ #./configure –prefix=/usr/local/squid
+ #make
+ #make install
+```
 
-> #cd /tmp
->
 
->
->
-
-> #mkdir squidinstall
->
-
->
->
-
-> #cd squidinstall
->
-
->
->
-
-> #fetch http://www.squid-cache.org/Versions/v2/2.5/squid-2.5.STABLE7.tar.gz
->
-
->
->
-
-> #tar xzvf squid-2.5.STABLE7.tar.gz
->
-
->
->
-
-> #cd squid-2.5.STABLE7
->
-
->
->
-
-> #./configure –prefix=/usr/local/squid
->
-
->
->
-
-> #make
->
-
->
->
-
-> #make install
->
 
 看到类似于下图的提示,并且没有出现 Error Code :1 之类的错误提示,证明Squid已经安装完成了!
 
@@ -137,8 +98,7 @@ squid的2.5最新版本是squid-2.5.STABLE7,先下载安装包,再安装:
 >
 >
 
-> # 缓存目录:/cache 类型:ufs 大小:530mb 允许Squid在目录下建立一级(16)和二级目录(256)
->
+> 缓存目录:/cache 类型:ufs 大小:530mb 允许Squid在目录下建立一级(16)和二级目录(256)
 
 >
 >
@@ -368,7 +328,7 @@ squid的2.5最新版本是squid-2.5.STABLE7,先下载安装包,再安装:
 
 squid提示:Creating swap … 然后回到shell提示符:#. 注意:以上指不出意外的话,若出现visible_hostname错误的话,证明你的squid.conf没写完整.
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_01.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_01.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/issue16_01.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_01.jpg)
 
 **运行Squid**
 
@@ -426,7 +386,7 @@ The cache was not able to resolve the hostname presented in the URL. Check if th
 
 Generated Sun, 11 Jul 2004 06:00:58 GMT by etclub.3322.org (squid/2.5.STABLE5) 就成功啦!!! 结果,访问www.163.com,就…
 
-[![](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_02.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_02.jpg)
+[![](https://blogstatic.haohtml.com//uploads/2023/09/issue16_02.jpg)](http://blog.haohtml.com/wp-content/uploads/2010/08/issue16_02.jpg)
 
 **重要Tip**
 

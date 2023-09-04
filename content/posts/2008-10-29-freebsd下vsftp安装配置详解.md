@@ -4,10 +4,6 @@ author: admin
 type: post
 date: 2008-10-29T12:22:34+00:00
 url: /archives/484
-IM_data:
- - 'a:1:{s:38:"/wp-content/uploads/2009/01/vsftp1.jpg";s:38:"/wp-content/uploads/2009/01/vsftp1.jpg";}'
-IM_contentdowned:
- - 1
 categories:
  - 服务器
 tags:
@@ -23,7 +19,7 @@ FreeBSD功能强大,ftp服务器只是它其中的很基础的一种服务,但�
 > \# cd /usr/ports/ftp/vsftpd
 > \# make install
 
-[![](/wp-content/uploads/2009/01/vsftp1.jpg)][1][
+[![](https://blogstatic.haohtml.com//uploads/2023/09/vsftp1-20230904193104456.jpg)][1][
 ][2]
 
 > 安装过程中会弹出一个对话框架,选中第一个选项,我以前没有选中,结果安装完以后,在/usr/local/etc/rc.d/目录里没有vsftpd这个命令,导致启动的时候出现以下错误信息:
@@ -223,5 +219,5 @@ Accept_timeout=60(秒) (将客户端空闲1分钟后断)
 
 **注意：**此方法好像一般不用的，为了安全一般在vsftpd下创建虚拟用户的方法的，详见： [FreeBSD vsftpd+pam虚拟用户方案配置](../index.php/archives/7213)
 
- [1]: /wp-content/uploads/2009/01/vsftp1.jpg
- [2]: /wp-content/uploads/2009/01/vsftp.jpg
+[1]: /wp-content/uploads/2009/01/vsftp1.jpg
+[2]: /wp-content/uploads/2009/01/vsftp.jpg

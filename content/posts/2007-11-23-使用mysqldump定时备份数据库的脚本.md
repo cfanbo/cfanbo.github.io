@@ -41,6 +41,7 @@ log-bin
 
 下载假设我们的数据量比较大,备份脚本如下:(参考过网络上一个mysql备份脚本,致谢 :))
 
+```
 #!/bin/sh
 \# mysql data backup scrīpt
 \# by scud http://www.jscud.com
@@ -73,6 +74,9 @@ echo “Backup Done!”
 echo “please Check $BakDir Directory!”
 echo “copy it to your local disk or ftp to somewhere !!!”
 ls -al $BakDir
+```
+
+
 
 上面的脚本把mysql备份到本地的/backup/mysql目录,增量备份的文件放在/backup/mysql/daily目录下.
 
@@ -84,6 +88,7 @@ ls -al $BakDir
 
 增量备份使用bin log,脚本如下:
 
+```
 #!/bin/sh
 #
 \# mysql binlog backup scrīpt
@@ -121,6 +126,9 @@ fi
 fi
 done
 echo “backup mysql binlog ok”
+```
+
+
 
 增量备份脚本是备份前flush-logs,mysql会自动把内存中的日志放到文件里,然后生成一个新的日志文件,所以我们只需要备份前面的几个即可,也就是不备份最后一个.
 
@@ -132,12 +140,16 @@ echo “backup mysql binlog ok”
 
 脚本写完了,为了能让脚本运行,还需要设置对应的用户名和密码,mysqladmin和mysqldump都是需要用户名和密码的,当然可以写在脚本中,但是修改起来不太方便,假设我们用系统的root用户来运行此脚本,那么我们需要在/root(也就是root用户的home目录)创建一个.my.cnf 文件,内容如下
 
+```
 [mysqladmin]
 password =password
 user= root
 [mysqldump]
 user=root
 password=password
+
+
+```
 
 注: 设置本文件只有root可读.(chmod 600 .my.cnf )
 
@@ -153,4 +165,4 @@ password=password
 
 具体使用,请参考crontab的帮助.
 
- [1]: /?tag=mysql
+[1]: /?tag=mysql

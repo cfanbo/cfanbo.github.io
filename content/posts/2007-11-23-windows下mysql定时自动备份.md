@@ -21,10 +21,14 @@ MySQL root 密码：123456
 
 程序代码
 
+```
 @echo off
 C:MySQLbinmysqladmin -u root –password=123456 shutdown
 C:MySQLbinmysqldump –opt -u root –password=123456 bbs > D:db_backupbbs.sql
 C:MySQLbinmysqld-nt
+```
+
+
 
 将以上代码保存为backup_db.bat
 然后使用Windows的“计划任务”定时执行该脚本即可。（例如：每天凌晨5点执行back_db.bat）
