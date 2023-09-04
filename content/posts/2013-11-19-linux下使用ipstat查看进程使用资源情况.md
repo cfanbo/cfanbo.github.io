@@ -193,7 +193,7 @@ mpstat命令
 结果显示：
 
 
-[![mpstat](http://blog.haohtml.com/wp-content/uploads/2013/11/mpstat.png)](http://blog.haohtml.com/wp-content/uploads/2013/11/mpstat.png)
+[![mpstat](https://blogstatic.haohtml.com//uploads/2023/09/mpstat.png)](http://blog.haohtml.com/wp-content/uploads/2013/11/mpstat.png)
 
 注意一下这里面的%iowait列，CPU等待I/O操作所花费的时间。这个值持续很高通常可能是I/O瓶颈所导致的。
 

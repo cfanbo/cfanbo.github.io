@@ -44,11 +44,11 @@ tags:
 
 **1、B+树典型结构**
 
-[![QQ截图20150810095054](http://blog.haohtml.com/wp-content/uploads/2015/08/QQ截图20150810095054.png)][1]
+[![QQ截图20150810095054](https://blogstatic.haohtml.com//uploads/2023/09/QQ%E6%88%AA%E5%9B%BE20150810095054.png)][1]
 
 **2、InnoDB主键逻辑结构**
 
-[![mysql_primarykey_index](http://blog.haohtml.com/wp-content/uploads/2015/08/mysql_primarykey_index.png)][2]
+[![mysql_primarykey_index](https://blogstatic.haohtml.com//uploads/2023/09/mysql_primarykey_index.png)][2]
 
 延伸阅读：
 
@@ -64,5 +64,5 @@ tags:
 
 摘自： [http://mp.weixin.qq.com/s?__biz=MjM5NzAzMTY4NQ==&mid=207339713&idx=1&sn=bceacae229cb9c8ab5947c8270b12663&scene=0#rd](http://mp.weixin.qq.com/s?__biz=MjM5NzAzMTY4NQ==&mid=207339713&idx=1&sn=bceacae229cb9c8ab5947c8270b12663&scene=0#rd)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2015/08/QQ截图20150810095054.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2015/08/mysql_primarykey_index.png
+[1]: http://blog.haohtml.com/wp-content/uploads/2015/08/QQ截图20150810095054.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2015/08/mysql_primarykey_index.png

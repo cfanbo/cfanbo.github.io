@@ -56,7 +56,9 @@ $git status
 
 git 提交的命令为：git commit 。
 
-2.1 git commit 与 git commit -agit commit 提交的是暂存区里面的内容，也就是 Changes to be committed 中的文件。
+2.1 git commit 与 git commit -a 
+
+git commit 提交的是暂存区里面的内容，也就是 Changes to be committed 中的文件。
 
 ```
 $git commit

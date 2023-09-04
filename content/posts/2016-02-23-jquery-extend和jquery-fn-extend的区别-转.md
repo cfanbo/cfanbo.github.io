@@ -23,16 +23,14 @@ jQuery.extend()，是扩展的jQuery这个类。
 
 可以如下图这样写着：
 
-
-[![jquery-1](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-1.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-1.png)
+[![jquery-1](https://blogstatic.haohtml.com//uploads/2023/09/jquery-1.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-1.png)
 
 2. 然后：$.liu();这样就能打印出来”liu“这个字符串
 
 
 代码在下面：
 
-
-[![jquery-2](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-2.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-2.png) 3. 这说明啥啊，这说明.liu()变成了jQuery这个类本身的方法（object）嘛。他现在能”唱歌“了。但是吧，这个能力啊，只有代表全人类的 jQuery 这个类本身，才能用啊。你个人想用，你张三李四王五麻六，你个小草民能代表全人类嘛？
+[![jquery-2](https://blogstatic.haohtml.com//uploads/2023/09/jquery-2.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-2.png) 3. 这说明啥啊，这说明.liu()变成了jQuery这个类本身的方法（object）嘛。他现在能”唱歌“了。但是吧，这个能力啊，只有代表全人类的 jQuery 这个类本身，才能用啊。你个人想用，你张三李四王五麻六，你个小草民能代表全人类嘛？
 
 
 所以啊，这个扩展也就是所谓的静态方法。只跟这个 类 本身有关。跟你具体的实例化对象是没关系滴。
@@ -50,7 +48,7 @@ jQuery.fn是啥玩意呢？
 源码如下
 
 
-![jquery-3](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-3.png)
+![jquery-3](https://blogstatic.haohtml.com//uploads/2023/09/jquery-3.png)
 
 4. 哦，原来jQuery.fn=jQuery.prototype，就是原型啊。
 
@@ -81,7 +79,6 @@ $(‘selector’).xyz();
 
 代码看下面图片：
 
-
-[![jquery-4](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-4.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-4.png)
+[![jquery-4](https://blogstatic.haohtml.com//uploads/2023/09/jquery-4.png)](http://blog.haohtml.com/wp-content/uploads/2016/02/jquery-4.png)
 
 转： [http://jingyan.baidu.com/article/fec4bce259ef67f2608d8b10.html](http://jingyan.baidu.com/article/fec4bce259ef67f2608d8b10.html)

@@ -16,30 +16,37 @@ tags:
 
 新建一个目录和一个 Dockerfile
 
+```
  $ mkdir sinatra
  $ cd sinatra
  $ touch Dockerfile
+```
 
 
 Dockerfile 中每一条指令都创建镜像的一层，例如：
 
+```
  # This is a comment
  FROM ubuntu:14.04
  MAINTAINER Docker Newbee
  RUN apt-get -qq update
  RUN apt-get -qqy install ruby ruby-dev
  RUN gem install sinatra
+```
+
+
 
 
 Dockerfile 基本的语法是
 
  * 使用`#`来注释
  * `FROM` 指令告诉 Docker 使用哪个镜像作为基础
- * 接着是维护者的信息
+ * 接着是维护者 `MAINTAINER` 的信息
  * `RUN`开头的指令会在创建中运行，比如安装一个软件包，在这里使用 apt-get 来安装了一些软件
 
 编写完成 Dockerfile 后可以使用 `docker build` 来生成镜像。
 
+```
  $ sudo docker build -t="ouruser/sinatra:v2" .
  Uploading context 2.56 kB
  Uploading context
@@ -72,6 +79,9 @@ Dockerfile 基本的语法是
  ---> 324104cde6ad
  Removing intermediate container 5e9d0065c1f7
  Successfully built 324104cde6ad
+```
+
+
 
 
 其中 `-t` 标记来添加 tag，指定新的镜像的用户信息。
@@ -80,36 +90,50 @@ Dockerfile 基本的语法是
 
 可以看到 build 进程在执行操作。它要做的第一件事情就是上传这个 Dockerfile 内容，上传到哪里呢，根据Docker 构架图所求，是上传到 Docker daemon了。因为所有的操作都要依据 Dockerfile 来进行。 然后，Dockfile 中的指令被一条一条的执行。每一步都创建了一个新的容器，在容器中执行指令并提交修改（就跟之前介绍过的 `docker commit` 一样）。当所有的指令都执行完毕之后，返回了最终的镜像 id。所有的中间步骤所产生的容器都被删除和清理了。
 
-*注意一个镜像不能超过 127 层
+*注意一个镜像不能超过 `127` 层
 
 此外，还可以利用 `ADD` 命令复制本地文件到镜像；用 `EXPOSE` 命令来向外部开放端口；用 `CMD` 命令来描述容器启动后运行的程序等。例如
 
- # put my local web site in myApp folder to /var/www
- ADD myApp /var/www
- # expose httpd port
- EXPOSE 80
- # the command to run
- CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+```dockerfile
+# put my local web site in myApp folder to /var/www
+ADD myApp /var/www
+
+# expose httpd port
+EXPOSE 80
+
+# the command to run
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+```
+
+
 
 
 现在可以利用新创建的镜像来启动一个容器。
 
+```
  $ sudo docker run -t -i ouruser/sinatra:v2 /bin/bash
  root@8196968dac35:/#
+```
+
+
 
 
 其中， `-t` 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上， `-i` 则让容器的标准输入保持打开。
 
 还可以用 `docker tag` 命令来修改镜像的标签。
 
+ ```
  $ sudo docker tag 5db5f8471261 ouruser/sinatra:devel
- $ sudo docker images ouruser/sinatra
- REPOSITORY TAG IMAGE ID CREATED VIRTUAL SIZE
- ouruser/sinatra latest 5db5f8471261 11 hours ago 446.7 MB
- ouruser/sinatra devel 5db5f8471261 11 hours ago 446.7 MB
- ouruser/sinatra v2 5db5f8471261 11 hours ago 446.7 MB
+  $ sudo docker images ouruser/sinatra
+  REPOSITORY TAG IMAGE ID CREATED VIRTUAL SIZE
+  ouruser/sinatra latest 5db5f8471261 11 hours ago 446.7 MB
+  ouruser/sinatra devel 5db5f8471261 11 hours ago 446.7 MB
+  ouruser/sinatra v2 5db5f8471261 11 hours ago 446.7 MB
+ ```
 
 
-*注：更多用法，请参考 [Dockerfile](https://yeasy.gitbooks.io/docker_practice/content/dockerfile/index.html) 章节。
 
-如果需要修改镜像的话请参考： [https://blog.csdn.net/ling811/article/details/53817123](https://blog.csdn.net/ling811/article/details/53817123)![](https://blog.haohtml.com/wp-content/uploads/2019/01/docker-architecture.jpg)Docker构架
+
+注：更多用法，请参考 [Dockerfile](https://yeasy.gitbooks.io/docker_practice/content/dockerfile/index.html) 章节。
+
+如果需要修改镜像的话请参考： [https://blog.csdn.net/ling811/article/details/53817123](https://blog.csdn.net/ling811/article/details/53817123)![](https://blogstatic.haohtml.com//uploads/2023/09/docker-architecture-20230904222136428.jpg)Docker构架

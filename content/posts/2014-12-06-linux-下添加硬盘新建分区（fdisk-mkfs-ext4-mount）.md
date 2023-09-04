@@ -46,10 +46,10 @@ b、编辑 /etc/fstab 配置文件，将分区信息写进去。
 
 添加：/dev/sdb1 /fikker ext3 defaults 0 0
 
-[![fstab-fikker-2](http://blog.haohtml.com/wp-content/uploads/2014/12/fstab-fikker-2.png)](http://blog.haohtml.com/wp-content/uploads/2014/12/fstab-fikker-2.png)
+[![fstab-fikker-2](http://blogx.haohtml.com/wp-content/uploads/2014/12/fstab-fikker-2.png)](http://blog.haohtml.com/wp-content/uploads/2014/12/fstab-fikker-2.png)
 
 c、加载新建分区：mount -a
 
 参考： [http://soft.chinabyte.com/461/7749961.shtml](http://soft.chinabyte.com/461/7749961.shtml)
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2014/12/QQ截图20141206152231.jpg
+[1]: http://blog.haohtml.com/wp-content/uploads/2014/12/QQ截图20141206152231.jpg

@@ -15,74 +15,27 @@ tags:
 
 Git与Subversion的命令对比表
 
-**操作****Git****Subversion**复制数据仓库git clonesvn checkout提交git commitsvn commit
- 查看提交的详细记录
+| **操作**           | **GIT**                  | **SUBVERSION**  |
+| :----------------- | :----------------------- | :-------------- |
+| 复制数据仓库       | git clone                | svn checkout    |
+| 提交               | git commit               | svn commit      |
+| 查看提交的详细记录 | git show                 | svn cat         |
+| 确认状态           | git status               | svn status      |
+| 确认差异           | git diff                 | svn diff        |
+| 确认记录           | git log                  | svn log         |
+| 添加               | git add                  | svn add         |
+| 移动               | git mv                   | svn mv          |
+| 删除               | git rm                   | svn rm          |
+| 取消修改           | git checkout / git reset | svn revert (※1) |
+| 创建分支           | git branch               | svn copy (※2)   |
+| 切换分支           | git checkout             | svn switch      |
+| 合并               | git merge                | svn merge       |
+| 创建标签           | git tag                  | svn copy (※2)   |
+| 从服务端更新本地   | git pull / git fetch     | svn update      |
+| 推送到远端         | git push                 | svn commit (※3) |
+| 忽略档案目录       | .gitignore               | .svnignore      |
 
- git show
 
- svn cat
-
- 确认状态
-
- git status
-
- svn status
-
- 确认差异
-
- git diff
-
- svn diff
-
- 确认记录
-
- git log
-
- svn log
- 添加git addsvn add
- 移动
-
- git mv
-
- svn mv
-
- 删除
-
- git rm
-
- svn rm
-
- 取消修改
-
- git checkout / git reset
-
- svn revert (※1)
-
- 创建分支
-
- git branch
-
- svn copy (※2)
-
- 切换分支
-
- git checkout
-
- svn switch
-
- 合并
-
- git merge
-
- svn merge
-
- 创建标签
-
- git tag
-
- svn copy (※2)
- 从服务端更新本地git pull / git fetchsvn update推送到远端git pushsvn commit (※3)
- 忽略档案目录.gitignore.svnignore
 
 ※1. SVN的revert是用来取消修改，但Git的revert是用来消除提交。所以即使是同样的命令，在SVN和Git里的含义是不同的。
 

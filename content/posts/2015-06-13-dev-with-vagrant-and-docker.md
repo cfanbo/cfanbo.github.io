@@ -43,7 +43,6 @@ vagrant up命令执行后，如果看到下面的错误信息，则需要安装�
 
 ```
 $  vagrant plugin install vagrant-vbguest
-
 ```
 
 
@@ -126,7 +125,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, path: "bootstrap.sh"
 end
-
 ```
 
 
@@ -143,7 +141,6 @@ Vagrant操作的VirtualBox里面运行着ubuntu， 然后又在ubuntu里安装�
 
 ```
 vagrant up
-
 ```
 
 
@@ -152,7 +149,6 @@ vagrant up
 
 ```
 config.vm.network :forwarded_port, guest: 22, host: 2222
-
 ```
 
 
@@ -165,7 +161,6 @@ config.vm.network :forwarded_port, guest: 22, host: 2222
 config.vm.provision :puppet do |puppet|
     puppet.manifests_path = 'puppet/manifests'
 end
-
 ```
 
 
@@ -176,7 +171,6 @@ vagrant支持puppet，来帮你自动安装好VirtualBox里需要的各种lib。
 config.vm.provision "docker" do |d|
   d.pull_images "blackanger/my-mysql-server"
 end
-
 ```
 
 
@@ -185,7 +179,6 @@ end
 
 ```
 config.vm.provision :shell, path: "bootstrap.sh"
-
 ```
 
 
@@ -194,7 +187,6 @@ config.vm.provision :shell, path: "bootstrap.sh"
 
 ```
 config.vm.synced_folder "./vagrant", "/vagrant_data"
-
 ```
 
 
@@ -211,22 +203,17 @@ config.vm.synced_folder "./vagrant", "/vagrant_data"
 - 也可以使用
       sudo docker build -t  <username>/<imagesname> .
   命令从一个Dockerfile文件来构建image。
-
 ```
 
 
-
-* * *
 
 ## 总结
 
 还有很多的vagrant和docker命令我都没有说，这些只要去看help就明白了。关于其他使用细节，欢迎大家一起交流。
 
-转自： [http://tao.logdown.com/posts/184078-dev-with-vagrant-and-docker](http://tao.logdown.com/posts/184078-dev-with-vagrant-and-docker)
 
 
-
- [1]: http://vagrantup.com/
- [2]: http://blog.segmentfault.com/fenbox/1190000000264347
- [3]: https://www.docker.io/%E2%80%8E
- [4]: https://github.com/Ruby-Study/dh_env
+[1]: http://vagrantup.com/
+[2]: http://blog.segmentfault.com/fenbox/1190000000264347
+[3]: https://www.docker.io/%E2%80%8E
+[4]: https://github.com/Ruby-Study/dh_env

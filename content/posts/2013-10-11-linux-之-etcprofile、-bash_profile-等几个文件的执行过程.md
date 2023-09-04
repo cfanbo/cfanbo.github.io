@@ -19,15 +19,21 @@ tags:
 
 因为在 ~/.bash_profile文件中一般会有下面的代码：
 
-[shell]if [ -f ~/.bashrc ] ; then
+```
+if [ -f ~/.bashrc ] ; then
 . ./bashrc
-fi[/shell]
+fi
+```
+
+
 
 ~/.bashrc中，一般还会有以下代码：
 
-[shell]if [ -f /etc/bashrc ] ; then
+```
+if [ -f /etc/bashrc ] ; then
 . /etc/bashrc
-fi[/shell]
+fi
+```
 
 所以，~/.bashrc会调用 /etc/bashrc文件。最后，在退出shell时，还会执行 ~/.bash_logout文件。
 

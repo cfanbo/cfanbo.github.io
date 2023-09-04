@@ -13,16 +13,14 @@ tags:
 **注意`slice`和数组在声明时的区别：**声明数组时，方括号内写明了数组的长度或使用`...`自动计算长度，而声明`slice`时，方括号内没有任何字符。
 
 ```
-[java]arr1 := [10]int{1,2,3,4} //数组,长度为10,只有4个元素指定,其它的元素值默认为0
+arr1 := [10]int{1,2,3,4} //数组,长度为10,只有4个元素指定,其它的元素值默认为0
 arr2 := [...]string{"a","b","c"} //数组,长度自适应,这里长度为3
-s1 := []int{1,2,3,4} //slice,目前长度为4,可能通过append来动态添加元素个数[/java]
+s1 := []int{1,2,3,4} //slice,目前长度为4,可能通过append来动态添加元素个数
 ```
 
 示例:
 
 ```
-[java]
-
 package main
 
 import (
@@ -55,7 +53,7 @@ s2 := append(slice, slice2...)
  fmt.Println(s2) //[a b c x y x]
  fmt.Println("len:", len2, "cap:", cap2) //len: 3 cap: 6
 
-}[/java]
+}
 ```
 
 ===========================================
@@ -64,21 +62,21 @@ s2 := append(slice, slice2...)
 长度是类型的组成部分，也就是说 “[10]int” 和 “[20]int” 是完全不同的两种数组类型。
 
 ```
-[java]var a [4]int;  // 所有元素⾃动被初始化为 0
+var a [4]int;  // 所有元素⾃动被初始化为 0
 a[1] = 100;
 for i := 0; i &amp;amp;lt; len(a); i++ {
-println(a[i])
-}[/java]
+	println(a[i])
+}
 ```
 
 可以用复合语句直接初始化。
 
 ```
-[java]
+
 a := [10]int{ 1, 2, 3, 4 }  // 未提供初始化值的元素为默认值 0
 b := [...]int{ 1, 2 }  // 由初始化列表决定数组长度，不能省略 "..." ，否则就成 slice 了。
 c := [10]int{ 2:1, 5:100 }  // 按序号初始化元素
-[/java]
+
 ```
 
 可以像这样声明一个数组：**var a [3]int**，如果不使用零来初始化它，则用复合声
@@ -144,15 +142,16 @@ println([1]string{"a"} == [1]string{"a"})
 ```
 
 func test(x *[4]int) {
-for i := 0; i < len(x); i++ {
-println(x[i]) // 用指针访问数组语法并没有什么不同，比 C 更直观。
+  for i := 0; i < len(x); i++ {
+    println(x[i]) // 用指针访问数组语法并没有什么不同，比 C 更直观。
+  }
+  x[3] = 300
 }
-x[3] = 300
-}
+
 func main() {
-x := [4]int{ 2:100, 1:200 }
-test(x)
-println(x[3])
+  x := [4]int{ 2:100, 1:200 }
+  test(x)
+  println(x[3])
 }
 
 ```
@@ -160,16 +159,15 @@ println(x[3])
 可以用 new() 创建数组，返回数组指针。
 
 ```
-
 func test(a *[10]int) {
-a[2] = 100 // 用指针直接操作没有压力。
-}
-func main() {
-var a = new([10]int)  // 返回指针。
-test(a)
-fmt.Println(a, len(a))
+	a[2] = 100 // 用指针直接操作没有压力。
 }
 
+func main() {
+  var a = new([10]int)  // 返回指针。
+  test(a)
+  fmt.Println(a, len(a))
+}
 ```
 
 输出:
@@ -183,13 +181,12 @@ fmt.Println(a, len(a))
 多维数组和 C 类似，一种数组的数组。
 
 ```
-
 func main() {
-var a = [3][2]int{ [...]int{1, 2}, [...]int{3, 4} }
-var b = [3][2]int{ {1, 2}, {3, 4} }
-c := [...][2]int{ {1, 2}, {3, 4}, {5, 6} }   // 第二个维度不能用 "..." 。
-c[1][1] = 100
-fmt.Println(a, "n", b, "n", c, len(c), len(c[0]))
+  var a = [3][2]int{ [...]int{1, 2}, [...]int{3, 4} }
+  var b = [3][2]int{ {1, 2}, {3, 4} }
+  c := [...][2]int{ {1, 2}, {3, 4}, {5, 6} }   // 第二个维度不能用 "..." 。
+  c[1][1] = 100
+  fmt.Println(a, "n", b, "n", c, len(c), len(c[0]))
 }
 
 ```

@@ -23,7 +23,7 @@ go 命令依赖一个重要的环境变量：$GOPATH
 在类似 Unix 环境大概这样设置：
 
 ```
-[shell]export GOPATH=/home/apple/mygo[/shell]
+export GOPATH=/home/apple/mygo
 ```
 
 为了方便，应该把新建以上文件夹，并且把以上一行加入到 .bashrc 或者 .zshrc 或者自己的 sh 的配置文件中。
@@ -32,7 +32,7 @@ go 命令依赖一个重要的环境变量：$GOPATH
 Windows 设置如下，新建一个环境变量名称叫做GOPATH：
 
 ```
-[shell]GOPATH=c:mygo[/shell]
+GOPATH=c:mygo
 ```
 
 GOPATH允许多个目录，当有多个目录时，请注意分隔符，多个目录的时候Windows是分号，Linux系统是冒号，当有多个GOPATH时，默认会将go get的内容放在第一个目录下
@@ -58,25 +58,25 @@ GOPATH允许多个目录，当有多个目录时，请注意分隔符，多个�
 
 
 ```
-[shell]cd $GOPATH/src
-mkdir mymath[/shell]
+cd $GOPATH/src
+mkdir mymath
 ```
 
 新建文件sqrt.go，内容如下：
 
 
 ```
-[shell]
+
 // $GOPATH/src/mymath/sqrt.go源码如下：
-package mymath&amp;nbsp;&amp;nbsp;&amp;nbsp;
+package mymath
 
 func Sqrt(x float64) float64 {
-z := 0.0
-for i := 0; i &amp;lt; 1000; i++ {
-z -= (z*z - x) / (2 * x)
+  z := 0.0
+  for i := 0; i &amp;lt; 1000; i++ {
+    z -= (z*z - x) / (2 * x)
+  }
+  return z
 }
-return z
-}[/shell]
 ```
 
 这样我的应用包目录和代码已经新建完毕，注意：一般建议package的名称和目录名保持一致
@@ -96,7 +96,7 @@ return z
 
 
 ```
-[shell]cd $GOPATH/pkg/${GOOS}_${GOARCH}[/shell]
+cd $GOPATH/pkg/${GOOS}_${GOARCH}
 ```
 
 //可以看到如下文件
@@ -114,17 +114,17 @@ mymath.a
 
 
 ```
-[shell]cd $GOPATH/src
+cd $GOPATH/src
 mkdir mathapp
 cd mathapp
-vim main.go[/shell]
+vim main.go
 ```
 
 // $GOPATH/src/mathapp/main.go源码：
 
 
 ```
-[shell]package main&amp;nbsp;&amp;nbsp;&amp;nbsp;
+package main&amp;nbsp;&amp;nbsp;&amp;nbsp;
 import (
 "mymath"
 "fmt"
@@ -132,35 +132,35 @@ import (
 
 func main() {
 fmt.Printf("Hello, world.&amp;nbsp; Sqrt(2) = %vn", mymath.Sqrt(2))
-}[/shell]
+}
 ```
 
 如何编译程序呢？进入该应用目录，然后执行go build，那么在该目录下面会生成一个mathapp的可执行文件
 
 
 ```
-[shell]./mathapp[/shell]
+./mathapp
 ```
 
 输出如下内容
 
 
 ```
-[shell]Hello, world.&amp;nbsp; Sqrt(2) = 1.414213562373095[/shell]
+Hello, world.&amp;nbsp; Sqrt(2) = 1.414213562373095
 ```
 
 如何安装该应用，进入该目录执行go install,那么在$GOPATH/bin/下增加了一个可执行文件mathapp,这样可以在命令行输入如下命令就可以执行
 
 
 ```
-[shell]mathapp[/shell]
+mathapp
 ```
 
 也是输出如下内容
 
 
 ```
-[shell]Hello, world.&amp;nbsp; Sqrt(2) = 1.414213562373095[/shell]
+Hello, world.&amp;nbsp; Sqrt(2) = 1.414213562373095
 ```
 
 **获取远程包**
@@ -169,7 +169,7 @@ go语言有一个获取远程包的工具就是go get，目前go get支持多数
 
 
 ```
-[shell]go get github.com/astaxie/beedb[/shell]
+go get github.com/astaxie/beedb
 ```
 
 go get -u 参数可以自动更新包，而且当go get的时候会自动获取该包依赖的其他第三方包
@@ -179,8 +179,7 @@ go get -u 参数可以自动更新包，而且当go get的时候会自动获取�
 
 通过上面获取的代码在我们本地的源码相应的代码结构如下：
 
-
-[![go_dir1](http://blog.haohtml.com/wp-content/uploads/2015/04/go_dir1.png)](http://blog.haohtml.com/wp-content/uploads/2015/04/go_dir1.png)
+[![go_dir1](https://blogstatic.haohtml.com//uploads/2023/09/go_dir1.png)](http://blog.haohtml.com/wp-content/uploads/2015/04/go_dir1.png)
 
 go get本质上可以理解为首先第一步是通过源码工具clone代码到src下面，然后执行go install
 
@@ -197,6 +196,6 @@ go get本质上可以理解为首先第一步是通过源码工具clone代码到
 通过上面建立的我本地的mygo的目录结构如下所示
 
 
-![go_dir](http://blog.haohtml.com/wp-content/uploads/2015/04/go_dir.png)
+![go_dir](https://blogstatic.haohtml.com//uploads/2023/09/go_dir.png)
 
 从上面的结构我们可以很清晰的看到，bin目录下面存的是编译之后可执行的文件，pkg下面存放的是函数包，src下面保存的是应用源代码。[1] Windows系统中环境变量的形式为%GOPATH%，本书主要使用Unix形式，Windows用户请自行替换。

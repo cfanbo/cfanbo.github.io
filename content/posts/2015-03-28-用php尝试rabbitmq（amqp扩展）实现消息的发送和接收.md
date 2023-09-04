@@ -138,11 +138,11 @@ queue对象有两个方法可用于取消息：consume和get。
 
 运行消费者：
 
-![1343873405_2469](http://7u2fpb.com1.z0.glb.clouddn.com/wp-content/uploads/2014/03/1343873405_2469.jpg)
+![1343873405_2469](http://blogx.haohtml.com/wp-content/uploads/2014/03/1343873405_2469.jpg)
 
 运行生产者，发消息：
 
-![1343873408_3083](http://7u2fpb.com1.z0.glb.clouddn.com/wp-content/uploads/2014/03/1343873408_3083.jpg)
+![1343873408_3083](http://blogx.haohtml.com/wp-content/uploads/2014/03/1343873408_3083.jpg)
 
 消费者接收到消息：
 

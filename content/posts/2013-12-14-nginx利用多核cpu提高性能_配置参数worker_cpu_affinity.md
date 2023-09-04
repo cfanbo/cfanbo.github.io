@@ -29,10 +29,10 @@ Nginx默认没有开启利用多核cpu，我们可以通过增加worker_cpu_affi
 ### **两核cpu，开启两个进程**
 
 ```
-[shell]
+
 worker_processes  2;
 worker_cpu_affinity 01 10;
-[/shell]
+
 ```
 
 01表示启用了第一个cpu内核，10表示启用了第二个cpu内核
@@ -43,10 +43,10 @@ worker_cpu_affinity 01 10;表示开启了两个进程，第一个进程对应着
 ### **两核cpu，开启八个进程**
 
 ```
-[shell]
+
 worker_processes  8;
 worker_cpu_affinity 01 10 01 10 01 10 01 10;
-[/shell]
+
 ```
 
 开启了8个进程，它们分别对应了开启2个内核
@@ -55,10 +55,10 @@ worker_cpu_affinity 01 10 01 10 01 10 01 10;
 ### **8核cpu，开启8个进程**
 
 ```
-[shell]
+
 worker_processes  8;
 worker_cpu_affinity 10000000 01000000 00100000 00010000 00001000 00000100 00000010 00000001;
-[/shell]
+
 ```
 
 00000001表示开启第一个cpu内核，00000010表示开启第二个cpu内核，依次类推
@@ -67,10 +67,10 @@ worker_cpu_affinity 10000000 01000000 00100000 00010000 00001000 00000100 000000
 ### **8核cpu，开启2个进程**
 
 ```
-[shell]
+
 worker_processes  2;
 worker_cpu_affinity 10101010 01010101;
-[/shell]
+
 ```
 
 10101010表示开启了第2,4,6,8内核，01010101表示开始了1,3,5,7内核
@@ -85,8 +85,8 @@ worker_cpu_affinity 10101010 01010101;
 
 
 ```
-[shell]/etc/init.d/nginx -s reload[/shell]
+/etc/init.d/nginx -s reload
 ```
 
- [1]: http://nginx.org/en/docs/ngx_core_module.html#worker_cpu_affinity
- [2]: # "收起"
+[1]: http://nginx.org/en/docs/ngx_core_module.html#worker_cpu_affinity
+[2]: # "收起"

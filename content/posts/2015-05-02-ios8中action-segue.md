@@ -12,7 +12,7 @@ tags:
 ---
 os8 action segue 有几种方法，一般选择哪一个，每种方法都有什么用，在什么环境下使用？
 
-[![57_400607_5f360e47ff35d47](http://blog.haohtml.com/wp-content/uploads/2015/05/57_400607_5f360e47ff35d47.jpg)][1]
+[![57_400607_5f360e47ff35d47](http://blogx.haohtml.com/wp-content/uploads/2015/05/57_400607_5f360e47ff35d47.jpg)][1]
 
 Apple的解释在这里： [https://developer.apple.com/library/ios/recipes/xcode_help-IB_storyboard/chapters/StoryboardSegue.html](https://developer.apple.com/library/ios/recipes/xcode_help-IB_storyboard/chapters/StoryboardSegue.html)
 我的翻译：
@@ -22,4 +22,4 @@ Apple的解释在这里： [https://developer.apple.com/library/ios/recipes/xcod
 **Present as Popover**：在当前的view上出现一个小窗口来展示内容，无处不在的“选中文字后出现 复制/翻译 按钮就是这个
 **Custom**：自定义的
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2015/05/57_400607_5f360e47ff35d47.jpg
+[1]: http://blog.haohtml.com/wp-content/uploads/2015/05/57_400607_5f360e47ff35d47.jpg

@@ -52,7 +52,7 @@ $ export PATH=$PATH:$GOPATH/bin
 
 到此为止，go的配置基本上已经完成．可以用 go env 命令查看相关的配置信息.
 
-[![linux_go_env](http://blog.haohtml.com/wp-content/uploads/2013/10/linux_go_env.png)][1]
+[![linux_go_env](https://blogstatic.haohtml.com//uploads/2023/09/linux_go_env.png)][1]
 
 **二．安装zeromq**
 
@@ -101,11 +101,11 @@ go run zmqClient.go
 
 这个时候会发现客户端有10个写入操作(生产者)，而服务端有10个输出操作(消费者).说明一切正常，否则请检查上面的操作是否有误．
 
-[![zmq_client](http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_client.png)][2]
+[![zmq_client](https://blogstatic.haohtml.com//uploads/2023/09/zmq_client.png)][2]
 
-[![zmq_server](http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_server.png)][3]
+[![zmq_server](https://blogstatic.haohtml.com//uploads/2023/09/zmq_server.png)][3]
 至于下面的操作，看开发者怎么使用了．
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2013/10/linux_go_env.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_client.png
- [3]: http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_server.png
+[1]: http://blog.haohtml.com/wp-content/uploads/2013/10/linux_go_env.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_client.png
+[3]: http://blog.haohtml.com/wp-content/uploads/2013/10/zmq_server.png
