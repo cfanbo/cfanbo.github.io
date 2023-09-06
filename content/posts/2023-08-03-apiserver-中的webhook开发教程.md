@@ -152,7 +152,7 @@ webhooks:
 >
 > 你必须在以上示例中将 `<CA_BUNDLE>` 替换为一个有效的 VA 证书包， 这是一个用 PEM 编码的 CA 证书包，用于校验 Webhook 的服务器证书。
 
-参考：
+参考: https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#service-reference
 
 # 请求与响应 
 
@@ -255,7 +255,7 @@ request:
   dryRun: False
 ```
 
-参考：
+参考： https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#request
 
 ## 响应 
 
@@ -338,7 +338,7 @@ Webhook 禁止请求的最简单响应示例：
  * 使用警告消息描述该客户端进行 API 请求时会遇到或应意识到的问题
  * 如果可能，将警告限制为 120 个字符
 
-参考：
+参考： https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#response
 
 # 失败策略 
 
@@ -359,13 +359,15 @@ webhooks:
 
 准入 Webhook 所用的默认 `failurePolicy` 是 `Fail`。
 
-参考：
+参考： https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#failure-policy
+
+
 
 # 开发实战 
 
 上面我们分别介绍了如何注册一个webhook 以及对一个webhook 如何发磅请求与响应。下面我们编写一个例子来测试一下webhook的功能。
 
-参考官方示例：
+参考官方示例： https://github.com/kubernetes/kubernetes/blob/release-1.27/test/images/agnhost/webhook/main.go
 
 ## 客户端 
 
