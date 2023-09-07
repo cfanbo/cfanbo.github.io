@@ -19,7 +19,7 @@ tags:
 
 # 实现原理
 
-在上一节[《apiserver 中的webhook开发教程》](https://blog.haohtml.com/archives/34883/) 我们介绍过`admission controller` ，由此要知当创建一个资源对象的时候，可以通过定义 `ValidatingWebhookConfiguration`  或 `MutatingWebhookConfiguration` 实现在创建的进程中调用这些 webhook，其中`ValidatingWebhookConfiguration` 用来验证请求合法性，而 `MutatingWebhookConfiguration` 则可以对请求的资源进行修改。而对于istio中的 `injection` 正则基于此原理实现的。
+在上一节[《apiserver 中的webhook开发教程》](https://blog.haohtml.com/archives/34883/) 我们介绍过`admission controller` 基本实现原理，由此得知当创建一个资源对象的时候，可以通过定义 `ValidatingWebhookConfiguration`  或 `MutatingWebhookConfiguration` 实现在创建的进程中调用这些 webhook。而 `MutatingWebhookConfiguration` 则可以对请求的资源进行修改。在istio中的 `injection` 正是基于此原理实现的。
 
 ![](https://blogstatic.haohtml.com/uploads/2023/08/6ca5dd6b207691069de1cf4df59cc6ad.png)
 
