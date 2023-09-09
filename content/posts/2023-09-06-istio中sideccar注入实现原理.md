@@ -19,7 +19,7 @@ tags:
 
 # 实现原理
 
-在上一节[《apiserver 中的webhook开发教程》](https://blog.haohtml.com/archives/34883/) 我们介绍过`admission controller` 基本实现原理，由此得知当创建一个资源对象的时候，可以通过定义 `ValidatingWebhookConfiguration`  或 `MutatingWebhookConfiguration` 实现在创建的进程中调用这些 webhook。而 `MutatingWebhookConfiguration` 则可以对请求的资源进行修改。在istio中的 `injection` 正是基于此原理实现的。
+在上一节[《apiserver 中的webhook开发教程》](https://blog.haohtml.com/archives/34883/) 我们介绍过`admission controller` 基本实现原理，由此得知当创建一个资源对象的时候，可以通过定义 `ValidatingWebhookConfiguration`  或 `MutatingWebhookConfiguration` 实现在创建的进程中对这些 webhook 进行调用。而 `MutatingWebhookConfiguration` 则可以对请求的资源进行修改。在istio中的 `injection` 正是基于此原理实现的。
 
 ![](https://blogstatic.haohtml.com/uploads/2023/08/6ca5dd6b207691069de1cf4df59cc6ad.png)
 
@@ -107,11 +107,11 @@ istio-validator-istio-system   1          155m
 
 在完成了所有对象修改并且 API 服务器也验证了所传入的对象之后，`ValidatingWebhookConfiguration` 的 Webhook 才会被调用，并通过拒绝请求的方式来强制实施自定义的策略。 
 
-> 这里声明了 四个MutatingWebhook 和 一个 ValidatingWebhook
+> 这里声明了 四个MutatingWebhook 和 一个ValidatingWebhook
 
 ## MutatingWebhookConfiguration
 
-所以我们先看一下 `MutatingWebhookConfiguration` 的定义
+我们先看一下 `MutatingWebhookConfiguration` 的定义
 
 ```yaml
 $ kubectl get MutatingWebhookConfiguration  -n istio-system -o yaml
@@ -300,7 +300,7 @@ metadata:
   resourceVersion: ""
 ```
 
-这里声明了四个webhook，它们的 [namespaceSelector](https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector)  与[objectSelector](https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector) 配置都不一样，但规则请求规则是一样的，都是针对 pod 资源的CREATE 操作。
+这四个webhook 的 [namespaceSelector](https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-namespaceselector)  与[objectSelector](https://kubernetes.io/zh-cn/docs/reference/access-authn-authz/extensible-admission-controllers/#matching-requests-objectselector) 配置都不一样，但请求规则是一样的，都是针对 `pod` 资源的 `CREATE` 操作。
 
 ```yaml
   rules:
@@ -315,7 +315,7 @@ metadata:
     scope: '*'
 ```
 
-同时请求服务端配置也是同一个。
+同时请求服务端配置也是同一个
 
 ```yaml
   service:
@@ -325,13 +325,13 @@ metadata:
     port: 443
 ```
 
-也就是说只要满足这四个配置中的任何一项，就会发起对 webhook 的调用，然后服务端可能对其进行修改并返回 `AdmissionReview` 对象。
+也就是说只要满足这四个配置中的任何一项，就会发起对 webhook 的调用，然后服务端对其进行修改并返回 `AdmissionReview` 对象。
 
 > 这里指定了 `admissionReviewVersions` 支持的版本号，默认情况下会发送支持列表中的第一个版本号。
 
 ## ValidatingWebhookConfiguration
 
-我们先看一下 `ValidatingWebhookConfiguration` 的定义
+再看一下 `ValidatingWebhookConfiguration` 的定义
 
 ```yaml
 $ kubectl get ValidatingWebhookConfiguration istio-validator-istio-system -o yaml -n istio-system
@@ -402,7 +402,7 @@ webhooks:
       port: 443
 ```
 
-从上面对 webhook 的定义得知，它们请求目标为 istiod 这个service ，路径分别为 `/inject`  和 `/validate`。
+从上面两个 webhook 的定义得知，它们请求目标为 `istiod` 这个 `service` ，请求路径为 `/inject`  和 `/validate`。
 
 我们再看一下 `istiod`  服务的定义
 
@@ -466,9 +466,9 @@ status:
 
 # webhook 实现
 
-上面我们知道了`mutating webhook` 的配置信息，下面我们再看一下它的服务端实现。
+上面我们知道了`mutating webhook` 的配置信息，执着我们再看一下它的服务端实现。
 
-如果我们不知道从哪里入手的话，不妨先看一下 istiod 容器使用的是哪一个镜像，然后根据  http://github.com/istio/istio 文档即可得到对应的服务端代码。
+如果你不知道从哪里入手的话，不妨先看一下 istiod 容器使用的是哪一个镜像，然后根据  http://github.com/istio/istio 文档即可得到这个镜像对应的服务端代码。
 
 ```yaml
 $ kubectl describe pod/istiod-86b84db666-tj7c4 -n istio-system
