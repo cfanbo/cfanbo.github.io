@@ -18,7 +18,7 @@ version: v1.27.3
 
 入口文件 `/pkg/kubelet/kubelet.go`中的 `NewMainKubelet()` 函数，
 
-```
+```go
 func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,...) (*Kubelet, error) {
     ...
     // 插件管理器 /pkg/kubelet/kubelet.go#L811-L814
@@ -33,7 +33,7 @@ func NewMainKubelet(kubeCfg *kubeletconfiginternal.KubeletConfiguration,...) (*K
 
 这里第一个参数 `klet.getPluginsRegistrationDir()` 是返回 `plugins` 所在目录，默认位于`kubelet`目录下的 `plugins_registry` 目录，因此完整的路径为 `/var/lib/kubelet/plugins_registry`。（这些sock文件是由谁创建的呢？）同时将sock放在子目录里。
 
-```
+```go
 const(
     DefaultKubeletPluginsRegistrationDirName = "plugins_registry"
 )
@@ -47,7 +47,7 @@ func (kl *Kubelet) getPluginsRegistrationDir() string {
 
 我们看一下函数 `NewPluginManager()` 的实现。
 
-```
+```go
 // pkg/kubelet/pluginmanager/plugin_manager.go#L54-L80
 func NewPluginManager(
     sockDir string,
@@ -84,7 +84,7 @@ func NewPluginManager(
 
 查看函数 `cache.NewActualStateOfWorld()`
 
-```
+```go
 // pkg/kubelet/pluginmanager/cache/actual_state_of_world.go
 type ActualStateOfWorld interface {
     GetRegisteredPlugins() []PluginInfo
@@ -110,7 +110,7 @@ func NewActualStateOfWorld() ActualStateOfWorld {
 
 这里我们看一下插件信息 `PluginInfo` 数据结构
 
-```
+```go
 // pkg/kubelet/pluginmanager/cache/actual_state_of_world.go#L78
 // PluginInfo holds information of a plugin
 type PluginInfo struct {
@@ -162,7 +162,7 @@ type PluginHandler interface {
 
 查看函数 `cache.NewDesiredStateOfWorld()`
 
-```
+```go
 // pkg/kubelet/pluginmanager/cache/desired_state_of_world.go
 type DesiredStateOfWorld interface {
     AddOrUpdatePlugin(socketPath string) error
@@ -192,7 +192,7 @@ func NewDesiredStateOfWorld() DesiredStateOfWorld {
 
 上面介绍了插件的 `期望状态` 与 `实际状态`，剩下的就是对这两种状态的 `reconciler` 操作了。
 
-```
+```go
 func NewPluginManager(sockDir string,...) PluginManager {
   ...
   reconciler := reconciler.NewReconciler(
@@ -211,7 +211,7 @@ func NewPluginManager(sockDir string,...) PluginManager {
 
 函数 `NewReconciler()` 源码
 
-```
+```go
 // pkg/kubelet/pluginmanager/reconciler/reconciler.go
 type Reconciler interface {
     Run(stopCh <-chan struct{})
@@ -256,7 +256,7 @@ func NewReconciler(
 
 我们看一下 `reconciler` 对这个接口的真正实现
 
-```
+```go
 // pkg/kubelet/pluginmanager/reconciler/reconciler.go
 
 // 共三个参数，第一个参数是一个函数
@@ -279,7 +279,7 @@ func (rc *reconciler) AddHandler(pluginType string, pluginHandler cache.PluginHa
 
 我看一下 Run() 函数里的 `rc.reconcile()`
 
-```
+```go
 func (rc *reconciler) reconcile() {
     // Unregisterations are triggered before registrations
 
@@ -345,17 +345,17 @@ func (rc *reconciler) reconcile() {
 
 这里插件的注册与取消注册是通过 `rc.operationExecutor` （ 操作执行器）来完成的，它是在上在函数 `NewPluginManager()` 中调用函数来实现的。
 
-```
-operationexecutor.NewOperationExecutor(
-            operationexecutor.NewOperationGenerator(
-                recorder,
-            ),
-        )
+```go
+    operationexecutor.NewOperationExecutor(
+        operationexecutor.NewOperationGenerator(
+            recorder,
+        ),
+    )
 ```
 
 函数实现为
 
-```
+```go
 // pkg/kubelet/pluginmanager/operationexecutor/operation_executor.go
 // NewOperationExecutor() 实现接口
 type OperationExecutor interface {
@@ -389,7 +389,7 @@ func NewOperationExecutor(
 
 对接口的实现
 
-```
+```go
 // pkg/kubelet/pluginmanager/operationexecutor/operation_executor.go
 
 // 执行器注册插件
@@ -425,7 +425,7 @@ func (oe *operationExecutor) UnregisterPlugin(
 
 这里 `oe.pendingOperations` 是一个 `GoRoutineMap`接口
 
-```
+```go
 // pkg/util/goroutinemap/goroutinemap.go
 type GoRoutineMap interface {
         // 第二个参数是函数
@@ -438,7 +438,7 @@ type GoRoutineMap interface {
 
 实现
 
-```
+```go
 type goRoutineMap struct {
     operations                map[string]operation
     exponentialBackOffOnError bool
@@ -494,7 +494,7 @@ func (grm *goRoutineMap) Run(
 
 这里对于回调函数 `operationFunc()` 的实现接口 `OperationGenerator`
 
-```
+```go
 // pkg/kubelet/pluginmanager/operationexecutor/operation_generator.go
 type OperationGenerator interface {
     GenerateRegisterPluginFunc(socketPath string, timestamp time.Time, pluginHandlers map[string]cache.PluginHandler, actualStateOfWorldUpdater ActualStateOfWorldUpdater) func() error
@@ -504,7 +504,7 @@ type OperationGenerator interface {
 
 注册插件实现
 
-```
+```go
 // pkg/kubelet/pluginmanager/operationexecutor/operation_generator.go
 
 // 注册插件回调函数
@@ -588,7 +588,7 @@ func (og *operationGenerator) GenerateRegisterPluginFunc(
 
 取消注册插件
 
-```
+```go
 // pkg/kubelet/pluginmanager/operationexecutor/operation_generator.go
 
 func (og *operationGenerator) GenerateUnregisterPluginFunc(
@@ -626,7 +626,7 @@ func (og *operationGenerator) GenerateUnregisterPluginFunc(
 
 对于`pluginwatcher` 它是在 `NewPluginManager()` 创建的
 
-```
+```go
 func NewPluginManager() PluginManager {
     ...
     pm := &pluginManager{
@@ -642,7 +642,7 @@ func NewPluginManager() PluginManager {
 }
 ```
 
-```
+```go
 // pkg/kubelet/pluginmanager/pluginwatcher/plugin_watcher.go
 func NewWatcher(sockDir string, desiredStateOfWorld cache.DesiredStateOfWorld) *Watcher {
     return &Watcher{
@@ -709,7 +709,7 @@ func (w *Watcher) Start(stopCh <-chan struct{}) error {
 
 这里通过 `fsnotify` 来监控插件 sock 文件的变化情况，如果这个路径是一个目录的话，则将这个目录添加到监控列表中。如果监听到文件的创建，则执行 `w.handleCreateEvent()`函数。
 
-```
+```go
 // pkg/kubelet/pluginmanager/pluginwatcher/plugin_watcher.go
 
 func (w *Watcher) handleCreateEvent(event fsnotify.Event) error {
@@ -748,7 +748,7 @@ func (w *Watcher) handleCreateEvent(event fsnotify.Event) error {
 
 现在看一下 `Wathcer` 是如何如何注册插件的
 
-```
+```go
 func (w *Watcher) handlePluginRegistration(socketPath string) error {
     socketPath = getSocketPath(socketPath)
 
@@ -763,7 +763,7 @@ func (w *Watcher) handlePluginRegistration(socketPath string) error {
 
 可以看到对于 pluginWatcher 来讲，当发现有插件sock的时候，会将这个插件注册到`dsw`中
 
-```
+```go
 // pkg/kubelet/pluginmanager/cache/desired_state_of_world.go#L138-L141
 func (dsw *desiredStateOfWorld) AddOrUpdatePlugin(socketPath string) error {
     // 注册插件，此时缺少插件 PluginInfo.Name 和  PluginInfo.Handler
@@ -781,7 +781,7 @@ func (dsw *desiredStateOfWorld) AddOrUpdatePlugin(socketPath string) error {
 
 当 `pluginWatch` 监控到删除操作时，将调用 `w.handleDeleteEvent(event)` 处理
 
-```
+```go
 func (w *Watcher) handleDeleteEvent(event fsnotify.Event) {
     socketPath := event.Name
     w.desiredStateOfWorld.RemovePlugin(socketPath)
@@ -790,7 +790,7 @@ func (w *Watcher) handleDeleteEvent(event fsnotify.Event) {
 
 可以看到这里是将插件从 dsw 中删除， 真正执行的代码为
 
-```
+```go
 // pkg/kubelet/pluginmanager/cache/desired_state_of_world.go#L145-L150
 func (dsw *desiredStateOfWorld) RemovePlugin(socketPath string) {
     dsw.Lock()
@@ -815,7 +815,7 @@ func (dsw *desiredStateOfWorld) RemovePlugin(socketPath string) {
 
 其中在 `initializeRuntimeDependentModules`这一步，先是注册了一些不同类型的插件，然后才正式启动服务。
 
-```
+```go
 func (kl *Kubelet) initializeRuntimeDependentModules() {
     // 1. CSI Driver 插件回调函数， pkg/volume/csi/csi_plugin.go
   // Adding Registration Callback function for CSI Driver

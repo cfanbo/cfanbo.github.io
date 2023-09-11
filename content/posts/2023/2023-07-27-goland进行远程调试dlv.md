@@ -39,13 +39,13 @@ tags:
 
 安装 `dlv` 命令参考 [https://github.com/go-delve/delve/tree/master/Documentation/installation][1]
 
-```
+```shell
 # go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
 查看一下 dlv 的用法
 
-```
+```shell
 # dlv -h
 Delve is a source level debugger for Go programs.
 
@@ -135,7 +135,7 @@ Use "dlv [command] --help" for more information about a command.
 
 在远程调试服务器编译程序，此时要禁用内联和优化（必须禁用优化）
 
-```
+```shell
 go build -gcflags "all=-N -l" -o app github.com/app/demo
 ```
 
@@ -143,7 +143,7 @@ go build -gcflags "all=-N -l" -o app github.com/app/demo
 
 运行服务
 
-```
+```shell
 ./app --name=zhangsir --sex=1
 ```
 
@@ -153,13 +153,13 @@ go build -gcflags "all=-N -l" -o app github.com/app/demo
 
 一种方法直接对原有的服务进程进行侵入，首先找出来原来 `app` 进程的`PID`, 然后执行以下命令
 
-```
+```shell
 dlv attach PID --headless --api-version=2 --log --listen=:2345
 ```
 
 另一种方法是在服务启动时时候，使用指定 dlv 命令启动
 
-```
+```shell
 dlv --headless --api-version=2 --log --listen=:2345 exec ./app -- --name=zhangsir --sex=1
 ```
 
@@ -172,7 +172,7 @@ dlv --headless --api-version=2 --log --listen=:2345 exec ./app -- --name=zhangsi
 
 这里我使用第二种方法
 
-```
+```shell
 $ dlv --headless --api-version=2 --log --listen=:2345 exec ./app -- --name=zhangsir --sex=1
 
 API server listening at: [::]:2345
@@ -183,7 +183,7 @@ API server listening at: [::]:2345
 
 可以看到dlv服务监听在 `:2345`地址。这里对目标进程(PID=24780) 启用了debug模式，可以通过命令查看一下
 
-```
+```shell
 $ ps aux | grep app | grep -v grep
 sxf        24774  0.0  0.4 5437024 19104 pts/1   Sl   11:43   0:00 dlv --headless --api-version=2 --log --listen=:2345 exec ./app -- --name=zhangsir --sex=1
 
@@ -192,7 +192,7 @@ sxf        24780  0.0  0.0   1608     8 pts/1    t+   11:43   0:00 /home/sxf/wor
 
 注意这时一共有两个进程, 我们看一下进程之间的关系
 
-```
+```shell
 $ pstree -p 24774
 dlv(24774)─┬─app(24780)
            ├─{dlv}(24775)
@@ -220,7 +220,7 @@ dlv(24774)─┬─app(24780)
 
 这时我们在远程调试服务器可以看到 dlv 的输出日志
 
-```
+```shell
 $ dlv --headless --api-version=2 --log --listen=:2345 exec ./app -- --name=zhangsir --sex=1
 API server listening at: [::]:2345
 2023-07-27T12:24:28Z warning layer=rpc Listening for remote connections (connections are not authenticated nor encrypted)
@@ -236,7 +236,7 @@ API server listening at: [::]:2345
 
 接着我们在GoLand点击`"Step Over"` 继续下一个断点，这时再看一下远程服务器日志
 
-```
+```shell
 2023-07-27T12:27:57Z debug layer=debugger nexting
 ```
 

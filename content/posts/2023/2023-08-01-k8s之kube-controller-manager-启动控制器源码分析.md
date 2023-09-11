@@ -20,7 +20,7 @@ k8s: v1.27.3
 
 # 控制器选项初始化 
 
-```
+```go
 // cmd/kube-controller-manager/app/controllermanager.go#L104
 func NewControllerManagerCommand() *cobra.Command {
 
@@ -31,7 +31,7 @@ func NewControllerManagerCommand() *cobra.Command {
 
 调用 `options.NewKubeControllerManagerOptions()` 对所有内置控制器及全局配置进行初始化。
 
-```
+```go
 func NewKubeControllerManagerOptions() (*KubeControllerManagerOptions, error) {
     componentConfig, err := NewDefaultComponentConfig()
     if err != nil {
@@ -148,7 +148,7 @@ func NewKubeControllerManagerOptions() (*KubeControllerManagerOptions, error) {
 
 # 获取内置控制器 
 
-```
+```go
 func NewControllerManagerCommand() *cobra.Command {
     ...
 
@@ -166,7 +166,7 @@ func NewControllerManagerCommand() *cobra.Command {
 
 > 调用链为： `KnownControllers()` -> `sets.StringKeySet(NewControllerInitializers(IncludeCloudLoops))` -> `NewControllerInitializers()`
 
-```
+```go
 func KnownControllers() []string {
     // IncludeCloudLoops 表示 kube控制器管理器包括依赖于云提供商的控制器循环
     ret := sets.StringKeySet(NewControllerInitializers(IncludeCloudLoops))
@@ -180,7 +180,7 @@ func KnownControllers() []string {
 
 调用 `NewControllerInitializers()` 函数获取所有内置控制器
 
-```
+```go
 // cmd/kube-controller-manager/app/controllermanager.go#L429
 func NewControllerInitializers(loopMode ControllerLoopMode) map[string]InitFunc {
     controllers := map[string]InitFunc{}
@@ -257,7 +257,7 @@ func NewControllerInitializers(loopMode ControllerLoopMode) map[string]InitFunc 
 
 接着调用 `s.Config()` 函数，生成控制器管理配置项，获取与集群通讯所必须的基本信息。
 
-```
+```go
 // Config return a controller manager config objective
 func (s KubeControllerManagerOptions) Config(allControllers []string, disabledByDefaultControllers []string) (*kubecontrollerconfig.Config, error) {
     if err := s.Validate(allControllers, disabledByDefaultControllers); err != nil {
@@ -325,7 +325,7 @@ func (s KubeControllerManagerOptions) Config(allControllers []string, disabledBy
 
 对于控制器的执行调用入口函数 `Run()` 实现
 
-```
+```go
 // cmd/kube-controller-manager/app/controllermanager.go#L104
 func NewControllerManagerCommand() *cobra.Command {
 
@@ -339,7 +339,7 @@ func NewControllerManagerCommand() *cobra.Command {
 
 `Run()` 函数首先创建一个控制器上下文配置选项，用来在每个控制器执行时提供公共配置，然后调用 `StartConterllers()` 函数来启动所有的内置控制器。
 
-```
+```go
 // cmd/kube-controller-manager/app/controllermanager.go#L180
 // Run runs the KubeControllerManagerOptions.
 func Run(ctx context.Context, c *config.CompletedConfig) error {
@@ -396,7 +396,7 @@ func Run(ctx context.Context, c *config.CompletedConfig) error {
 
 从`StartControllers` 函数可以看出，是通过遍历的方式启动每一个 controller 的。其中传递了上下文参数 `ControllerCtx` ，它是每个控制器的上下文配置项。
 
-```
+```go
 // 启动所有控制器
 // StartControllers starts a set of controllers with a specified ControllerContext
 func StartControllers(ctx context.Context, controllerCtx ControllerContext, startSATokenController InitFunc, controllers map[string]InitFunc,
@@ -445,7 +445,7 @@ func StartControllers(ctx context.Context, controllerCtx ControllerContext, star
 
 这里我们以 `startDeploymentController()` 为例，看看 `deploymentController` 是如何启动的。
 
-```
+```go
 // cmd/kube-controller-manager/app/apps.go#L76
 func startDeploymentController(ctx context.Context, controllerContext ControllerContext) (controller.Interface, bool, error) {
   // 1. 创建一个 DeploymentController.

@@ -33,7 +33,7 @@ kube-proxy的主要功能包括以下几个方面：
 
 这里我们先介绍一下 `options` 这个数据结构，它主要有来存储一些配置项
 
-```
+```go
 type Options struct {
   // 配置文件路径
   ConfigFile string
@@ -92,7 +92,7 @@ type Options struct {
 
 现在我们正式看一下组件 `kube proxy` 实现，入口函数为
 
-```
+```go
 func NewProxyCommand() *cobra.Command {
   // 准备：初始化配置选项 options
   opts := NewOptions()
@@ -148,7 +148,7 @@ func NewProxyCommand() *cobra.Command {
 
 现在我们的重点是看一下服务启动的实现。
 
-```
+```go
 // cmd/kube-proxy/app/server.go
 ​
 // Run runs the specified ProxyServer.
@@ -188,7 +188,7 @@ func (o *Options) Run() error {
 
 对于创建 proxyServer 实现上是通过 `newProxyServer()` 来实现的
 
-```
+```go
 // cmd/kube-proxy/app/server_others.go
 ​
 func newProxyServer(
@@ -263,7 +263,7 @@ func newProxyServer(
 
 通过调用 `utiliptables.New` 来返回一个执行 `iptables` 规则命令的实例 [runner](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/util/iptables/iptables.go#L203-L214)，其实现了 ` [Interface](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/util/iptables/iptables.go#L48-L97) ` 接口
 
-```
+```go
 // pkg/util/iptables/iptables.go#L48-L97
 type Interface interface {
     EnsureChain(table Table, chain Chain) (bool, error)
@@ -319,7 +319,7 @@ type Interface interface {
 
 由于 proxyServer 是重点，我们再看一下它的数据结构
 
-```
+```go
 // cmd/kube-proxy/app/server.go
 ​
 type ProxyServer struct {
@@ -391,7 +391,7 @@ type ProxyServer struct {
 
 我们再看一下 `runLoop()` 的实现
 
-```
+```go
 func (o *Options) runLoop() error {
   // 1. 启动 fileWatcher 服务，监控配置文件的变更, 参考 pkg/util/filesystem/watcher.go#L73
   if o.watcher != nil {
@@ -416,7 +416,7 @@ func (o *Options) runLoop() error {
 
 函数 `o.proxyServer.Run()`的实现。
 
-```
+```go
 // cmd/kube-proxy/app/server.go
 ​
 func (s *ProxyServer) Run() error {
@@ -552,7 +552,7 @@ func (s *ProxyServer) Run() error {
 
 创建一个 _informers_ 实例(指定 options.LabelSelector), 并注册 `Service` 和 `endpointSlice` 对象内容变更事件，最后调用 `serviceConfig.Run(wait.NeverStop)` 启用informers 服务，由于是刚初始化，因此需要调用 一次 `OnServiceSynced()`这个方法。我们知道 `informer` 是 `client-go` 库其中的一部分，对于整个 `client-go` 的介绍请参考 。这里以 Service 为例，介绍一下 informers 的处理。**3.1** 首先调用 `NewServiceConfig()` 初始化一个 `ServiceConfig` 服务
 
-```
+```go
 // pkg/proxy/config/config.go
 type ServiceConfig struct {
     listerSynced  cache.InformerSynced
@@ -583,7 +583,7 @@ func NewServiceConfig(serviceInformer coreinformers.ServiceInformer, resyncPerio
 
 **3.2** 接着调用 `serviceConfig.RegisterEventHandler(s.Proxier)` 注册事件处理handler
 
-```
+```go
 // RegisterEventHandler registers a handler which is called on every service change.
 func (c *ServiceConfig) RegisterEventHandler(handler ServiceHandler) {
 	c.eventHandlers = append(c.eventHandlers, handler)
@@ -592,7 +592,7 @@ func (c *ServiceConfig) RegisterEventHandler(handler ServiceHandler) {
 
 这里函数 `RegisteEventHandler(handler ServiceHandler)` 的参数是 ` [ServiceHandler](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/proxy/config/config.go#L32-L47) ` 接口，其定义
 
-```
+```go
 // pkg/proxy/config/config.go
 type ServiceHandler interface {
 	// 只要观察到新服务对象的创建，就会调用OnServiceAdd
@@ -609,7 +609,7 @@ type ServiceHandler interface {
 
 **3.3** 最后调用 `go serviceConfig.Run(wait.NeverStop)` 启动服务。
 
-```
+```go
 // pkg/proxy/config/config.go
 // Run waits for cache synced and invokes handlers after syncing.
 func (c *ServiceConfig) Run(stopCh <-chan struct{}) {
@@ -627,7 +627,7 @@ func (c *ServiceConfig) Run(stopCh <-chan struct{}) {
 
 可以看到这里必须先强制同步一下 `cache`, 然后再调用 `OnServiceSynced()` 方法，在本例中实际上执行是 ` [s.Proxier.OnServiceSynced()](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/proxy/iptables/proxier.go#L553-L563) ` 方法。
 
-```
+```go
 // pkg/proxy/iptables/proxier.go#L553
 
 func (proxier *Proxier) OnServiceSynced() {
@@ -643,7 +643,7 @@ func (proxier *Proxier) OnServiceSynced() {
 
 这里的 `proxies.syncProxyRules()`主要用来维护 iptables 规则，如创建一个Service，它则会在本机写一条iptables 规则，后面我们再单独介绍它。对于`endpointSlice` 对象与 Service 的机制完全一样，只不过它实现的是 ` [EndpointSliceHandler](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/proxy/config/config.go#L49-L64) ` 接口, 定义如下
 
-```
+```go
 // pkg/proxy/config/config.go
 type EndpointSliceHandler interface {
 	OnEndpointSliceAdd(endpointSlice *discovery.EndpointSlice)
@@ -658,7 +658,7 @@ type EndpointSliceHandler interface {
 
 创建一个 `node informers` 实例，注册节点信息变更事件。其事件处理handler 实现的是一个 ` [NodeHandler](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/proxy/config/config.go#L248-L263) ` 接口
 
-```
+```go
 // pkg/proxy/config/config.go
 type NodeHandler interface {
 	OnNodeAdd(node *v1.Node)
@@ -676,7 +676,7 @@ type NodeHandler interface {
 
 开启一个goroutine，执行 `s.Proxier.SyncLoop()` 服务，这里的 `s.Proxier` 对象是根据 `proxyMode` 而定。对于这一步可以简单的理解为启动了一个 Loop 服务。对于 `iptables` 模式来讲，对应的是 `pkg/proxy/ipables/proxier.go#L509`，调用流程如下：
 
-```
+```go
 // pkg/proxy/iptables/proxier.go#L509
 func (proxier *Proxier) SyncLoop() {
 	if proxier.healthzServer != nil {
@@ -687,7 +687,7 @@ func (proxier *Proxier) SyncLoop() {
 }
 ```
 
-```
+```go
 // pkg/util/async/bounded_frequency_runner.go#L189
 func (bfr *BoundedFrequencyRunner) Loop(stop <-chan struct{}) {
     bfr.timer.Reset(bfr.maxInterval)

@@ -28,7 +28,7 @@ tags:
 
 本机下载 [kubernetes](https://github.com/kubernetes/kubernetes) 仓库
 
-```
+```shell
 git clone --filter=blob:none https://github.com/kubernetes/kubernetes.git
 ```
 
@@ -48,7 +48,7 @@ git clone --filter=blob:none https://github.com/kubernetes/kubernetes.git
 
 首先对当前调试环境进行一系列的检查，如果条件不满足将给出提示信息
 
-```
+```shell
 $ make verify
 ```
 
@@ -58,7 +58,7 @@ $ make verify
 
 由于 `kube-apiserver` 依赖于 `ectd` ，所以必须先安装etcd。
 
-```
+```shell
 $ cd workspace/kubernetes
 $ ./hack/install-etcd.sh
 Downloading https://github.com/coreos/etcd/releases/download/v3.5.7/etcd-v3.5.7-linux-amd64.tar.gz succeed
@@ -70,13 +70,13 @@ export PATH="/home/sxf/workspace/kubernetes/third_party/etcd:${PATH}"
 
 接着按照提示设置环境变量
 
-```
+```shell
 $ export PATH="/home/sxf/workspace/kubernetes/third_party/etcd:${PATH}"
 ```
 
 此时我们查看一下目录内容
 
-```
+```shell
 $ ls -al third_party/
 total 36
 drwxr-xr-x  7 sxf sxf 4096 Jul 28 05:20 .
@@ -103,19 +103,19 @@ drwxr-xr-x  3 sxf sxf 4096 Apr 20 12:16 protobuf
 
 安装三方依赖库
 
-```
+```shell
 $ go get ./...
 ```
 
 安装 `cfssl` 和 `cfssljson`
 
-```
+```shell
 $ go install github.com/cloudflare/cfssl/cmd/...@latest
 ```
 
 ## 启动k8s集群 
 
-```
+```shell
 $ ENABLE_DAEMON=true DBG=1 ./hack/local-up-cluster.sh
 make: Entering directory '/home/sxf/workspace/kubernetes'
 go version go1.20.5 linux/amd64
@@ -314,7 +314,7 @@ time out on waiting 127.0.0.1 info
 
 安装成功后，会在 `_output/bin` 目录里生成一些 k8s组件二进制文件
 
-```
+```shell
 $ ls -al _output
 total 12
 drwxrwxr-x  3 sxf sxf 4096 Jul 28 16:55 .
@@ -332,7 +332,7 @@ cloud-controller-manager  kube-apiserver  kube-controller-manager  kube-proxy  k
 
 此时再开启一个终端，会发现有以下三个个进程。
 
-```
+```shell
 $ ps -a|grep kube
   49297 pts/1    00:01:10 kube-apiserver
   49600 pts/1    00:00:45 kube-controller
@@ -345,7 +345,7 @@ $ ps -a|grep kube
 
 如果以后重启集群的话，只需要执行一下命令即可
 
-```
+```shell
 $ ENABLE_DAEMON=true DBG=1 ./hack/local-up-cluster.sh  -O
 skipped the build.
 API SERVER secure port is free, proceeding...
@@ -357,7 +357,7 @@ Detected host and ready to start services.  Doing some housekeeping first...
 
 对于 `local-up-cluster.sh` 的用法参考
 
-```
+```shell
 $ ./hack/local-up-cluster.sh -h
 This script starts a local kube cluster.
 Example 0: hack/local-up-cluster.sh -h  (this 'help' usage description)
@@ -370,13 +370,13 @@ Example 3: hack/local-up-cluster.sh (build a local copy of the source)
 
 首先设置环境变量，指定连接集群配置文件
 
-```
+```shell
 $ export KUBECONFIG=/var/run/kubernetes/admin.kubeconfig
 ```
 
 这时使用 `./cluster/kubectl.sh` 脚本验证
 
-```
+```shell
 $ ./cluster/kubectl.sh get nodes
 NAME        STATUS   ROLES    AGE   VERSION
 127.0.0.1   Ready    <none>   9ms   v1.27.3-dirty
@@ -395,14 +395,14 @@ kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   10m33s
 
 其它验证命令
 
-```
+```shell
 $ ./cluster/kubectl.sh get pods
 $ ./cluster/kubectl.sh get replicationcontrollers
 ```
 
 在等待配置完成时，您可以使用这些命令在另一个终端中观察进度。
 
-```
+```shell
 # containerd
 # To list images
 ctr --namespace k8s.io image ls
@@ -414,7 +414,7 @@ ctr --namespace k8s.io containers ls
 
 创建一个pod
 
-```
+```shell
 $ ./cluster/kubectl.sh create -f test/fixtures/doc-yaml/user-guide/pod.yaml
 ```
 
@@ -422,7 +422,7 @@ $ ./cluster/kubectl.sh create -f test/fixtures/doc-yaml/user-guide/pod.yaml
 
 查看pod
 
-```
+```shell
 $ ./cluster/kubectl.sh get pods
 NAME    READY   STATUS    RESTARTS   AGE
 nginx   1/1     Running   0          12m
@@ -434,7 +434,7 @@ nginx   1/1     Running   0          12m
 
 先找出来 `kube-apiserver` 进程PID
 
-```
+```shell
 $ ps aux | grep kube-apiserver
 root       49292  0.0  0.1   9280  4512 pts/1    S    16:55   0:00 sudo -E /home/sxf/workspace/kubernetes/_output/local/bin/linux/amd64/kube-apiserver --authorization-mode=Node,RBAC  --cloud-provider= --cloud-config=   --v=3 --vmodule= --audit-policy-file=/tmp/local-up-cluster.sh.iU0gc3/kube-audit-policy-file --audit-log-path=/tmp/kube-apiserver-audit.log --authorization-webhook-config-file= --authentication-token-webhook-config-file= --cert-dir=/var/run/kubernetes --egress-selector-config-file=/tmp/local-up-cluster.sh.iU0gc3/kube_egress_selector_configuration.yaml --client-ca-file=/var/run/kubernetes/client-ca.crt --kubelet-client-certificate=/var/run/kubernetes/client-kube-apiserver.crt --kubelet-client-key=/var/run/kubernetes/client-kube-apiserver.key --service-account-key-file=/tmp/local-up-cluster.sh.iU0gc3/kube-serviceaccount.key --service-account-lookup=true --service-account-issuer=https://kubernetes.default.svc --service-account-jwks-uri=https://kubernetes.default.svc/openid/v1/jwks --service-account-signing-key-file=/tmp/local-up-cluster.sh.iU0gc3/kube-serviceaccount.key --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,Priority,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota,NodeRestriction --disable-admission-plugins= --admission-control-config-file= --bind-address=0.0.0.0 --secure-port=6443 --tls-cert-file=/var/run/kubernetes/serving-kube-apiserver.crt --tls-private-key-file=/var/run/kubernetes/serving-kube-apiserver.key --storage-backend=etcd3 --storage-media-type=application/vnd.kubernetes.protobuf --etcd-servers=http://127.0.0.1:2379 --service-cluster-ip-range=10.0.0.0/24 --feature-gates=AllAlpha=false --external-hostname=localhost --requestheader-username-headers=X-Remote-User --requestheader-group-headers=X-Remote-Group --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-client-ca-file=/var/run/kubernetes/request-header-ca.crt --requestheader-allowed-names=system:auth-proxy --proxy-client-cert-file=/var/run/kubernetes/client-auth-proxy.crt --proxy-client-key-file=/var/run/kubernetes/client-auth-proxy.key --cors-allowed-origins=/127.0.0.1(:[0-9]+)?$,/localhost(:[0-9]+)?$
 
@@ -446,13 +446,13 @@ sxf        54148  0.0  0.0   6404  2456 pts/0    S+   17:14   0:00 grep --color=
 
 ## 侵入服务PID 
 
-```
+```shell
 $ dlv --listen=:2345 --headless=true --api-version=2 attach <PID>
 ```
 
 如果遇到以下错误
 
-```
+```shell
 $ dlv --listen=:2345 --headless=true --api-version=2 attach 49297
 API server listening at: [::]:2345
 2023-07-28T09:20:59Z warning layer=rpc Listening for remote connections (connections are not authenticated nor encrypted)
@@ -462,7 +462,7 @@ Could not attach to pid 49297: this could be caused by a kernel security setting
 
 需要修改内核配置
 
-```
+```shell
 $ echo 0 > /proc/sys/kernel/yama/ptrace_scope
 ```
 
@@ -470,13 +470,13 @@ $ echo 0 > /proc/sys/kernel/yama/ptrace_scope
 
 使用这种方法，命令格式将发生变化，假如原来的命令是
 
-```
+```shell
 $ ./myApp --config=/path/config.json
 ```
 
 对应的新命令为
 
-```
+```shell
 $ dlv --listen=:2345 --headless=true --api-version=2 exec ./myApp -- --config=/path/config.conf
 ```
 
@@ -489,13 +489,13 @@ $ dlv --listen=:2345 --headless=true --api-version=2 exec ./myApp -- --config=/p
 
 先将原来的进程 `kill` 掉，然后用 dlv 命令启动这个服务，原来所有参数要保证不变。
 
-```
+```shell
 $ kill -9 49292
 ```
 
 使用 dlv 重新启动 `kube-apiserver` 服务
 
-```
+```shell
 $ dlv --listen=:2345 --headless=true --api-version=2 exec /home/sxf/workspace/kubernetes/_output/local/bin/linux/amd64/kube-apiserver -- --authorization-mode=Node,RBAC  --cloud-provider= --cloud-config=   --v=3 --vmodule= --audit-policy-file=/tmp/local-up-cluster.sh.iU0gc3/kube-audit-policy-file --audit-log-path=/tmp/kube-apiserver-audit.log --authorization-webhook-config-file= --authentication-token-webhook-config-file= --cert-dir=/var/run/kubernetes --egress-selector-config-file=/tmp/local-up-cluster.sh.iU0gc3/kube_egress_selector_configuration.yaml --client-ca-file=/var/run/kubernetes/client-ca.crt --kubelet-client-certificate=/var/run/kubernetes/client-kube-apiserver.crt --kubelet-client-key=/var/run/kubernetes/client-kube-apiserver.key --service-account-key-file=/tmp/local-up-cluster.sh.iU0gc3/kube-serviceaccount.key --service-account-lookup=true --service-account-issuer=https://kubernetes.default.svc --service-account-jwks-uri=https://kubernetes.default.svc/openid/v1/jwks --service-account-signing-key-file=/tmp/local-up-cluster.sh.iU0gc3/kube-serviceaccount.key --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,Priority,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota,NodeRestriction --disable-admission-plugins= --admission-control-config-file= --bind-address=0.0.0.0 --secure-port=6443 --tls-cert-file=/var/run/kubernetes/serving-kube-apiserver.crt --tls-private-key-file=/var/run/kubernetes/serving-kube-apiserver.key --storage-backend=etcd3 --storage-media-type=application/vnd.kubernetes.protobuf --etcd-servers=http://127.0.0.1:2379 --service-cluster-ip-range=10.0.0.0/24 --feature-gates=AllAlpha=false --external-hostname=localhost --requestheader-username-headers=X-Remote-User --requestheader-group-headers=X-Remote-Group --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-client-ca-file=/var/run/kubernetes/request-header-ca.crt --requestheader-allowed-names=system:auth-proxy --proxy-client-cert-file=/var/run/kubernetes/client-auth-proxy.crt --proxy-client-key-file=/var/run/kubernetes/client-auth-proxy.key
 ```
 
@@ -529,7 +529,7 @@ $ dlv --listen=:2345 --headless=true --api-version=2 exec /home/sxf/workspace/ku
 
 apiserver 包含一个webservice服务，所以也可以通过web的方式访问apiserver。如
 
-```
+```shell
 $ kubectl proxy --port 8080
 $ curl http://localhost:8080/api/v1/namespaces/default/pods
 ```
