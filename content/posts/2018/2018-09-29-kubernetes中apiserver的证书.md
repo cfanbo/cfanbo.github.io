@@ -35,5 +35,5 @@ admin.conf controller-manager.conf kubelet.conf scheduler.conf
 
 [![](https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/kubernetes-arvhitecture.jpg)][2]
 
-[1]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-master.jpg
-[2]: https://blog.haohtml.com/wp-content/uploads/2018/09/kubernetes-arvhitecture.jpg
+[1]: https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/kubernetes-master.jp
+[2]: https://blog--static.oss-cn-shanghai.aliyuncs.com//uploads/2023/09/kubernetes-arvhitecture.jpg
