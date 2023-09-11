@@ -95,142 +95,122 @@ sudo su
 
 4：解压缩
 
+```
 tar zxvf nagios-2.5.tar.gz
+```
 
 5：建立运行nagios的用户：
 
+```
 adduser nagios
+```
 
 6：建立安装nagios的文件夹，并使这个文件夹的所有者为nagios:nagios
 
-> mkdir /usr/local/nagios
-> chown nagios.nagios /usr/local/nagios
+```
+mkdir /usr/local/nagios
+chown nagios.nagios /usr/local/nagios
+```
 
 7：确认web服务器的用户
 
 可能会通过web接口执行一些命令，必须确定web服务器以哪个用户运行的，通常为：apache：
-
-> grep “^User” /etc/httpd/conf/httpd.conf
+```
+grep “^User” /etc/httpd/conf/httpd.conf
+```
 
 8：建立命令文件组
 
 这个新的组会包括apache的用户和nagios的用户
+```
+groupadd nagcmd
 
-> groupadd nagcmd
->
-> usermod apache -G nagcmd
->
-> usermod nagios -G nagcmd
->
-> ———————————-
->
-> cat /etc/group
->
-> nagcmd:*:9007:apache,nagios
->
-> ———————————-
+usermod apache -G nagcmd
+usermod nagios -G nagcmd
+———————————-
+cat /etc/group
+nagcmd:*:9007:apache,nagios
+———————————-
+```
+：运行配置脚本并安装nagios
+```
+cd nagios-2.5
 
-8：运行配置脚本并安装nagios
-
-> cd nagios-2.5
->
-> ./configure –prefix=/usr/local/nagios –with-gd-lib=/usr/local/lib –with-gd-inc=/usr/local/include
->
-> make all
->
-> make install
->
-> make install-init
->
-> make install-commandmode
->
-> make install-config
-
+./configure –prefix=/usr/local/nagios –with-gd-lib=/usr/local/lib –with-gd-inc=/usr/local/include
+make all
+make install
+make install-init
+make install-commandmode
+make install-config
+```
 9：安装nagios-plugins
 
-> tar zxvf nagios-plugins-1.4.3.tar.gz
->
-> cd nagios-plugins-1.4.3
->
-> ./configure –prefix=/usr/local/nagios-plugins
->
-> make all
->
-> make install
-
+```
+tar zxvf nagios-plugins-1.4.3.tar.gz
+cd nagios-plugins-1.4.3
+./configure –prefix=/usr/local/nagios-plugins
+make all
+make install
+```
 安装完成以后在/usr/local/nagios-plugins-plugins会产生一个libexec的目录，将该目录全部移动到/usr/local/nagios目录下即可。
 
-> mv /usr/local/nagios-plugins-plugins/libexec/ /usr/local/nagios/
+```
+mv /usr/local/nagios-plugins-plugins/libexec/ /usr/local/nagios/
+```
 
 10：imagepak-base.tar.gz的安装
 
-> tar –xvzf imagepak-base.tar.gz
+```
+tar –xvzf imagepak-base.tar.gz
+``````
 
 解压以后是base目录
 
-> mv base/ /usr/local/nagios/share/images/logos/
-
+```
+mv base/ /usr/local/nagios/share/images/logos/
+```
 **现在开始配置：**
 
 1：配置web接口
 
-> vi /etc/httpd/conf/httpd.conf
+```
+vi /etc/httpd/conf/httpd.conf
+```
 
 添加如下内容：
+```
+ScriptAlias /nagios/cgi-bin /usr/local/nagios/sbin
 
-> ScriptAlias /nagios/cgi-bin /usr/local/nagios/sbin
->
->
->
-> Options ExecCGI
->
-> AllowOverride None
->
-> Order allow,deny
->
-> Allow from all
->
-> AuthName “Nagios Access”
->
-> AuthType Basic
->
-> AuthUserFile /usr/local/nagios/etc/htpasswd.users
->
-> Require valid-user
->
->
->
-> Alias /nagios /usr/local/nagios/share
->
->
->
-> Options None
->
-> AllowOverride None
->
-> Order allow,deny
->
-> Allow from all
->
-> AuthName “Nagios Access”
->
-> AuthType Basic
->
-> AuthUserFile /usr/local/nagios/etc/htpasswd.users
->
-> Require valid-user
->
->
+Options ExecCGI
+AllowOverride None
+Order allow,deny
+Allow from all
+AuthName “Nagios Access”
+AuthType Basic
+AuthUserFile /usr/local/nagios/etc/htpasswd.users
+Require valid-user
+
+Alias /nagios /usr/local/nagios/share
+
+Options None
+AllowOverride None
+Order allow,deny
+Allow from all
+AuthName “Nagios Access”
+AuthType Basic
+AuthUserFile /usr/local/nagios/etc/htpasswd.users
+Require valid-user
+```
 
 修改完毕，保存文件，并重启apache：
 
-> /usr/local/apahce2/bin/apachectl restart
-
-2：配置apache的BASIC认证：
+/usr/local/apahce2/bin/apachectl restart2：配置apache的BASIC认证：
 
 生成认证密码：
 
-> #htpasswd –c /usr/local/nagios/etc/htpasswd.users nagios
+```
+#htpasswd –c /usr/local/nagios/etc/htpasswd.users nagios
+```
 
 开始配置nagios：
 
@@ -267,8 +247,9 @@ Total Errors: 0
 配置文件等会再弄。
 
 现在启动nagios
-
-> /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+```
+/usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+```
 
 现在打开网页：
 
@@ -282,7 +263,7 @@ Total Errors: 0
 
 **监测windows 客户端：**
 
-在nagios的libexec下有check\_nt这个插件,它就是用来检查windows机器的服务的,其功能类似于上一章讲的check\_nrpe.不过还需要搭配另外一个软件NSClient,它则类似于NRPE
+在nagios的libexec下有check_nt这个插件,它就是用来检查windows机器的服务的,其功能类似于上一章讲的check_nrpe.不过还需要搭配另外一个软件NSClient,它则类似于NRPE
 
 NSClient与nrpe最大的区别就是:
 
@@ -300,7 +281,7 @@ NSClient++-0.3.7-Win32
 
 [Settings]
 
-‘allowed\_hosts’选项的注释去掉,并且加上运行nagios的监控主机的IP.如allowed\_hosts=127.0.0.1/32,192.168.0.22 以逗号相隔.
+‘allowed_hosts’选项的注释去掉,并且加上运行nagios的监控主机的IP.如allowed_hosts=127.0.0.1/32,192.168.0.22 以逗号相隔.
 
 如果写成192.168.0.0/24则表示该子网内的所有机器都可以访问.如果这个地方是空白则表示所有的主机都可以连接上来.注意是[Settings]部分的,因为[NSClient]部分也有这个选项.
 
@@ -321,34 +302,17 @@ NSClient++-0.3.7-Win32
 3.定义要监控的项目
 
 定义命令
-
+```
 vi /usr/local/nagios/etc/commands.cfg
-
+```
 增加下面的内容:
-
-########################################################################
-
-#
-
-# 2007.9.6 add by yahoon
-
-# CHECK_NT
-
-# check windows hosts info
-
-#
-
-########################################################################
-
+```
 define command{
-
-command_name    check_nt
-
-
-command_line    $USER1$/check_nt -H $HOSTADDRESS$ -p 12489  -v $ARG1$ $ARG2$
-
-
+    command_name    check_nt
+    command_line    $USER1$/check_nt -H $HOSTADDRESS$ -p 12489  -v $ARG1$ $ARG2$
 }
+
+```
 
 如果NSClient设置了连接需要密码,则应写成如下格式
 
@@ -357,77 +321,61 @@ $USER1$/check_nt -H $HOSTADDRESS$ -p 12489 -s PASSWORD -v $ARG1$ $ARG2$
 具体含义参考check_nt命令的用法
 
 增加监控项目
-
+```
 vi /usr/local/nagios/etc/services.cfg
+```
 
 下面这个服务是监控NSClient的版本
-
+```
 define service{
-
-host_name               yahoon
-
-
-service_description     check-version         check_command           check_nt!CLIENTVERSION
-
-
-max_check_attempts      5
-
-normal_check_interval   3
-
-
-retry_check_interval    2
-
-check_period            24×7
-
-
-notification_interval   10
-
-
-notification_period     24×7
-
-
-notification_options    w,u,c,r
-
-
-contact_groups          sagroup
-
-
+    host_name               yahoon
+    service_description     check-version         check_command           check_nt!CLIENTVERSION
+    max_check_attempts      5
+    normal_check_interval   3
+    retry_check_interval    2
+    check_period            24×7
+    notification_interval   10
+    notification_period     24×7
+    notification_options    w,u,c,r
+    contact_groups          sagroup
 }
+```
+
 
 同样的可以增加如下服务(为了篇幅,我只给出最关键的check_command这一项)
 
 1)监控windows服务器运行的时间
 
-check\_command check\_nt!UPTIME
+check_command check_nt!UPTIME
 
 2)监控Windows服务器的CPU负载,如果5分钟超过80%则是warning,如果5分钟超过90%则是critical
 
-check\_command check\_nt!CPULOAD!-l 5,80,90
+check_command check_nt!CPULOAD!-l 5,80,90
 
 3)监控Windows服务器的内存使用情况,如果超过了80%则是warning,如果超过90%则是critical.
 
-check\_command check\_nt!MEMUSE!-w 80 -c 90
+check_command check_nt!MEMUSE!-w 80 -c 90
 
 4)监控Windows服务器C:\盘的使用情况,如果超过80%已经使用则是warning,超过90%则是critical
 
-check\_command check\_nt!USEDDISKSPACE!-l c -w 80 -c 90
+check_command check_nt!USEDDISKSPACE!-l c -w 80 -c 90
 
 注:-l后面接的参数用来指定盘符
 
 5)监控Windows服务器D:\盘的使用情况,如果超过80%已经使用则是warning,超过90%则是critical
 
-check\_command check\_nt!USEDDISKSPACE!-l d -w 80 -c 90
+check_command check_nt!USEDDISKSPACE!-l d -w 80 -c 90
 
 6)监控Windows服务器的W3SVC服务的状态,如果服务停止了,则是critical
 
-check\_command check\_nt!SERVICESTATE!-d SHOWALL -l W3SVC
+check_command check_nt!SERVICESTATE!-d SHOWALL -l W3SVC
 
 7)监控Windows服务器的Explorer.exe进程的状态,如果进程停止了,则是critical
 
-check\_command check\_nt!PROCSTATE!-d SHOWALL -l Explorer.exe
+check_command check_nt!PROCSTATE!-d SHOWALL -l Explorer.exe
 
 **相关教程:**
 
-Nagios监控windows主机教程请参考:
+Nagios监控windows主机教程请参考: http://blog.haohtml.com/archives/10829
 
-FreeBSD下安装nagios教程:
+FreeBSD下安装nagios教程: http://blog.haohtml.com/archives/4579
