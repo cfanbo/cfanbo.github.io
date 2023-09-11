@@ -24,10 +24,10 @@ tags:
 
 以上是安装k8s环境的两种推荐方法，这里更推荐使用kind。主要原因是 `minikube` 只支持单个节点，而 `kind` 可以支持多个节点，这样就可以实现在一台电脑上部署的环境与生产环境一样，方便大家学习。
 
-要实现管理控制 Kubernetes 集群资源如pod、node、service等的管理，还必须安装一个命令工具 ` [kubectl](https://kubernetes.io/zh/docs/reference/kubectl/kubectl/) `，请参考： [https://kubernetes.io/zh/docs/tasks/tools/](https://kubernetes.io/zh/docs/tasks/tools/)
+要实现管理控制 Kubernetes 集群资源如pod、node、service等的管理，还必须安装一个命令工具 [kubectl](https://kubernetes.io/zh/docs/reference/kubectl/kubectl/) ，请参考： [https://kubernetes.io/zh/docs/tasks/tools/](https://kubernetes.io/zh/docs/tasks/tools/)
 
 ## 学习文档 
 
- * Kubernetes 文档
+ * Kubernetes 文档 https://kubernetes.io/zh/docs/home/ 
  * Play with Kubernetes [https://labs.play-with-k8s.com/](https://labs.play-with-k8s.com/)
- * Kubernetes中文指南/云原生应用架构实践手册 –
+ * Kubernetes中文指南/云原生应用架构实践手册 –  https://jimmysong.io/kubernetes-handbook 
