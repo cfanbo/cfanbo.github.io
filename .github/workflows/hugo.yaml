@@ -76,8 +76,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-    inputs:
-      timeout:
-        description: 'Time in milliseconds after which to timeout and cancel the deployment (default: 10 minutes)'
-        required: false
-        default: '6000000'        
+        inputs:
+          timeout:
+            description: 'Time in milliseconds after which to timeout and cancel the deployment (default: 10 minutes)'
+            required: false
+            default: '6000000'        
