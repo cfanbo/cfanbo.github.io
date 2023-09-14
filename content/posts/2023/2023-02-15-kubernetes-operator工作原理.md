@@ -49,7 +49,7 @@ tags:
 
 入口函数为 main函数中的 `go controller.Run(1, stop)`
 
-```
+```go
 // /examples/workqueue/main.go
 func main() {
 	...
@@ -85,7 +85,7 @@ func NewController(queue workqueue.RateLimitingInterface, indexer cache.Indexer,
 
 这里的 `workqueue` 主要是在回调的 `ResoureEventHandlers` 来调用的，对应的是第 `7) Enqueue Object Key` 步骤。
 
-```
+```go
 // /examples/workqueue/main.go
 func (c *Controller) Run(threadiness int, stopCh chan struct{}) {
 	defer runtime.HandleCrash()
@@ -118,7 +118,7 @@ func (c *Controller) Run(threadiness int, stopCh chan struct{}) {
 
 下面我们先看一下 `informer` 服务的实现 （ [https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L97-L125](https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L97-L125)）。
 
-```
+```go
 // /tools/cache/controller.go
 func (c *controller) Run(stopCh <-chan struct{}) {
 ​
@@ -139,7 +139,7 @@ func (c *controller) Run(stopCh <-chan struct{}) {
 
 这里首先创建一个 `Reflector` 对象，并注入 `podListWatcher` 和 `Delta Fifo Queue` 队列， 其中 `ObjectType` 为 `&v1.Pod{}`，接着启用 `Reflector` 服务（）
 
-```
+```go
 // /tools/cache/reflector.go
 // Run starts a watch and handles watch events. Will restart the watch if it is closed.
 // Run will exit when stopCh is closed.
@@ -155,7 +155,7 @@ func (r *Reflector) Run(stopCh <-chan struct{}) {
 
 接着看一下 `r.ListAndWatch()` 实现 （）
 
-```
+```go
 // It returns error if ListAndWatch didn't even try to initialize watch.
 func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error {
 ​
@@ -250,7 +250,7 @@ func (r *Reflector) ListAndWatch(stopCh <-chan struct{}) error {
 
 我们再看一下 `r.watchHandler` 的实现
 
-```
+```go
 // watchHandler watches w and keeps *resourceVersion up to date.
 func (r *Reflector) watchHandler(w watch.Interface, resourceVersion *string, errc chan error, stopCh <-chan struct{}) error {
 ​
@@ -322,7 +322,7 @@ loop:
 
 对于 `3）Pop Object` 这个操作入口函数为 `processLoop` ( [https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L139-L161](https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L139-L161))
 
-```
+```go
 // /tools/cache/controller.go
 func (c *controller) processLoop() {
 	for {
@@ -344,7 +344,7 @@ func (c *controller) processLoop() {
 
 其增量队列Pop实现见
 
-```
+```go
 // /tools/cache/delta_fifo.go
 // Pop returns a 'Deltas', which has a complete list of all the things
 // that happened to the object (deltas) while it was sitting in the queue.
@@ -394,7 +394,7 @@ func (f *DeltaFIFO) Pop(process PopProcessFunc) (interface{}, error) {
 
 这个 `process` 函数在这里是作为一个参数传递过来的，其声明位置为
 
-```
+```go
 // /tools/cache/controller.go
 func newInformer(
     lw ListerWatcher,
@@ -445,7 +445,7 @@ func newInformer(
 
 而 `6）Dispatch Event Handler functions` 则为 对象 `h` ，其是一个实现了 `Resource Event Handlers` 接口的结构体，可以看到它有三个方法函数 `h.OnAdd` 、`h.OnUpdate` 和 `h.OnDelete`，而这三个函数原型已在 main 函数里实现
 
-```
+```go
 // /examples/workqueue/main.go
 func main() {
     ...
@@ -487,7 +487,7 @@ func main() {
 
 对于 `8）Get key` 则对应的是 [controller.processNextItem()][2]
 
-```
+```go
 // /examples/workqueue/main.go
 func (c *Controller) processNextItem() bool {
 	// Wait until there is a new item in the working queue
@@ -516,7 +516,7 @@ func (c *Controller) processNextItem() bool {
 
 而 `9) Get Object for key` 则对应的是 [controller.syncToStdout()][3] 函数
 
-```
+```go
 // /examples/workqueue/main.go
 func (c *Controller) syncToStdout(key string) error {
 	// 对应步骤 9，从 index 里读取对象
@@ -538,9 +538,9 @@ func (c *Controller) syncToStdout(key string) error {
 }
 ```
 
-可以看到对 `workqueue` 的写入与读取全部在 `Custom Controller` 部分来实现的，有时候对一个对象对处理会出现失败的情况，这种情况下就需要对其 key 进行 `RateLimited` 了.
+可以看到对 `workqueue` 的写入与读取全部在 `Custom Controller` 部分来实现的，有时候对一个对象处理会出现失败的情况，这种情况下就需要对其 key 进行 `RateLimited` 了.
 
-```
+```go
 // handleErr checks if an error happened and makes sure we will retry later.
 func (c *Controller) handleErr(err error, key interface{}) {
 	if err == nil {
@@ -570,7 +570,7 @@ func (c *Controller) handleErr(err error, key interface{}) {
 
 `queue.AddRateLimted(key)` 表示**过一段时间**将当前 key重新写入 `workqueue` 里，同时累计当前key的重试次数, 如果重试多次（当前示例为5次）仍失败的话，则调用 `runtime.HandleError(err)` 处理。
 
-`c.queue.Forget` 表示一旦key完成，则清除其重启记录，避免影响下次重试，可以看出来 `Forget` 是对重试行为的处理，这个与 `c.queue.Done()` 的作用是不一样的。
+`c.queue.Forget` 表示一旦key完成，则清除其试记录，避免影响下次重试，可以看出来 `Forget` 是对重试行为的处理，这个与 `c.queue.Done()` 的作用是不一样的。
 
 至此整个架构图中的每个步骤我们基本介绍完了，对于部分细节问题可能还需要花一些时间进行消化。
 
@@ -582,14 +582,14 @@ K8s 在 `client go` 中基于 `Informer` 之上再做了一层封装，提供了
 
 而对 `SharedInformer` 对象的获取一般是通过 _`SharedInformerFactory`_ 工厂模式来获取
 
-```
+```go
 // SharedInformerFactory provides shared informers for resources in all known
 // API group versions.
 ```
 
 在内部通过调用 `InformerFor()` 方法从 `cache` 中获取某一资源对应的 `Informer`，如果缓存中不存在，则需要通过指定的函数先创建并加入缓存，然后返回。
 
-```
+```go
 // client-go/informers/factory.go#L1870-L208
 // InternalInformerFor returns the SharedIndexInformer for obj using an internal client.
 func (f *sharedInformerFactory) InformerFor(obj runtime.Object, newFunc internalinterfaces.NewInformerFunc) cache.SharedIndexInformer {
@@ -616,7 +616,7 @@ func (f *sharedInformerFactory) InformerFor(obj runtime.Object, newFunc internal
 
 这里所谓的 `cache` 其实就是一个 `map` 对象。
 
-```
+```go
 type sharedInformerFactory struct {
         informers map[reflect.Type]cache.SharedIndexInformer
 }
