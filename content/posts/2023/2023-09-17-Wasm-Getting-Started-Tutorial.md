@@ -1,7 +1,12 @@
 ---
 title: "WebAssembly开发入门"
 date: 2023-09-17T10:04:13+08:00
-draft: true
+type: post
+url: /posts/webassembly-getting-started-tutorial
+categories:
+ - 程序开发
+tags:
+ - wasm
 ---
 
 
