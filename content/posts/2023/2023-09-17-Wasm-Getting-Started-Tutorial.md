@@ -1,5 +1,5 @@
 ---
-title: "WebAssembly开发入门"
+title: "WebAssembly开发入门教程"
 date: 2023-09-17T10:04:13+08:00
 type: post
 url: /posts/webassembly-getting-started-tutorial
