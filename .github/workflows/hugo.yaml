@@ -8,12 +8,7 @@ on:
       - main
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-    inputs:
-      timeout:
-        description: 'Time in milliseconds after which to timeout and cancel the deployment (default: 10 minutes)'
-        required: false
-        default: '6000000'        
+  workflow_dispatch:     
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
