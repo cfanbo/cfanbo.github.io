@@ -67,7 +67,7 @@ WebAssembly (WASM) 需要运行时环境来提供执行和管理 WASM 模块的�
 
 2. SpiderMonkey：SpiderMonkey 是 Mozilla Firefox 浏览器使用的 JavaScript 引擎，也支持执行 WebAssembly。SpiderMonkey 是一个功能强大的运行时，提供了许多高级功能和调试选项。
 
-3. Wasmtime：Wasmtime 是一个快速、可扩展的 WebAssembly 运行时，由 Bytecode Alliance 开发。它提供了一组 API，使开发人员可以在自己的应用程序中嵌入和执行 WebAssembly 模块。
+3. Wasmtime：[Wasmtime](https://wasmtime.dev/) 是一个快速、可扩展的 WebAssembly 运行时，由 Bytecode Alliance 开发。它提供了一组 API，使开发人员可以在自己的应用程序中嵌入和执行 WebAssembly 模块。
 
 4. Wasmer：Wasmer 是一个通用的 WebAssembly 运行时，支持在各种环境中执行 WebAssembly。它提供了一组 API 和工具，使开发人员能够在不同的宿主语言中嵌入和执行 WASM 模块。Wasmer 支持多种语言绑定，包括 Rust、C/C++、Python 和 Go。同时还提供了一些功能，例如内存管理、引用类型支持和自定义 API 导入等一些有用的功能和工具。
 
