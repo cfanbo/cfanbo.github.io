@@ -121,13 +121,13 @@ $ curl -v localhost:8000/headers
 }
 ```
 
-可以看到此时 `Lua Filter` 已生效。总体来说Lua脚本的实现还是非常的简单的，只需要了解一些Lua的基本语法就可以了。
+可以看到此时 `Lua Filter` 已生效。总体来说Lua脚本的实现还是非常简单的，只需要了解一些Lua的基本语法就即可。
 
 
 
 # Wasm Filter
 
-下面我们再看一下通过 Wasm Filter 的实现
+下面我们再看一下通过 Wasm Filter。
 
 ## Wasm扩展概述
 
@@ -141,7 +141,7 @@ Wasm 运行时类型默认为 Envoy 构建时使用的第一个可用的 Wasm �
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
 | [envoy.wasm.runtime.v8](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-v8) | V8-based runtime                                             | 启用   |
 | [envoy.wasm.runtime.wasmtime](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-wasmtime) | Wasmtime runtime                                             | 未启用 |
-| [envoy.wasm.runtime.wamr](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-wamr) | [github](https://github.com/bytecodealliance/wasm-micro-runtime/) | 未启用 |
+| [envoy.wasm.runtime.wamr](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-wamr) | [wasm-micro-runtime](https://github.com/bytecodealliance/wasm-micro-runtime/) | 未启用 |
 | [envoy.wasm.runtime.wavm](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-wavm) | WAVM runtime                                                 | 未启用 |
 | [envoy.wasm.runtime.null](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#extension-envoy-wasm-runtime-null) | Compiled modules linked into Envoy                           |        |
 
@@ -158,9 +158,9 @@ Go: https://github.com/tetratelabs/proxy-wasm-go-sdk
 
 Python: https://github.com/bytecodealliance/wasmtime-py
 
-开发 wasm可以使用Rust、C++、Go 或 Pytohon任意一种语言，不过强烈推荐采用 Rust 开发，因为它开发出来的是GC 二进制文件，相比用Go 开发，无论是性能还是文件大小都比较占优势。
+开发 wasm可以使用Rust、C++、Go 或 Pytohon任意一种语言，不过强烈推荐采用 Rust 开发，因为它开发出来的是无GC二进制文件，相比使用 Go 语言开发，无论是性能还是文件大小都比较占优势。
 
-官方提供的wasm示例参考：https://www.envoyproxy.io/docs/envoy/latest/start/sandboxes/wasm-cc。
+官方提供的wasm c++示例参考：https://www.envoyproxy.io/docs/envoy/latest/start/sandboxes/wasm-cc。
 
 
 
@@ -197,7 +197,21 @@ panic = "abort" #在发生 panic 时直接终止程序
 strip = "debuginfo" #去除调试信息
 ```
 
-在 `dependencies` 引入了当前仓库的依赖项，也就是 `/src/` 目录里几个核心文件。这里还引入了 `log` 这个库。
+在 `dependencies` 引入了当前仓库的依赖项，也就是 `/src/` 目录里几个核心文件
+
+```shell
+$ proxy-wasm-rust-sdk git:(master) ✗ tree src/
+src/
+├── allocator.rs
+├── dispatcher.rs
+├── hostcalls.rs
+├── lib.rs
+├── logger.rs
+├── traits.rs
+└── types.rs
+```
+
+同时依赖配置里还引入了 `log` 日志库。
 
 1. 文件 `/src/lib.rs`内容
 
@@ -273,9 +287,8 @@ impl HttpContext for HttpHeaders {
 
 > 下面对 https://github.com/proxy-wasm/proxy-wasm-rust-sdk/blob/master/examples/http_headers/ 提供的内容进行了部分修改，主要为了演示 request header 和 response header 的修改效果。
 >
-> `proxy-wasm` 是一个用于构建网络代理的库，它提供了一组用于拦截和修改网络流量的 API。
 
-上面我们在官方的基础上添加了两行代码，一个是添加了一个请求头`req-hello: req-world`
+上面我们在官方的基础上添加了两行代码，一个是添加了一个请求头`req-hello: req-world`。
 
  ```rust
  fn on_http_request_headers(&mut self, _: usize, _: bool) -> Action {
@@ -286,7 +299,7 @@ impl HttpContext for HttpHeaders {
  }
  ```
 
-同时还在响应时添加了`esp_header_key_1", "resp_header_value_1` 响应头
+另一个是添加了响应头 `resp_header_key_1: resp_header_value_1` 。
 
 ```rust
 fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
@@ -303,9 +316,7 @@ fn on_http_response_headers(&mut self, _: usize, _: bool) -> Action {
 $ cargo build --target wasm32-wasi --release
 ```
 
- 这时将生成一个目标文件 `target/wasm32-wasi/release/proxy_wasm_example_http_headers.wasm`
-
-
+ 这时将生成一个目标文件 `target/wasm32-wasi/release/proxy_wasm_example_http_headers.wasm`，这个文件需要将其配置在envoy.yaml 中。
 
 3. `envoy.yaml`配置(参考 https://github.com/envoyproxy/envoy/blob/main/examples/wasm-cc/envoy.yaml)
 
@@ -374,29 +385,27 @@ static_resources:
 
 相关配置可参考 https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/wasm/v3/wasm.proto#envoy-v3-api-msg-extensions-wasm-v3-vmconfig
 
-上面官方提供的配置是通过 docker-compose 来运行的，这里为了让大家更好的理解如何在envoy调用wasm的，放弃这种方式，直接采用原生的运行方式
+> 官方提供的配置是通过 docker-compose 运行服务的，这里为了让大家更好的理解如何在envoy调用wasm，因此放弃这种运行方式，从而采用原生的手动命令行运行方式
 
-这里我们只需要将 
+这里我们只需要将 envoy.yaml 里的配置项
 
-````
+````yaml
 filename: "/etc/envoy/proxy-wasm-plugins/proxy_wasm_example_http_headers.wasm"
 ````
 
-这行配置路径修改成上面生成的文件路径 
+修改成上面生成的wasm文件路径 
 
-```
+```yaml
 filename: "./target/wasm32-wasi/release/proxy_wasm_example_http_headers.wasm"
 ```
 
- 好了，现在我们运行一下envoy服务
+ 好了，现在我们启动envoy服务
 
 ```shell
 $ envoy -c envoy.yaml
 ```
 
-
-
-新开一个终端，发起一个请求
+服务启动成功后，再新开一个终端，发起一个HTTP请求
 
 ```shell
 $ curl -v http://localhost:10000/headers
@@ -429,11 +438,11 @@ $ curl -v http://localhost:10000/headers
 }
 ```
 
-可以看到请求头`Req-Hello` 和 响应头 `resp_header_key_1`，至此说明我们的 `wasm  filter` 正常工作了。
+可以看到输出结果中包含请求头`Req-Hello` 和 响应头 `resp_header_key_1`，至此说明我们的 `wasm  filter` 正常工作了。
 
 # 总结 
 
-对于这两类 filter 如何选择，需要根据具体情况来决定。如果你特别的在意性能的话，则还是推荐wasm  filter，同时最好使用Rust语言开发。如果对性能要求不高的话，或者 lua filter 是一个不错的选择。
+对于这两类 filter 如何选择，需要根据具体情况来决定。如果你特别的在意性能的话，则还是推荐采用 `wasm  filter`，同时最好使用Rust语言开发。如果对性能要求不高的话，则可以使用 `lua filter`。
 
 # 参考资料
 
