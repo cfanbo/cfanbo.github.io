@@ -7,10 +7,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Upload Records
-        uses: iChochy/Algolia-Upload-Records@main
-        env:
-          APPLICATION_ID: ${{secrets.APPLICATION_ID}}
-          ADMIN_API_KEY: ${{secrets.ADMIN_API_KEY}}
-          INDEX_NAME: ${{secrets.INDEX_NAME}}
-          FILE_PATH: ${{secrets.FILE_PATH}}
+      - uses: darrenjennings/algolia-docsearch-action@master
+        with:
+          algolia_application_id: ${{secrets.APPLICATION_ID}}
+          algolia_api_key: ${{secrets.ADMIN_API_KEY}}
+          file: ${{secrets.FILE_PATH}}
