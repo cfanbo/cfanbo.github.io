@@ -1,8 +1,6 @@
 name: Algolia Upload Records
 on:
-  push:
-    branches:
-      - main
+  [push]
 jobs:
   algolia:
     runs-on: ubuntu-latest
