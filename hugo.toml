@@ -34,3 +34,8 @@ identifier = "IETF"
 name = "IETF"
 url = "https://datatracker.ietf.org/"
 weight = 6
+
+[outputFormats.Algolia]
+  mediaType = "application/json"
+  baseName = "algolia"
+  isPlainText = true
