@@ -7,8 +7,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: darrenjennings/algolia-docsearch-action@master
+      - uses: tilburgsciencehub/algolia-uploader@master
         with:
-          algolia_application_id: ${{secrets.APPLICATION_ID}}
-          algolia_api_key: ${{secrets.ADMIN_API_KEY}}
-          file: ${{secrets.FILE_PATH}}
+          app_id: ${{secrets.APPLICATION_ID}}
+          admin_key: ${{secrets.ADMIN_API_KEY}}
+          index_name: ${{secrets.INDEX_NAME}}
+          index_file_path: ${{secrets.FILE_PATH}}
