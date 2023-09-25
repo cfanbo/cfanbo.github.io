@@ -35,6 +35,11 @@ name = "IETF"
 url = "https://datatracker.ietf.org/"
 weight = 6
 
+[outputs]
+  home = ["HTML","RSS","Algolia"]
+  section = ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
 [outputFormats.Algolia]
   mediaType = "application/json"
   baseName = "algolia"
