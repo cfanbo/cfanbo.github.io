@@ -55,4 +55,3 @@ weight = 6
 [params.algolia]
   vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink", "image"]
   params = ["tags"]
-  
