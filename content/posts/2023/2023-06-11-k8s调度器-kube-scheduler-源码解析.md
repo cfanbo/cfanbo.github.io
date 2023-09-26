@@ -2,6 +2,7 @@
 title: k8s调度器 kube-scheduler 源码解析
 author: admin
 type: post
+toc: true
 date: 2023-06-11T07:17:16+00:00
 url: /archives/33138
 categories:

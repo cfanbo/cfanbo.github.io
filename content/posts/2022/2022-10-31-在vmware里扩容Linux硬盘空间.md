@@ -4,10 +4,12 @@ author: admin
 type: post
 date: 2022-10-31T07:55:46+00:00
 url: /archives/31973
+toc: true
 categories:
  - 其它
 tags:
  - vmware
+ - linux
 
 ---
 在mac上创建了一个ubuntu的虚拟机做为k8s远程开发调试机器，但在编译程序的时候发现磁盘空间不足，于是需要对磁盘进行扩容。

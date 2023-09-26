@@ -4,6 +4,7 @@ author: admin
 type: post
 date: 2021-04-30T11:48:20+00:00
 url: /archives/30211
+toc: true
 categories:
  - 程序开发
 tags:
@@ -17,7 +18,7 @@ tags:
 
 ## 用法 
 
-```
+```go
 // https://github.com/valyala/bytebufferpool/blob/18533face0/bytebuffer_example_test.go
 package bytebufferpool_test
 
@@ -48,7 +49,7 @@ func ExampleByteBuffer() {
 
 我们先看一下与其相关的一些常量
 
-```
+```go
 const (
 	// 定位数据索引位置，使用位操作性能比较高效
 	minBitSize = 6 // 2**6=64 is a CPU cache line size
@@ -74,7 +75,7 @@ const (
 
 ### 数据结构 
 
-```
+```go
 // ByteBuffer provides byte buffer, which can be used for minimizing
 // memory allocations.
 //
@@ -116,7 +117,7 @@ var defaultPool Pool
 
 ## 实现原理 
 
-```
+```go
 // Get returns an empty byte buffer from the pool.
 func Get() *ByteBuffer { return defaultPool.Get() }
 
@@ -131,7 +132,7 @@ func Put(b *ByteBuffer) { defaultPool.Put(b) }
 
 对于取对象很简单
 
-```
+```go
 // Get returns new byte buffer with zero length.
 //
 // The byte buffer may be returned to the pool via Put after the use
@@ -158,7 +159,7 @@ func (p *Pool) Get() *ByteBuffer {
 
 存对象稍微有一点点复杂，主要是多了一个校准的操作。
 
-```
+```go
 // Put releases byte buffer obtained via Get to the pool.
 //
 // The buffer mustn't be accessed after returning to the pool.
@@ -192,7 +193,7 @@ func (p *Pool) Put(b *ByteBuffer) {
 
 整体逻辑还是比较清楚的。下面我们重点看一下 `校准` 逻辑
 
-```
+```go
 func (p *Pool) calibrate() {
 	if !atomic.CompareAndSwapUint64(&p.calibrating, 0, 1) {
 		return

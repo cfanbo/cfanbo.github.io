@@ -1,11 +1,9 @@
 ---
-title: 私密：Linux 内核select、poll 和 eventpoll 的实现
+title: Linux 内核select、poll 和 eventpoll 的实现
 author: admin
 type: post
 date: 2021-05-01T06:22:35+00:00
-draft: true
-private: true
-url: /?p=30291
+url: /archives/30291
 categories:
  - 程序开发
 tags:
