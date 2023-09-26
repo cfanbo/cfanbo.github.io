@@ -149,6 +149,13 @@
                 .modal-backdrop.show {
                     opacity: 0.5;
                 }
+
+                .modal-dialog-scrollable {
+                    max-height: calc(100% - 2px);
+                    /* 控制最大高度，如果需要自定义，请调整此值 */
+                    overflow-y: auto;
+                    /* 启用垂直滚动条 */
+                }
             </style>
 
             <!-- jQuery and JavaScript Bundle with Popper -->
@@ -159,12 +166,12 @@
             <!-- Modal -->
             <div class="modal fade" id="modalSearch" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-body">
                             {{ partial "ss.html" . }}
                         </div>
-
+                        <div class="modal-footer"></div>
                     </div>
                 </div>
             </div>
