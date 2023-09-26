@@ -5,8 +5,8 @@
       "objectID": "{{ .File.TranslationBaseName }}",
       "url": {{ .Permalink | jsonify }},
       "title": {{ .Title | jsonify }},
-      "summary": {{ .Plain | safeHTML | truncate 300 | jsonify }},
-      "content": {{ .Plain | safeHTML | truncate 3200 | jsonify }},
+      "summary": {{ .Plain | safeHTML | truncate 200 | jsonify }},
+      "content": {{ .Plain | safeHTML | truncate 3000 | jsonify }},
       "pubDate": {{ .PublishDate | jsonify }}
     }
     {{- end }}
