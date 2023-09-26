@@ -1,0 +1,176 @@
+<nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white no-underline white-90 dib">
+            {{ with .Site.Params.site_logo }}
+            <img src="{{ relURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
+            {{ else }}
+            {{ .Site.Title }}
+            {{ end }}
+        </a>
+        <div class="flex-l items-center">
+            {{ partial "i18nlist.html" . }}
+            {{ if .Site.Menus.main }}
+            <ul class="{{ cond (eq $.Site.Language.LanguageDirection " rtl") "pr0 ml3" "pl0 mr3" }}">
+                {{ range .Site.Menus.main }}
+                <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection " rtl") "pl3" "pr3" }}">
+                    <a class="hover-white no-underline white-90" href="{{ .URL }}" title="{{ i18n " pageTitle" . }}">
+                        {{ .Name }}
+                    </a>
+                </li>
+                {{ end }}
+                <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection " rtl") "pl3" "pr3" }}">
+                    <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+                        <span id="searchGlyph" class="glyphicon glyphicon-search"><svg
+                                xmlns="http://www.w3.org/2000/svg" height="1em"
+                                viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                <style>
+                                    svg {
+                                        fill: #ffffff
+                                    }
+                                </style>
+                                <path
+                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                            </svg></span>
+                    </a>
+                </li>
+            </ul>
+            <!-- dialog -->
+
+            <!-- CSS -->
+            <style>
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 1050;
+                    display: none;
+                    overflow: hidden;
+                    outline: 0;
+
+                }
+
+                body.modal-open {
+                    overflow: hidden;
+                    position: fixed;
+                    width: 100%;
+                }
+
+                .modal-dialog {
+                    position: relative;
+                    margin: 0.5rem;
+                    pointer-events: none;
+                    width: 80%;
+                    margin: 0px auto;
+                }
+
+                .modal.fade .modal-dialog {
+                    transition: transform 0.3s ease-out;
+                    transform: translate(0, -50px);
+                }
+
+                .modal.show .modal-dialog {
+                    transform: translate(0, 0);
+                }
+
+                .modal-content {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    pointer-events: auto;
+                    background-color: #fff;
+                    background-clip: padding-box;
+                    border: 1px solid rgba(0, 0, 0, 0.2);
+                    border-radius: 0.5rem;
+                    outline: 0;
+                }
+
+                .modal-header {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    padding: 1rem;
+                    border-bottom: 1px solid #dee2e6;
+                    border-top-left-radius: 0.5rem;
+                    border-top-right-radius: 0.5rem;
+                }
+
+                .modal-header .modal-title {
+                    margin-bottom: 0;
+                    line-height: 1.5;
+                }
+
+                .modal-body {
+                    position: relative;
+                    flex: 1 1 auto;
+                    padding: 1rem;
+                }
+
+                .modal-footer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    padding: 0.75rem;
+                    border-top: 1px solid #dee2e6;
+                    border-bottom-right-radius: 0.5rem;
+                    border-bottom-left-radius: 0.5rem;
+                }
+
+                .show {
+                    display: block !important;
+                }
+
+                .fade {
+                    opacity: 0;
+                    transition: opacity 0.15s linear;
+                }
+
+                .fade.show {
+                    opacity: 1;
+                }
+
+                .modal-backdrop {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 1040;
+                    background-color: #000;
+                }
+
+                .modal-backdrop.fade {
+                    opacity: 0;
+                    transition: opacity 0.15s linear;
+                }
+
+                .modal-backdrop.show {
+                    opacity: 0.5;
+                }
+            </style>
+
+            <!-- jQuery and JavaScript Bundle with Popper -->
+            <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.js"></script>
+            <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+            <!-- Button trigger modal -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="modalSearch" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            {{ partial "ss.html" . }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--//dialog-->
+            {{ end }}
+            {{ partialCached "social-follow.html" . }}
+        </div>
+    </div>
+</nav>
