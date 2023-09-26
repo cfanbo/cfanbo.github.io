@@ -1,0 +1,49 @@
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.5.1/dist/algoliasearch-lite.umd.js" integrity="sha256-EXPXz4W6pQgfYY3yTpnDa3OH8/EPn16ciVsPQ/ypsjk=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.8.3/dist/instantsearch.production.min.js" integrity="sha256-LAGhRRdtVoD6RLo2qDQsU2mp+XVSciKRC8XPOBWmofM=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    const searchClient = algoliasearch('CMUVDH220Y', 'YOUR9aa296e8e10ea311c8f514d5033268c6');
+
+    const search = instantsearch({
+        indexName: 'blog',
+        searchClient,
+    });
+    const hitTemplate =
+        '<div class="col-lg-12 col-md-12 mb-4">' +
+            '<article class="card post-card" id="summary-{{ safeHTML "{{{ key }}}" }}">' +
+                '{{ safeHTML "<img loading=\"lazy\" class=\"w-100 rounded\" style=\"height:200px;object-fit:cover;\"src=\"{{{ image }}}\" alt=\"{{{ name }}}\">" }}' +
+                '<div class="card-body">' +
+                    '<h3 class="h4 mb-4">' +
+                    '{{ safeHTML "<a class=\"post-title\" href=\"{{{ permalink }}}\">{{{ title }}}</a>" }}' +
+                    '</h3>' +
+                    '<p>{{ safeHTML "{{{ summary }}}" }}</p>' +
+                '</div>' + 
+            '</article>' + 
+        '</div>';
+    const missTemplate = 
+        '<div class="col-lg-10 col-md-10 mb-4">' +
+            '<article class="card post-card">' +
+                '<div class="card-body">' +
+                    '<h3 class="h4 mb-4">No results</h3>' +
+                    '<p>There were no results matching your search terms {{ safeHTML "<em>{{{ query }}}</em>" }}.</p>' +
+                '</div>' + 
+            '</article>' + 
+        '</div>';
+    search.addWidgets([
+        instantsearch.widgets.searchBox({
+            container: '#searchBox',
+            placeholder: "Search...",
+            showReset: false,
+            showSubmit: false,
+            autofocus: true,
+        }),
+        instantsearch.widgets.hits({
+            container: "#searchResults",
+            templates: {
+                item: hitTemplate,
+                empty: missTemplate,
+            }
+          })
+    ]);
+    search.start();
+</script>

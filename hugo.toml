@@ -35,12 +35,24 @@ name = "IETF"
 url = "https://datatracker.ietf.org/"
 weight = 6
 
+[markup]
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 1
+
 [outputs]
   home = ["HTML","RSS","Algolia"]
   section = ["HTML"]
   taxonomy = ["HTML"]
   term = ["HTML"]
+
 [outputFormats.Algolia]
   mediaType = "application/json"
   baseName = "algolia"
   isPlainText = true
+
+[params.algolia]
+  vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink", "image"]
+  params = ["tags"]
+  
