@@ -1,1 +1,5 @@
 content/wp-content/*
+.idea/
+.vscode/
+public/
+!public/algolia.json
