@@ -70,3 +70,4 @@ weight = 6
     pagerDirection= "last" # Comment sorting direction, available values are 'last' and 'first'.
     createIssueManually= true # 设置为true，如果是管理员登录，会自动创建issue，如果是false，需要管理员手动添加第一个评论(issue)
     distractionFreeMode= false # Enable hot key (cmd|ctrl + enter) submit comment.
+    language = "zh-CN"
