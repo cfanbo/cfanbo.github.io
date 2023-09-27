@@ -7,7 +7,7 @@ theme = 'ananke'
   recent_posts_number = 5
 
 show_reading_time = true
-googleAnalytics = "UA-34662167-1"
+googleAnalytics = "G-544832BXMX"
 
 [[menu.main]]
 identifier = "linux"
