@@ -4,6 +4,7 @@ title = "学习笔记"
 Subtitle = '系统架构 高性能 云原生 Golang kubernetes MySQL'
 theme = 'ananke'
 [params]
+  enableGitalk = true
   recent_posts_number = 5
 
 show_reading_time = true
@@ -55,3 +56,17 @@ weight = 6
 [params.algolia]
   vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink", "image"]
   params = ["tags"]
+
+
+[params.gitalk] 
+    clientID = "73353040ffac6d750fe7" # 您刚才创建Github Application 的 Client ID
+    clientSecret = "daa1232b75304bf697a41b317d4650a443c399ef" # 您刚才创建Github Application 的 Client Secret
+    repo = "cfanbo.github.io" # 您的博客的github地址Repository name，例如：xxxx.github.io
+    owner = "cfanbo" # 您的GitHub ID
+    admin= "cfanbo" # 您的GitHub ID
+    id= "location.pathname" # 文章页面的链接地址就是ID
+    labels= "gitalk" # Github issue labels. If you used to use Gitment, you can change it
+    perPage= 15 # Pagination size, with maximum 100.
+    pagerDirection= "last" # Comment sorting direction, available values are 'last' and 'first'.
+    createIssueManually= true # 设置为true，如果是管理员登录，会自动创建issue，如果是false，需要管理员手动添加第一个评论(issue)
+    distractionFreeMode= false # Enable hot key (cmd|ctrl + enter) submit comment.
