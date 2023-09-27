@@ -3,3 +3,4 @@ content/wp-content/*
 .vscode/
 public/
 !public/algolia.json
+resources/
