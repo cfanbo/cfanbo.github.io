@@ -16,13 +16,13 @@ MyISM使用的是非聚簇索引，非聚簇索引的两棵B+树看上去没什�
 
 MyISAM索引用的B+ tree来储存数据，MyISAM表的索引和数据是分开的，MyISAM索引的指针指向的是键值的地址(0XX开始之类的物理地址)，地址存储的是数据，如下图：
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/01/a6jABj.jpg)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/a6jABj.jpg)]
 
 为了更形象说明这两种索引的区别，我们假想一个表如下图存储了4行数据。其中Id作为主索引，Name作为辅助索引。图示清晰的显示了聚簇索引和非聚簇索引的差异。
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/01/mysql_0.jpg)][2]x
+[![](https://blogstatic.haohtml.com//uploads/2023/09/mysql_0.jpg)
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/01/timg.jpg)][3]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/timg.jpg)][3]
 
 我们重点关注聚簇索引，看上去聚簇索引的效率明显要低于非聚簇索引，因为每次使用辅助索引检索都要经过两次B+树查找，这不是多此一举吗？聚簇索引的优势在哪？
 
@@ -31,9 +31,3 @@ MyISAM索引用的B+ tree来储存数据，MyISAM表的索引和数据是分开�
 2 辅助索引使用主键作为”指针” 而不是使用地址值作为指针的好处是，减少了当出现行移动或者数据页分裂时辅助索引的维护工作，使用主键值当作指针会让辅助索引占用更多的空间，换来的好处是InnoDB在移动行时无须更新辅助索引中的这个”指针”。也就是说行的位置（实现中通过16K的Page来定位，后面会涉及）会随着数据库里数据的修改而发生变化（前面的B+树节点分裂以及Page的分裂），使用聚簇索引就可以保证不管这个主键B+树的节点如何变化，辅助索引树都不受影响。
 
 参考： [http://www.tuicool.com/articles/ZRN3qu](http://www.tuicool.com/articles/ZRN3qu)
-
-转：http://www.cnblogs.com/shijingxiang/articles/4743324.html
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2017/01/a6jABj.jpg
- [2]: http://blog.haohtml.com/wp-content/uploads/2017/01/mysql_0.jpg
- [3]: http://blog.haohtml.com/wp-content/uploads/2017/01/timg.jpg

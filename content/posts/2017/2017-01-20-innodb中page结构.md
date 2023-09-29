@@ -9,12 +9,12 @@ categories:
 
 ---
  1. 一个存放记录(row)的page，由page header、page trailer、page body组成。如下图:[2]
- [![](http://blog.haohtml.com/wp-content/uploads/2017/01/mysql_page_struct.png)][1]
- [![](http://blog.haohtml.com/wp-content/uploads/2017/01/page_struct.png)][2]
+ 
+  [![](https://blogstatic.haohtml.com//uploads/2023/09/page_struct.png)][2]
 
 page的完整结构
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/01/page_full_struct.jpg)][3]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/page_full_struct.jpg)][3]
 
 page的结构详情参看如下：
 
@@ -50,7 +50,7 @@ The meaning of the parts is as follows:
 
 [smarty和html_QuikForm联合编程][4]
 
- [1]: http://blog.haohtml.com/wp-content/uploads/2017/01/mysql_page_struct.png
- [2]: http://blog.haohtml.com/wp-content/uploads/2017/01/page_struct.png
- [3]: http://blog.haohtml.com/wp-content/uploads/2017/01/page_full_struct.jpg
- [4]: http://hedengcheng.com/?p=118
+[1]: http://blog.haohtml.com/wp-content/uploads/2017/01/mysql_page_struct.png
+[2]: http://blog.haohtml.com/wp-content/uploads/2017/01/page_struct.png
+[3]: http://blog.haohtml.com/wp-content/uploads/2017/01/page_full_struct.jpg
+[4]: http://hedengcheng.com/?p=118

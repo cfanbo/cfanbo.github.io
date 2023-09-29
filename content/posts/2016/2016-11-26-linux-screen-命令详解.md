@@ -138,7 +138,7 @@ Screen默认会为窗口命名为编号和窗口中运行程序名的组合，�
 
 **暂时中断会话**
 
-[![screen_1](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_1.jpg)][1]
+[![screen_1](https://blogstatic.haohtml.com//uploads/2023/09/screen_1.jpg)]
 
 半个小时之后回来了，找到该screen会话：
 
@@ -146,7 +146,7 @@ Screen默认会为窗口命名为编号和窗口中运行程序名的组合，�
 [root@TS-DEV ~]# screen -ls
 ```
 
-[![screen_2](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_2.jpg)][2]
+[![screen_2](https://blogstatic.haohtml.com//uploads/2023/09/screen_2.jpg)]
 
 重新连接会话：
 
@@ -160,13 +160,13 @@ Screen默认会为窗口命名为编号和窗口中运行程序名的组合，�
 
 这时可以使用下面命令强制将这个会话从它所在的终端分离，转移到新的终端上来：
 
-[![screen_3](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_3.jpg)][3]
+[![screen_3](https://blogstatic.haohtml.com//uploads/2023/09/screen_3.jpg)]
 
 **5.5 清除dead 会话**
 
 如果由于某种原因其中一个会话死掉了（例如人为杀掉该会话），这时screen -list会显示该会话为dead状态。使用screen -wipe命令清除该会话：
 
-[![screen_4](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_4.jpg)][4]
+[![screen_4](https://blogstatic.haohtml.com//uploads/2023/09/screen_4.jpg)]
 
 **5.6 关闭或杀死窗口**
 
@@ -210,7 +210,7 @@ Screen允许使用快捷键C-a s锁定会话。锁定以后，再进行任何输
 
 可以用C-a X快捷键关闭当前焦点所在的屏幕区块，也可以用C-a Q关闭除当前区块之外其他的所有区块。关闭的区块中的窗口并不会关闭，还可以通过窗口切换找到它。
 
-[![screen_5](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_5.jpg)][5]
+[![screen_5](https://blogstatic.haohtml.com//uploads/2023/09/screen_5.jpg)]
 
 **6.5 C/P模式和操作**
 
@@ -218,19 +218,10 @@ screen的另一个很强大的功能就是可以在不同窗口之间进行复�
 
 一般情况下，可以移动光标到指定位置，按下空格设置一个开头标记，然后移动光标到结尾位置，按下空格设置第二个标记，同时会将两个标记之间的部分储存在copy/paste buffer中，并退出copy/paste模式。在正常模式下，可以使用快捷键C-a ]将储存在buffer中的内容粘贴到当前窗口。
 
-[![screen_6](http://blog.haohtml.com/wp-content/uploads/2016/11/screen_6.jpg)][6]
+[![screen_6](https://blogstatic.haohtml.com//uploads/2023/09/screen_6.jpg)]
 
 **6.6 更多screen功能**
 
 同大多数UNIX程序一样，GNU Screen提供了丰富强大的定制功能。你可以在Screen的默认两级配置文件/etc/screenrc和$HOME/.screenrc中指定更多，例如设定screen选项，定制绑定键，设定screen会话自启动窗口，启用多用户模式，定制用户访问权限控制等等。如果你愿意的话，也可以自己指定screen配置文件。
 
 以多用户功能为例，screen默认是以单用户模式运行的，你需要在配置文件中指定multiuser on 来打开多用户模式，通过acl*（acladd,acldel,aclchg…）命令，你可以灵活配置其他用户访问你的screen会话。更多配置文件内容请参考screen的man页。
-
-http://www.cnblogs.com/mchina/archive/2013/01/30/2880680.html
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_1.jpg
- [2]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_2.jpg
- [3]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_3.jpg
- [4]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_4.jpg
- [5]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_5.jpg
- [6]: http://blog.haohtml.com/wp-content/uploads/2016/11/screen_6.jpg
