@@ -6,6 +6,7 @@ date: 2017-02-07T02:42:21+00:00
 url: /archives/17396
 categories:
  - MySQL
+ - 索引
 
 ---
 有同学问到InnoDB的索引长度问题，简单说几个tips。
@@ -14,7 +15,7 @@ categories:
 
 大家经常碰到InnoDB单列索引长度不能超过767bytes，实际上联合索引还有一个限制是3072。
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/02/19130103_qFJc.jpg)][1]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/19130103_qFJc.jpg)][1]
 
 可以看到，由于每个字段占用255\*3, 因此这个索引的大小是3825(255\*3*5)>3072，报错。
 
@@ -36,13 +37,10 @@ categories:
 
 因此导致如下效果(5.5)：
 
-[![](http://blog.haohtml.com/wp-content/uploads/2017/02/19130104_eWuF.jpg)][2]
+[![](https://blogstatic.haohtml.com//uploads/2023/09/19130104_eWuF.jpg)][2]
 
 可以看到默认行为是建表成功，报一个warning，并且将长度阶段为255。
 
 使用large_prefix后，报的是error，建表不成功。这个参数要等到 5.6才有效。
 
 原文地址: [关于InnoDB索引长度限制的tips](http://www.mysqlops.com/2012/09/19/%e5%85%b3%e4%ba%8einnodb%e7%b4%a2%e5%bc%95%e9%95%bf%e5%ba%a6%e9%99%90%e5%88%b6%e7%9a%84tips.html)
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2017/02/19130103_qFJc.jpg
- [2]: http://blog.haohtml.com/wp-content/uploads/2017/02/19130104_eWuF.jpg
