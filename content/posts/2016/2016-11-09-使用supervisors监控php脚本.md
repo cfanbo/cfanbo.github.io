@@ -68,7 +68,5 @@ $brew services restart supervisord
 
 打开浏览器 [http://127.0.0.9001](http://127.0.0.9001),输入用户名和密码，可以看此进程,可以对每个进程进行停止，重启和刷新操作。
 
-[![supervisord_php](http://blog.haohtml.com/wp-content/uploads/2016/11/supervisord_php.png)][1]
-对于supervisord命令请参考： [http://blog.haohtml.com/archives/15145](http://blog.haohtml.com/archives/15145)
-
- [1]: http://blog.haohtml.com/wp-content/uploads/2016/11/supervisord_php.png
+[![supervisord_php](https://blogstatic.haohtml.com//uploads/2023/09/supervisord_php.png)][1]
+对于supervisord命令请参考： [http://blog.haohtml.com/archives/15145 
