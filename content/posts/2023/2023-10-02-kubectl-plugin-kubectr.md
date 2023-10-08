@@ -89,7 +89,7 @@ debugger-kbm5m	  0    	  Terminated	  0       	  -   	  -    	  busybox:1.28    
 
 目前插件支持普通 `container`、`initContainer` 和 `ephemeralContainer`三类容器。
 
-## 版本号
+# 版本号
 
 ```sh
 $ kubectl ctr -v
