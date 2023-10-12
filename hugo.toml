@@ -19,7 +19,7 @@ weight = 2
 [[menu.main]]
 identifier = "mysql"
 name = "MySQL"
-url = "/mysql/"
+url = "/tags/mysql/"
 weight = 3
 [[menu.main]]
 identifier = "golang"
