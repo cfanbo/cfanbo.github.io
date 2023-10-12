@@ -14,7 +14,7 @@ googleAnalytics = "G-544832BXMX"
 [[menu.main]]
 identifier = "linux"
 name = "Linux"
-url = "/linux/"
+url = "/tags/linux/"
 weight = 2
 [[menu.main]]
 identifier = "mysql"
