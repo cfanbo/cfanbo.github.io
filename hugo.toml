@@ -29,7 +29,7 @@ weight = 4
 [[menu.main]]
 identifier = "kubernetes"
 name = "Kubernetes"
-url = "https://kubernetes.io/zh-cn/docs/home/"
+url = "/tags/k8s"
 weight = 5
 [[menu.main]]
 identifier = "IETF"
