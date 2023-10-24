@@ -4,10 +4,6 @@ author: admin
 type: post
 date: 2009-11-17T03:52:04+00:00
 url: /archives/2593
-IM_data:
- - 'a:1:{s:48:"/wp-content/uploads/2009/11/sphinex-services.jpg";s:48:"/wp-content/uploads/2009/11/sphinex-services.jpg";}'
-IM_contentdowned:
- - 1
 categories:
  - 程序开发
 tags:
@@ -23,7 +19,7 @@ tags:
 >
 > searchd –delete
 
-[![sphinex-services](/wp-content/uploads/2009/11/sphinex-services.jpg)][1]
+[![sphinex-services](https://blogstatic.haohtml.com//uploads/2023/09/sphinex-services.jpg)][1]
 
 这里有两种办法:
 1.直接把配置文件复制到c:/windows/system32目录里一份就可以了.
@@ -35,8 +31,8 @@ tags:
 
 错误的编码格式包括：Unicode、Unicode BOM、Unicode big endian、Unicode 低位在前、UTF-8 + BOM、UTF-8 Signature、UTF-8 包含签名等；
 
-特别注意：Windows自带的记事本(Notepad)或者写字板（WordPad）无法正确保存为所需格式，请勿使用其编辑配置文件；
+**特别注意**
 
-推荐编辑器： [点击下载Notepad2绿色版](http://www.coreseek.cn/uploads/csft/tool/Notepad2.zip)；使用Notepad2打开配置文件，依次选择：“文件”菜单－－“编码”－－“UTF-8”，然后保存文件（快捷键CTRL+S）即可。
+Windows自带的记事本(Notepad)或者写字板（WordPad）无法正确保存为所需格式，请勿使用其编辑配置文件；
 
- [1]: /wp-content/uploads/2009/11/sphinex-services.jpg
+
