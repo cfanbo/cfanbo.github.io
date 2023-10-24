@@ -136,7 +136,8 @@ type bmap struct {
 
 如果当前bucket已满的话，则会创建新的bucket，并使用 `overflow` 字段进行bucket之间的连接，实现`单向链表`功能。![d4a95ed79625399a0ed58638e776f923-1](https://blogstatic.haohtml.com/uploads/2021/01/570d82cc1b0c6d20a456b9be6a40dd5c-2.png)
 
-### map结构体关系图 ![00b06e623a81cd5ed7fb89935b78d44a-1](https://blogstatic.haohtml.com/uploads/2021/01/f7a92a9a3fdb8a966a2b2a1ec083c72f-2.png)来源网络
+### map结构体关系图 
+![map结构体关系图 ](https://blogstatic.haohtml.com/uploads/2021/01/f7a92a9a3fdb8a966a2b2a1ec083c72f-2.png)来源网络
 
 ## key的定位算法 
 
