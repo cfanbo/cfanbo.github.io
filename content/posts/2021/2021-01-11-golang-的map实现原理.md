@@ -4,6 +4,7 @@ author: admin
 type: post
 date: 2021-01-11T09:07:29+00:00
 url: /archives/20420
+toc: true
 categories:
  - 程序开发
 tags:
@@ -141,9 +142,9 @@ type bmap struct {
 
 在map中要存储一个键值对，必须先找到所在的位置，一般采用hash算法即取模的结果来实现，这里我们主要介绍一下map中是如何实现的。
 
-先介绍一下map装载相关的内容。上面我们介绍 `bmap` 结构体的时候，有一个 `B` 字段，这个字段决定了map对应的底层数组的大小，它的大小决定了可以容纳的bucket的个数。如果`B=5`的话，则可以bucket的数组元素值个数为 `2^5=32`个，但golang中需要考虑到装载分子`6.5`这个因素，所以真正装载的元素并没有这么多。每当一个map存储的元素个数占比达到65%的时候，就会触发map的扩容操作。
+在此这前先介绍一下map装载相关的内容。上面我们介绍 `bmap` 结构体的时候，有一个 `B` 字段，这个字段决定了map对应的底层数组的大小，它的大小决定了可以容纳的bucket的个数。如果`B=5`的话，则可以bucket的数组元素值个数为 `2^5=32`个，但golang中需要考虑到装载分子`6.5`这个因素，所以真正装载的元素并没有这么多。每当一个map存储的元素个数占比达到65%的时候，就会触发map的扩容操作。
 
-如果想知道一个key要放在哪个bucket个, 需要先计算出一个hash值，然后再除以 32取余数即可。golang 也是如此实现的，只不过是为了性能考虑，使用了位操作而已。如5 \*2 换作用位操作的话，就是将5左移1位即可。也就是主每左移1位一次就是\*2，左移两位就是*4，同理右移则是相除。
+如果想知道一个key要放在哪个bucket, 需要先计算出一个hash值，然后再除以 32取余数即可。golang 也是如此实现的，只不过是为了性能考虑，使用了位操作而已。如5 \*2 换作用位操作的话，就是将5左移1位即可。也就是主每左移1位一次就是\*2，左移两位就是*4，同理右移则是相除。
 
 假如 `hash(key)` 计算出的结果为
 
@@ -155,7 +156,7 @@ type bmap struct {
 
 找到了要存储的桶位置，还需要找到放在桶的什么位置，每个位置我们可以称之为`slot`或者`Cell`。
 
-```
+```go
 // src/runtime/map.go
 
 const (
@@ -182,7 +183,7 @@ const (
 
 ## map创建 
 
-```
+```go
 package main
 
 func main() {
@@ -196,7 +197,7 @@ func main() {
 
 我们先看一下与 map 相关的runtime有哪些
 
-```
+```shell
 $ go tool compile -S main.go | grep runtime
         0x0080 00128 (main.go:4)        CALL    runtime.fastrand(SB)
         0x00aa 00170 (main.go:5)        CALL    runtime.mapassign_fast64(SB)
@@ -213,7 +214,7 @@ $ go tool compile -S main.go | grep runtime
 
 > 注意：我们这里没有指定创建map的长度，runtime会根据是否指定这个字段做一些情况考虑。
 
-```
+```go
 // src/runtime/map.go
 
 // makemap implements Go map creation for make(map[k]v, hint).
@@ -267,7 +268,7 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 
 注意 makemap()函数返回的是一个指针，而makeslice()返回的是一个新的结构体，在参数传递的时候，是值复制，两者有差异，有些是引用的是同一个数组，有些不是。
 
-```
+```go
 // src/runtime/map.go
 
 // makeBucketArray initializes a backing array for map buckets.
@@ -333,7 +334,7 @@ func makeBucketArray(t *maptype, b uint8, dirtyalloc unsafe.Pointer) (buckets un
 
 对于map的赋值操作，是由函数 ` [runtime.mapaccess1()](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L389-L450) `和 ` [runtime.mapaccess2()](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L452-L508) ` 来实现的。两者的唯一区别就是返回值不一样，`runtime.mapaccess1()` 返回的是一个值，`runtime.mapaccess2()` 返回的是两个值，第二个值决定了key是否在map中存在。这点可以通过上面我们的 compile 结果中看出他们的区别。这里我们只介绍`runtime.mapaccess1()`
 
-```
+```go
 // src/runtime/map.go
 
 // mapaccess1 returns a pointer to h[key].  Never returns nil, instead
@@ -416,7 +417,7 @@ runtime.mapaccess1()函数返回一个指定h[key]的指针，如果key不存在
  8. 真正开始查找key,外层for是循环bucket及溢出桶overflow，内层for是循环桶内的8个slot
  * 如果 `b.tophash[i] != top` 则表示当前`bucket`的第`i`个位置的`tophash` 与当前key的`tophash`不同。这时分两种情况：
  一种是当前的标识是 `emptyRest` 表示剩下的所有slot全是空，则直接结束当前`bucket`查找，继续下一个 `bucket` 重复此步骤（`b = b.overflow(t)`）；
- 另一种则是继续查找下一个slot，直到8个slot全部查找完毕，然后再查找下一个`bucket`
+    另一种则是继续查找下一个slot，直到8个slot全部查找完毕，然后再查找下一个`bucket`
  * 如果`b.tophash[i] == top`，则根据键bucket的首地址+类型计算出字节长度*slot索引值 计算得出key的位置
  * 判断同时bucket中的key与请求的key是否相等，如果相等的话，按取键的方法取出值，并返回，否则继续
  9. 如果在最后仍未找到key，则直接返回zero 值
@@ -435,7 +436,7 @@ e := add(unsafe.Pointer(b), dataOffset+bucketCnt*uintptr(t.keysize)+i*uintptr(t.
 
 其中 dataOffset 表示key相对于bmap的偏移量，结构体如下
 
-```
+```go
 // src/runtime/map.go
 
 // data offset should be the size of the bmap struct, but needs to be
@@ -453,7 +454,7 @@ dataOffset = unsafe.Offsetof(struct {
 
 对于bucket的几种 [状态码](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L88-L97) 如下
 
-```
+```go
 // src/runtime/map.go
 
 // Possible tophash values. We reserve a few possibilities for special marks.
@@ -490,7 +491,7 @@ minTopHash tophash最小值，如果在调用 `tophash(hash)` 时，计算出的
 
 函数原型
 
-```
+```go
 // src/runtime/map.go
 
 // Like mapaccess, but allocates a slot for the key if it is not present in the map.
@@ -521,7 +522,7 @@ func mapassign(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {}
 
 与删除有关的函数为 mapdelete，原型
 
-```
+```go
 // src/runtime/map.go
 
 func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {}
@@ -541,15 +542,15 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {}
  2. 检查是否并发模式
  3. 计算hash,双层for循环遍历查找key，找到位置后进行以下工作
  将key位置写入nil或置零值
- 将value位置写入nil或置零值
- 将tophash位置置为 emptyOne 状态
- 判断当前key是不是bucket中的最后一个元素，如果是最后一个元素，且当前bucket还有overflow，而overflow的首个tophash[0] != emptyRest 说明已经没有元素可查找了，于是直接结束。否则判断当前key的下一个 tophash是不是emptyRest，如果不是的话，直接结束逻辑。后面利用for循环重置tophash 的状态为最合适的状态，以方便后期循环使用
+    将value位置写入nil或置零值
+    将tophash位置置为 emptyOne 状态
+    判断当前key是不是bucket中的最后一个元素，如果是最后一个元素，且当前bucket还有overflow，而overflow的首个tophash[0] != emptyRest 说明已经没有元素可查找了，于是直接结束。否则判断当前key的下一个 tophash是不是emptyRest，如果不是的话，直接结束逻辑。后面利用for循环重置tophash 的状态为最合适的状态，以方便后期循环使用
 
 ## map扩容 
 
 随着map元素的添加，有可能出现bucket的个数不够，导致overflow桶越来越多，最后变成了一个单向链表了，查找效率越来越差，最差的情况下可能会变成O(n)。这与我们期待的O(1)相反，所以golang为了解决这个问题，就需要对map中的元素进行扩容重新整理，以达到最优的效果。那么什么时候才需要扩容呢?
 
-```
+```go
 // src/runtime/map.go
 
 // Did not find mapping for key. Allocate new cell & add entry.
@@ -567,14 +568,13 @@ if !h.growing() && (overLoadFactor(h.count+1, h.B) || tooManyOverflowBuckets(h.n
  1. 当装载因子越过6.5的时候，这个是一个固定值( [查看说明](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L68-L71)）(代码）
  2. 当overflow 过多的时候
  a. 当 B 小于 15，也就是 bucket 总数 2^B 小于 2^15 时，如果 overflow 的 bucket 数量超过 2^B；
- b. 当 B >= 15，也就是 bucket 总数 2^B 大于等于 2^15，如果 overflow 的 bucket 数量超过 2^15。
- 主要分界点就是15（ [代码](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L1065-L1078)）
+    b. 当 B >= 15，也就是 bucket 总数 2^B 大于等于 2^15，如果 overflow 的 bucket 数量超过 2^15。
+    主要分界点就是15（ [代码](https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L1065-L1078)）
 
- 针对第一个条件，就是说元素太多，桶装不下了，立即进行扩容，添加一倍的桶，保证元素个数最多只能达到桶总容量的65%；
- 针对第二种情况一般是先是大量的添加元素，后来又删除了，再添加导致出现了太多的空的overflow，这样查找key的话，就需要遍历多桶，效率大大下降，这时就需要重新对元素进行位置调整，类似于windows系统中的磁盘碎片整理一样，将overflow中的元素向前面的bucket迁移，以便下次查找数据时效率更高，这种情况我们称之为`等量扩容`。
- 3.
+针对第一个条件，就是说元素太多，桶装不下了，立即进行扩容，添加**1倍**的桶，保证元素个数最多只能达到桶总容量的65%；
+针对第二种情况一般是先是大量的添加元素，后来又删除了，再添加导致出现了太多的空的overflow，这样查找key的话，就需要遍历多个无效桶，效率大大下降，这时就需要重新对元素进行位置调整，类似于windows系统中的磁盘碎片整理一样，将overflow中的元素向前面的bucket迁移，以便下次查找数据时效率更高，这种情况我们称之为`等量扩容`。
 
-```
+```go
 // overLoadFactor reports whether count items placed in 1<<B buckets is over loadFactor.
 // 装载因子>6.5
 func overLoadFactor(count int, B uint8) bool {
@@ -600,13 +600,14 @@ func tooManyOverflowBuckets(noverflow uint16, B uint8) bool {
 
 虽然这里调用了 hashGrow() 函数，但它并不有真正的进行扩容，我们先看下它的源码
 
-```
+```go
 // src/runtime/map.go
 
 func hashGrow(t *maptype, h *hmap) {
 	// If we've hit the load factor, get bigger.
 	// Otherwise, there are too many overflow buckets,
 	// so keep the same number of buckets and "grow" laterally.
+  //
 	// 申请2倍空间
 	bigger := uint8(1)
 
@@ -661,7 +662,7 @@ func hashGrow(t *maptype, h *hmap) {
 
 我们再看看growWrok()源码
 
-```
+```go
 // src/runtime/map.go
 
 func growWork(t *maptype, h *hmap, bucket uintptr) {
@@ -682,7 +683,7 @@ func growWork(t *maptype, h *hmap, bucket uintptr) {
 
 这里 `h.oldbucketmask()`是计算`oldbucket`的位置的，实现原理我们上面介绍过的，计算hash值的最低B位来决定用哪个bucket。
 
-```
+```go
 // src/runtime/map.go
 
 // oldbucketmask provides a mask that can be applied to calculate n % noldbuckets().
@@ -693,7 +694,7 @@ func (h *hmap) oldbucketmask() uintptr {
 
 下面我们重点关注 `evacuate()`函数，最复杂的工作就是由它来完成的。
 
-```
+```go
 // src/runtime/map.go
 
 // evacDst is an evacuation destination.
@@ -846,7 +847,7 @@ func evacuate(t *maptype, h *hmap, oldbucket uintptr) {
 
 函数`advanceEvacuationMark()`源码
 
-```
+```go
 // src/runtime/map.go
 
 func advanceEvacuationMark(h *hmap, t *maptype, newbit uintptr) {
@@ -891,7 +892,7 @@ func advanceEvacuationMark(h *hmap, t *maptype, newbit uintptr) {
 
 我们知道每个bucket 最多只有8个元素，迁移需要一个一个的迁移，每迁移完一个元素，都需要将当前cell作个标记，表示当前位置的元素已经迁移完成，对于等量扩容和非等量扩容两者是有些细微的差别的。我们先看一下等量迁移。
 
-对于等量扩容来说，由于bucket是`1对1`的迁移，况且都迁移到了`x`桶，所以`oldbucket`中每个cell在迁移后被标记为`evacuatedX`，表示当前oldbucket中的元素全部被迁移到了`x`桶了。![](https://blogstatic.haohtml.com/uploads/2021/01/2fc8f27ddf89671791d0898238972b10.png)csdn
+对于等量扩容来说，由于bucket是`1对1`的迁移，况且都迁移到了`x`桶，所以`oldbucket`中每个cell在迁移后被标记为`evacuatedX`，表示当前oldbucket中的元素全部被迁移到了`x`桶了。![csdn](https://blogstatic.haohtml.com/uploads/2021/01/2fc8f27ddf89671791d0898238972b10.png)
 
 经过等量扩容后，原来的overflow消失了，所有元素都放在了同一个bucket，节省资源的同时查询效率也提高了。是不是有点像widows 的磁盘碎片整理。![](https://blogstatic.haohtml.com/uploads/2021/01/279b770ddc7c5730599d0c50b6d6eb10.png)等量扩容后
 
@@ -903,13 +904,13 @@ func advanceEvacuationMark(h *hmap, t *maptype, newbit uintptr) {
 
 经过迁移后，我们发现元素在oldbucket中的存储顺序，到新的bucket中发生了变化。如odlbucket里有8个元素(1-8)，遍历打印的时候，会打印12345678。后来分成了两个bucket， 其中3/4/8 放在了x桶，1/2/5/6/7放在了y桶，那么这时遍历打印的话，则是遍历打印x桶，然后是y桶，最后打印34812567，与原来的顺序不一样了，这正是我们平时所说的对map的遍历并不保证一定的顺序的。
 
-当然在源代码里起始位置也是随机定位的，先是随机选择一个bucket,然后再随机选择一个cell位置，开始往后遍历查找，当达到最后bucket的最后一个元素的时候再才第一个bucket查找，直到遍历到当前元素等于起始元素为止。官方是为了引起我们的注意因此故意这样设计。所以就算你是硬编码写死的map不进行删除或添加，打印的值也是随机的。
+当然在源代码里起始位置也是随机定位的，先是随机选择一个bucket,然后再随机选择一个cell位置，开始往后遍历查找，当达到最后bucket的最后一个元素的时候再从第一个bucket查找，直到遍历到当前元素等于起始元素为止。官方是为了引起我们的注意因此故意这样设计。所以就算你是硬编码写死的map不进行删除或添加，打印的值也是随机的。
 
-由于map内部是按bucket迁移的，每次最多迁移两个bucket，所以在遍历数据的时候也有些复杂，即可考虑新bucket的数据，也要考虑oldbucket中的数据。有些oldbucket中的数据被分两到两个新bucket中了，导致要考虑的情况要多一些。等有时间了再单独写写这一块的实现逻辑。
+由于map内部是按bucket迁移的，每次最多迁移两个bucket，所以在遍历数据的时候也有些复杂，即可考虑新bucket的数据，也要考虑oldbucket中的数据。有些oldbucket中的数据被分分到两个新bucket中了，导致要考虑的情况要多一些。等有时间了再单独写写这一块的实现逻辑。
 
 最后，当所有数据都迁移完成后，还需要将`oldbucket`清除，直接通过设置 `h.oldbuckets`为`nil` 即可，记得还有一个`mapextra.oldoverflow`。
 
-在扩容过程中，有一段说明需要注意到
+在扩容过程中，有一个注意事项，见官方说明
 
 // If key != key (NaNs), then the hash could be (and probably
 // will be) entirely different from the old hash. Moreover,
@@ -929,7 +930,7 @@ func advanceEvacuationMark(h *hmap, t *maptype, newbit uintptr) {
 
 1. map不是并发安全的，所以在源码里有大量的代码判断
 
-```
+```go
 
 if h.flags&hashWriting == 0 {
 	throw("concurrent map writes")
@@ -938,7 +939,7 @@ if h.flags&hashWriting == 0 {
 
 在赋值时会设置map处于协程写的状态
 
-```
+```go
 
 // Set hashWriting after calling t.hasher, since t.hasher may panic,
 // in which case we have not actually done a write.
@@ -957,6 +958,6 @@ h.flags ^= hashWriting
  * [https://studygolang.com/articles/22236](https://studygolang.com/articles/22236)
  * [https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/](https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/)
 
- [1]: https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L600
- [2]: https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L713
- [3]: https://github.com/qcrao/Go-Questions/blob/master/map/map%20%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88.md
+[1]: https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L600
+[2]: https://github.com/golang/go/blob/go1.15.6/src/runtime/map.go#L713
+[3]: https://github.com/qcrao/Go-Questions/blob/master/map/map%20%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88.md
