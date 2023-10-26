@@ -75,13 +75,14 @@ kubernetes 调度器入口文件位于 [`/cmd/kube-scheduler/scheduler.go`][1]�
 
 最后到达文件 [`/pkg/scheduler/scheduler.go#L241`][3], 这里创建了一个 `Scheduler` 是我们重点关注的地方。
 
-# Scheduler 结构体 ![](https://blogstatic.haohtml.com/uploads/2023/06/d5219dfece9f908adb085c69c77bfbb3.png)
+# Scheduler 结构体 
+![](https://blogstatic.haohtml.com/uploads/2023/06/d5219dfece9f908adb085c69c77bfbb3.png)
 
 不过为了后面方便理解，我们先看一下 [`Scheduler结构体`][4]的结构。
 
 从注释信息我们可以看到其主要功能是 watch未调度的`pod`，它将试图找一个合适的 `Node` ，然后将其写回到 `api server`。
 
-```
+```go
 // Scheduler watches for new unscheduled pods. It attempts to find
 // nodes that they fit on and writes bindings back to the api server.
 type Scheduler struct {
@@ -156,7 +157,7 @@ type Scheduler struct {
 
 我们先看一下函数原型
 
-```
+```go
 func New(client clientset.Interface,
   informerFactory informers.SharedInformerFactory,
   dynInformerFactory dynamicinformer.DynamicSharedInformerFactory,
@@ -187,7 +188,7 @@ func New(client clientset.Interface,
 
 函数选项式模式对调度器结构体初始化
 
-```
+```go
 // 函数选项式模块初始化调度器结构体
   options := defaultSchedulerOptions
   for _, opt := range opts {
@@ -197,7 +198,7 @@ func New(client clientset.Interface,
 
 这里的 `defaultSchedulerOptions` 是一个单独的结构体，原型为
 
-```
+```go
 type schedulerOptions struct {
   componentConfigVersion string
   kubeConfig             *restclient.Config
@@ -222,7 +223,7 @@ type schedulerOptions struct {
 
 `profiels` 字段类型为 `[]schedulerapi.KubeSchedulerProfile`，API文档为 [https://kubernetes.io/zh-cn/docs/reference/config-api/kube-scheduler-config.v1/#kubescheduler-config-k8s-io-v1-KubeSchedulerProfile](https://kubernetes.io/zh-cn/docs/reference/config-api/kube-scheduler-config.v1/#kubescheduler-config-k8s-io-v1-KubeSchedulerProfile)， 结构类型
 
-```
+```go
 // KubeSchedulerProfile is a scheduling profile.
 type KubeSchedulerProfile struct {
     SchedulerName            string  // 调度器名称
@@ -236,7 +237,7 @@ type KubeSchedulerProfile struct {
 
 而这个 `Plugins` 结构为
 
-```
+```go
 type Plugins struct {
   // PreEnqueue is a list of plugins that should be invoked before adding pods to the scheduling queue.
   PreEnqueue PluginSet
@@ -351,7 +352,7 @@ PreBind -> Bind -> PostBind
 
 现在我们再回到初始化调度器的主流程。
 
-```
+```go
 if options.applyDefaultProfile {
     // 调度器配置，很重要，特别是  Profiles  和 Extenders 字段
 
@@ -372,7 +373,7 @@ if options.applyDefaultProfile {
 
 这里 `KubeSchedulerConfiguration` 结构体
 
-```
+```go
 // KubeSchedulerConfiguration configures a scheduler
 type KubeSchedulerConfiguration struct {
   ...
@@ -412,11 +413,12 @@ type KubeSchedulerConfiguration struct {
               - name: sample
 ```
 
-## 插件构建器注册表 ![](https://blogstatic.haohtml.com/uploads/2023/06/c433c2079f0158bd89cda578a259c332.png)
+## 插件构建器注册表 
+![](https://blogstatic.haohtml.com/uploads/2023/06/c433c2079f0158bd89cda578a259c332.png)
 
 注册所有内置插件，`registry` 的数据结构为 `map[string]PluginFactory`
 
-```
+```go
 // 插件构建函数注册表，
   // 注册表是所有可用插件的集合，framework 使用注册表来启用和初始化配置的插件。在初始化框架之前，所有插件都必须在注册表中。
   registry := frameworkplugins.NewInTreeRegistry()
@@ -427,7 +429,7 @@ type KubeSchedulerConfiguration struct {
 
 调用 `frameworkplugins.NewInTreeRegistry()` 实现 `in-tree` 插件的注册，也可通过 ` [WithFrameworkOutOfTreeRegistry()](https://github.com/kubernetes/kubernetes/blob/v1.27.3/cmd/kube-scheduler/app/server.go#L347) ` 选项函数注册外部插件
 
-```
+```go
 func NewInTreeRegistry() runtime.Registry {
   fts := plfeature.Features{
     EnableDynamicResourceAllocation:              feature.DefaultFeatureGate.Enabled(features.DynamicResourceAllocation),
@@ -475,7 +477,7 @@ func NewInTreeRegistry() runtime.Registry {
 
 通过插件器可以实现的功能有实现 `注册插件`，`取消注册插件` 和 `合并插件`
 
-```
+```go
 type Registry map[string]PluginFactory
 func (r Registry) Register(name string, factory PluginFactory) error {}
 func (r Registry) Unregister(name string) error {}
@@ -486,7 +488,7 @@ func (r Registry) Merge(in Registry) error {}
 
 扩展器是外部进程影响Kubernetes做出的调度决策的接口，这通常是不由Kubernetes直接管理的资源所需要的。
 
-```
+```go
 // pkg/scheduler/apis/config/types.go#L261-L301
 type Extender struct {
     URLPrefix        string
@@ -506,13 +508,13 @@ type Extender struct {
 
 保存用于与扩展器通信的参数，如果谓词未指定/为空，则假定扩展程序选择不提供该扩展。
 
-```
+```go
 extenders, err := buildExtenders(options.extenders, options.profiles)
 ```
 
 对于扩展器的构建需要 `options.extenders` 参数, 其是扩展器参数配置 它返回的是一个 `[]framework.Extender` 数据类型。我们看一下其具体实现
 
-```
+```go
 func buildExtenders(extenders []schedulerapi.Extender, profiles []schedulerapi.KubeSchedulerProfile) ([]framework.Extender, error) {
   var fExtenders []framework.Extender
   if len(extenders) == 0 {
@@ -577,21 +579,21 @@ func buildExtenders(extenders []schedulerapi.Extender, profiles []schedulerapi.K
 
 这里 `profiles[i].PluginConfig[i].args` 字段类型对应的是 `NodeResourcesFitArgs`，它是一个 `[]string` 类型
 
-```
+```go
 type NodeResourcesFitArgs struct {
     v1.TypeMeta
     IgnoredResources      []string
     IgnoredResourceGroups []string
     ScoringStrategy       *ScoringStrategy
 }
-​
+
 ```
 
 ## 创建 podLister 和 nodeLister 
 
-```
+```go
 podLister := informerFactory.Core().V1().Pods().Lister()
-  nodeLister := informerFactory.Core().V1().Nodes().Lister()
+nodeLister := informerFactory.Core().V1().Nodes().Lister()
 ```
 
 通过 informetFactory 工作模式创建 podLister 和 nodeLister, 可以用来获取所有对象资源列表。如 posLister 可以用来获取所有 Pod 列表, nodeLister 则可以获取所有 node 列表。
@@ -606,7 +608,7 @@ podLister := informerFactory.Core().V1().Pods().Lister()
 
 这里根据配置文件生成相应的 `Framework`。
 
-```
+```go
 // 节点快照
   snapshot := internalcache.NewEmptySnapshot()
 
@@ -660,7 +662,7 @@ podLister := informerFactory.Core().V1().Pods().Lister()
 
 先是通过 Options functions 的方式指定了多个参数，其函数 `profile.NewMap()`实现
 
-```
+```go
 // NewMap builds the frameworks given by the configuration, indexed by name.
 func NewMap(cfgs []config.KubeSchedulerProfile, r frameworkruntime.Registry, recorderFact RecorderFactory,
   stopCh <-chan struct{}, opts ...frameworkruntime.Option) (Map, error) {
@@ -686,7 +688,7 @@ func NewMap(cfgs []config.KubeSchedulerProfile, r frameworkruntime.Registry, rec
 
 根据每个 `profile` 调用 `newProfile()` 生成对应的 `frameworkImpl`，其实现了 [`Framework`][11] 接口，这里真正的实现位于函数 [`NewFramework()`][12], 这里不做介绍。
 
-```
+```go
 type Framework interface {
     // 插件需要的数据和一些工具，在插件初始化的时候通过 pluginFactory 传入,见 NewInTreeRegistry() 函数
     Handle
@@ -748,7 +750,7 @@ type Framework interface {
 
 首先遍历 profiles 获取其对应的已注册好的 `PreQueuePlugin` 插件，这些插件是在将**Pods**添加到 **activeQ** 之前调用。
 
-```
+```go
 preEnqueuePluginMap := make(map[string][]framework.PreEnqueuePlugin)
   for profileName, profile := range profiles {
     preEnqueuePluginMap[profileName] = profile.PreEnqueuePlugins()
@@ -757,7 +759,7 @@ preEnqueuePluginMap := make(map[string][]framework.PreEnqueuePlugin)
 
 然后创建一个优先队列 `sched.SchedulingQueue`。
 
-```
+```go
 // 初始化一个优先队列作为调度队列 sched.SchedulingQueue
   podQueue := internalqueue.NewSchedulingQueue(
     // 获取profile 设置的调度队列Pod里的Pod排序函数，这里指定获取第 options.profiles[0]个profile
@@ -791,7 +793,7 @@ internalqueue.WithPodInitialBackoffDuration(time.Duration(options.podInitialBack
 
 然后从原来的 profiles 中读取一些配置，如 preEnqueuePlugin 、 Pod 在队列里的排序函数 QueueSortFunc() 作为调用函数 [internalqueue.NewSchedulingQueue()](https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L123-L129) 的入参。函数实现
 
-```
+```go
 // pkg/scheduler/internal/queue/scheduling_queue.go#L291-L330
 // NewPriorityQueue creates a PriorityQueue object.
 func NewPriorityQueue(
@@ -865,7 +867,7 @@ func NewPriorityQueue(
 
 我们看一下队列常用的一些方法
 
-```
+```go
 // 从 activeQ 队列中以阻塞的方式获取一个Pod，会将增加 scheduling cycle 的值
 func (p *PriorityQueue) Pop() (*framework.QueuedPodInfo, error){}
 ​
@@ -886,7 +888,7 @@ func (p *PriorityQueue) Activate(pods map[string]*v1.Pod) {}
 
 ## SetPodNominator 
 
-```
+```go
 // 根据 profiles 设置PodNominator
   for _, fwk := range profiles {
     fwk.SetPodNominator(podQueue)
@@ -897,7 +899,7 @@ func (p *PriorityQueue) Activate(pods map[string]*v1.Pod) {}
 
 ## 调度缓存 
 
-```
+```go
 // 设置缓存，此时缓存服务自动处于运行状态
   schedulerCache := internalcache.New(durationToExpireAssumedPod, stopEverything)
 ​
@@ -912,7 +914,7 @@ func (p *PriorityQueue) Activate(pods map[string]*v1.Pod) {}
 
 ## 创建 scheduler 对象 
 
-```
+```go
 sched := &Scheduler{
     Cache:                    schedulerCache, // 缓存
     client:                   client, // api server 客户端
@@ -934,7 +936,7 @@ sched := &Scheduler{
 
 调用 `sched.applyDefaultHandlers()` 设置调度Pod函数 和 调度失败处理函数。
 
-```
+```go
 func (s *Scheduler) applyDefaultHandlers() {
   s.SchedulePod = s.schedulePod
   s.FailureHandler = s.handleSchedulingFailure
@@ -947,7 +949,7 @@ func (s *Scheduler) applyDefaultHandlers() {
 
 上面做了好么多工作，只是为了调度器能够执行。对于调度器的执行入口为
 
-```
+```go
 // cmd/kube-scheduler/app/server.go#L243
 // Run executes the scheduler based on the given configuration. It only returns on error or when context is done.
 func Run(ctx context.Context, cc *schedulerserverconfig.CompletedConfig, sched *scheduler.Scheduler) error {
@@ -959,7 +961,7 @@ func Run(ctx context.Context, cc *schedulerserverconfig.CompletedConfig, sched *
 
 这里调用了`sched.Run()` 函数真正将服务运行起来，我们看一下它做了哪些事。
 
-```
+```go
 // pkg/scheduler/scheduler.go#L337-L391
 // Run begins watching and scheduling. It starts scheduling and blocked until the context is done.
 func (sched *Scheduler) Run(ctx context.Context) {
@@ -996,7 +998,7 @@ func (sched *Scheduler) Run(ctx context.Context) {
 
 首先通过调用 `sched.SchedulingQueue.Run()`启用优先队列服务。
 
-```
+```go
 func (p *PriorityQueue) Run() {
   go wait.Until(p.flushBackoffQCompleted, 1.0*time.Second, p.stop)
   go wait.Until(p.flushUnschedulablePodsLeftover, 30*time.Second, p.stop)
@@ -1014,7 +1016,7 @@ func (p *PriorityQueue) Run() {
 
 将所有已完成的Pod从 `backoffQ` 移动到 `activeQ` 队列
 
-```
+```go
 func (p *PriorityQueue) flushBackoffQCompleted() {
   p.lock.Lock()
   defer p.lock.Unlock()
@@ -1052,7 +1054,7 @@ func (p *PriorityQueue) flushBackoffQCompleted() {
 
 加入 `activeQ` 函数实现
 
-```
+```go
 func (p *PriorityQueue) addToActiveQ(pInfo *framework.QueuedPodInfo) (bool, error) {
   // 执行插件 runPreEnqueuePlugins
   pInfo.Gated = !p.runPreEnqueuePlugins(context.Background(), pInfo)
@@ -1075,7 +1077,7 @@ func (p *PriorityQueue) addToActiveQ(pInfo *framework.QueuedPodInfo) (bool, erro
 
 将所有停留在 _unschedulablePods_ 中时间超出 _podMaxInUnschedulablePodsDuration_ 的Pod移动到 `backoffQ` 或 `activeQ` 队列
 
-```
+```go
 func (p *PriorityQueue) flushUnschedulablePodsLeftover() {
   var podsToMove []*framework.QueuedPodInfo
   currentTime := p.clock.Now()
@@ -1144,7 +1146,7 @@ func (p *PriorityQueue) movePodsToActiveOrBackoffQueue(podInfoList []*framework.
 
 ### 获取待调度的Pod 
 
-```
+```go
 func (sched *Scheduler) scheduleOne(ctx context.Context) {
   // 1. 获取一个 Pod, 如果为 nil 则直接返回取消
   podInfo := sched.NextPod()
@@ -1153,7 +1155,7 @@ func (sched *Scheduler) scheduleOne(ctx context.Context) {
 
 这里的 sched.NextPod() 在上面”创建 scheduler 对象”的时候已经赋值过，它对应
 
-```
+```go
 // MakeNextPodFunc returns a function to retrieve the next pod from a given
 // scheduling queue
 func MakeNextPodFunc(queue SchedulingQueue) func() *framework.QueuedPodInfo {
@@ -1174,7 +1176,7 @@ func MakeNextPodFunc(queue SchedulingQueue) func() *framework.QueuedPodInfo {
 
 这里调用 优先队列的 [PriorityQueue.Pop()][15] 方法获取一个 Pod 信息。
 
-```
+```go
 // Pop removes the head of the active queue and returns it. It blocks if the
 // activeQ is empty and waits until a new item is added to the queue. It
 // increments scheduling cycle when a pod is popped.
@@ -1213,7 +1215,7 @@ func (p *PriorityQueue) Pop() (*framework.QueuedPodInfo, error) {
 
 根据当前Pod调度器 `pod.schedulerName` 获取其对应的 `Framework`
 
-```
+```go
 func (sched *Scheduler) scheduleOne(ctx context.Context) {
   // 2. 根据当前Pod调度器 pod.schedulerName 获取其对应的 Framework
   fwk, err := sched.frameworkForPod(pod)
@@ -1242,14 +1244,14 @@ func (sched *Scheduler) scheduleOne(ctx context.Context) {
 
 为了能将执行Pod，必须找一个合适的Node，这一步也是 k8s 中必须关注的一块内容
 
-```
+```go
 // 3. 获取一个最合适的节点
 scheduleResult, assumedPodInfo, status := sched.schedulingCycle(schedulingCycleCtx, state, fwk, podInfo, start, podsToActivate)
 ```
 
 可以看到，对于节点的选择是在 `sched.schedulingCycle()`函数里又调用了一个 `sched.SchedulePod` 函数来实现的。
 
-```
+```go
 // schedulingCycle tries to schedule a single Pod.
 func (sched *Scheduler) schedulingCycle(
   ctx context.Context,
@@ -1284,7 +1286,7 @@ func (sched *Scheduler) schedulingCycle(
 
 ##### 更新节点快照 
 
-```
+```go
 // schedulePod tries to schedule the given pod to one of the nodes in the node list.
 func (sched *Scheduler) schedulePod(ctx context.Context, fwk framework.Framework, state *framework.CycleState, pod *v1.Pod) (result ScheduleResult, err error) {
 ​
@@ -1297,7 +1299,7 @@ func (sched *Scheduler) schedulePod(ctx context.Context, fwk framework.Framework
 
 ##### 检查快照节点数量 
 
-```
+```go
 // schedulePod tries to schedule the given pod to one of the nodes in the node list.
 func (sched *Scheduler) schedulePod(ctx context.Context, fwk framework.Framework, state *framework.CycleState, pod *v1.Pod) (result ScheduleResult, err error) {
   // 2. 检查节点快照有无节点
@@ -1311,7 +1313,7 @@ func (sched *Scheduler) schedulePod(ctx context.Context, fwk framework.Framework
 
 然后为 Pod 寻找所有适合此Pod 运行的 node 清单
 
-```
+```go
 // 3. 查找合适的节点
 feasibleNodes, diagnosis, err := sched.findNodesThatFitPod(ctx, fwk, state, pod)
 ```
@@ -1320,7 +1322,7 @@ feasibleNodes, diagnosis, err := sched.findNodesThatFitPod(ctx, fwk, state, pod)
 
 如果当前只有一个节点的话，则此时不用考虑其它情况，直接使用此节点并返回。
 
-```
+```go
 // 4. 正好只有一个节点，直接使用
   // When only one node after predicate, just use it.
   if len(feasibleNodes) == 1 {
@@ -1336,7 +1338,7 @@ feasibleNodes, diagnosis, err := sched.findNodesThatFitPod(ctx, fwk, state, pod)
 
 如果有多个节点的话，则在这些节点上调用函数 `RunScorePlugins()` 再执行插件评分。
 
-```
+```go
 // 5. 从多个节点中选择最合适的节点
 priorityList, err := prioritizeNodes(ctx, sched.Extenders, fwk, state, pod, feasibleNodes)
 ```
@@ -1345,7 +1347,7 @@ priorityList, err := prioritizeNodes(ctx, sched.Extenders, fwk, state, pod, feas
 
 ##### 找出评分最高的节点 
 
-```
+```go
 // 6. 从丛多节点中遍历出来评分最高的那个，每个节点都会调用所有plugins对其进行评分
 host, err := selectHost(priorityList)
 ```
@@ -1354,7 +1356,7 @@ host, err := selectHost(priorityList)
 
 最后将获取节点返回
 
-```
+```go
 return ScheduleResult{
     SuggestedHost:  host,  // 选择的节点名称（这里是指主机名还是系统内部分配的一个标识？）
     EvaluatedNodes: len(feasibleNodes) + len(diagnosis.NodeToStatusMap),
@@ -1364,7 +1366,7 @@ return ScheduleResult{
 
 这里 `ScheduleResult` 结构体为
 
-```
+```go
 // ScheduleResult represents the result of scheduling a pod.
 type ScheduleResult struct {
   // 节点名称
@@ -1385,9 +1387,11 @@ type ScheduleResult struct {
 
 #### 修改Pod的属性 
 
-通过修改 `Pod.Spec.NodeName=NodeName` 属性，建立Pod与Node之间的映射关系。告诉 cache 这个pod已与上面选择以node建立了绑定关系（其实还没有真正绑定），只是在cache里对其建立了绑定关系
+通过修改 `Pod.Spec.NodeName=NodeName` 属性，建立Pod与Node之间的映射关系。告诉 cache 这个pod已与上面选择的node建立了绑定关系（其实还没有真正绑定），只是在cache里对其建立了绑定关系。
 
-```
+接着再从队列里将这个Pod删除。
+
+```go
 func (sched *Scheduler) schedulingCycle(...) {
   assumedPodInfo := podInfo.DeepCopy()
   assumedPod := assumedPodInfo.Pod
@@ -1396,11 +1400,11 @@ func (sched *Scheduler) schedulingCycle(...) {
   err = sched.assume(assumedPod, scheduleResult.SuggestedHost)
   ...
 }
-​
+
 func (sched *Scheduler) assume(assumed *v1.Pod, host string) error {
   // pod 所在Node
   assumed.Spec.NodeName = host
-​
+
   // 缓存更新
   if err := sched.Cache.AssumePod(assumed); err != nil {
     klog.ErrorS(err, "Scheduler cache AssumePod failed")
@@ -1410,7 +1414,7 @@ func (sched *Scheduler) assume(assumed *v1.Pod, host string) error {
   if sched.SchedulingQueue != nil {
     sched.SchedulingQueue.DeleteNominatedPodIfExists(assumed)
   }
-​
+
   return nil
 }
 ```
@@ -1419,18 +1423,18 @@ func (sched *Scheduler) assume(assumed *v1.Pod, host string) error {
 
 执行 `reserve` 插件的 `Reserve()` 方法 和 执行 `Permit` 插件。
 
-```
+```go
 func (sched *Scheduler) schedulingCycle(...) {
   // 三、执行一些插件
   // Run the Reserve method of reserve plugins.
   if sts := fwk.RunReservePluginsReserve(ctx, state, assumedPod, scheduleResult.SuggestedHost); !sts.IsSuccess() {}
-​
-​
+
+
   // Run "permit" plugins.
   runPermitStatus := fwk.RunPermitPlugins(ctx, state, assumedPod, scheduleResult.SuggestedHost)
   if !runPermitStatus.IsWait() && !runPermitStatus.IsSuccess() {
   }
-​
+
 }
 ```
 
@@ -1438,7 +1442,7 @@ func (sched *Scheduler) schedulingCycle(...) {
 
 如果 podsToActive.Map 存在Pod，则将它们从 backoffQ 或unschedulablePods 中移到 activeQ
 
-```
+```go
 func (sched *Scheduler) schedulingCycle(...) {
   // 四、podsToActivate.Map值被插件修改，什么情况下会插件会修改？
 
@@ -1460,7 +1464,7 @@ podsToActivate.Map 什么时候可能被修改？
 
 ### 异步绑定Pod与Node 
 
-```
+```go
 // 异步绑定 Pod 与 node
   go func() {
     bindingCycleCtx, cancel := context.WithCancel(ctx)
@@ -1476,7 +1480,7 @@ podsToActivate.Map 什么时候可能被修改？
 
 可以看到对于pod与节点 node的绑定是异步的，其由绑定函数 `bindingCycle()` 实现
 
-```
+```go
 func (sched *Scheduler) bindingCycle( ctx context.Context,
   state *framework.CycleState,
   fwk framework.Framework,
@@ -1484,34 +1488,34 @@ func (sched *Scheduler) bindingCycle( ctx context.Context,
   assumedPodInfo *framework.QueuedPodInfo,
   start time.Time,
   podsToActivate *framework.PodsToActivate) *framework.Status {
-​
+
   assumedPod := assumedPodInfo.Pod
-​
+
   // 执行 "permit" 插件.
   if status := fwk.WaitOnPermit(ctx, assumedPod); !status.IsSuccess() {
     return status
   }
-​
+
   // Run "prebind" plugins.
   if status := fwk.RunPreBindPlugins(ctx, state, assumedPod, scheduleResult.SuggestedHost); !status.IsSuccess() {
     return status
   }
-​
-  // Run "bind" plugins.
+
+  // Run "bind" plugins. 真正绑定的地方
   if status := sched.bind(ctx, fwk, assumedPod, scheduleResult.SuggestedHost, state); !status.IsSuccess() {
     return status
   }
-​
+
   // Run "postbind" plugins.
   fwk.RunPostBindPlugins(ctx, state, assumedPod, scheduleResult.SuggestedHost)
-​
+
   // At the end of a successful binding cycle, move up Pods if needed.
   if len(podsToActivate.Map) != 0 {
     sched.SchedulingQueue.Activate(podsToActivate.Map)
     // Unlike the logic in schedulingCycle(), we don't bother deleting the entries
     // as `podsToActivate.Map` is no longer consumed.
   }
-​
+
   return nil
 }
 ```
@@ -1524,6 +1528,70 @@ func (sched *Scheduler) bindingCycle( ctx context.Context,
  4. postbind
 
 在最后，如果 podsToActive.Map 不为空的话，则需要将这些 Pod 移到 activeQ 队列里，但这里并不将这些Pod信息从`podsToActivate.Map` 中删除，这个与上面 `schedulingCycle()` 有些不一样。
+
+其中 `sched.bind` 绑定操作在 [RunBindPlugins()](https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/framework/runtime/framework.go#L1091-L1118) 执行的
+
+```go
+// RunBindPlugins runs the set of configured bind plugins until one returns a non `Skip` status.
+func (f *frameworkImpl) RunBindPlugins(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeName string) (status *framework.Status) {
+	startTime := time.Now()
+	defer func() {
+		metrics.FrameworkExtensionPointDuration.WithLabelValues(metrics.Bind, status.Code().String(), f.profileName).Observe(metrics.SinceInSeconds(startTime))
+	}()
+  
+  // bind插件不存在
+	if len(f.bindPlugins) == 0 {
+		return framework.NewStatus(framework.Skip, "")
+	}
+  
+	logger := klog.FromContext(ctx)
+	logger = klog.LoggerWithName(logger, "Bind")
+	// TODO(knelasevero): Remove duplicated keys from log entry calls
+	// When contextualized logging hits GA
+	// https://github.com/kubernetes/kubernetes/issues/111672
+	logger = klog.LoggerWithValues(logger, "pod", klog.KObj(pod), "node", klog.ObjectRef{Name: nodeName})
+  
+  // 执行注册的所有 bind 插件 
+	for _, pl := range f.bindPlugins {
+		logger := klog.LoggerWithName(logger, pl.Name())
+		ctx := klog.NewContext(ctx, logger)
+    
+    // 执行绑定插件 
+		status = f.runBindPlugin(ctx, pl, state, pod, nodeName)
+		if status.IsSkip() {
+			continue
+		}
+		if !status.IsSuccess() {
+			if status.IsUnschedulable() {
+				logger.V(4).Info("Pod rejected by Bind plugin", "pod", klog.KObj(pod), "node", nodeName, "plugin", pl.Name(), "status", status.Message())
+				status.SetFailedPlugin(pl.Name())
+				return status
+			}
+			err := status.AsError()
+			logger.Error(err, "Plugin Failed", "plugin", pl.Name(), "pod", klog.KObj(pod), "node", nodeName)
+			return framework.AsStatus(fmt.Errorf("running Bind plugin %q: %w", pl.Name(), err))
+		}
+		return status
+	}
+	return status
+}
+
+// 执行绑定插件
+func (f *frameworkImpl) runBindPlugin(ctx context.Context, bp framework.BindPlugin, state *framework.CycleState, pod *v1.Pod, nodeName string) *framework.Status {
+	if !state.ShouldRecordPluginMetrics() {
+    // 执行插件的 Bind() 方法
+		return bp.Bind(ctx, state, pod, nodeName)
+	}
+	startTime := time.Now()
+    // 执行插件的 Bind() 方法
+	status := bp.Bind(ctx, state, pod, nodeName)
+  
+	f.metricsRecorder.ObservePluginDurationAsync(metrics.Bind, bp.Name(), status.Code().String(), metrics.SinceInSeconds(startTime))
+	return status
+}
+```
+
+
 
 至此，Pod 与 Node 绑定关系正式完成。
 
@@ -1543,18 +1611,18 @@ func (sched *Scheduler) bindingCycle( ctx context.Context,
  * [https://github.com/kubernetes-sigs/scheduler-plugins/blob/master/doc/develop.md](https://github.com/kubernetes-sigs/scheduler-plugins/blob/master/doc/develop.md)
  * [https://mp.weixin.qq.com/s/FGzwDsrjCNesiNbYc3kLcA](https://mp.weixin.qq.com/s/FGzwDsrjCNesiNbYc3kLcA)
 
- [1]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/cmd/kube-scheduler/scheduler.go
- [2]: https://github.com/kubernetes/kubernetes/tree/v1.27.2/pkg/scheduler
- [3]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L241
- [4]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L60-L99
- [5]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/cache/interface.go
- [6]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L1123-L1138
- [7]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L126-L137
- [8]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L89-L121
- [9]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/cache/snapshot.go#L27-L43
- [10]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L241-L352
- [11]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/framework/interface.go#L507-L590
- [12]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/framework/runtime/framework.go#L243-L376
- [13]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L136-L190
- [14]: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduler_queues.md
- [15]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L588-L611
+[1]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/cmd/kube-scheduler/scheduler.go
+[2]: https://github.com/kubernetes/kubernetes/tree/v1.27.2/pkg/scheduler
+[3]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L241
+[4]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L60-L99
+[5]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/cache/interface.go
+[6]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L1123-L1138
+[7]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L126-L137
+[8]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L89-L121
+[9]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/cache/snapshot.go#L27-L43
+[10]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/scheduler.go#L241-L352
+[11]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/framework/interface.go#L507-L590
+[12]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/framework/runtime/framework.go#L243-L376
+[13]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L136-L190
+[14]: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduler_queues.md
+[15]: https://github.com/kubernetes/kubernetes/blob/v1.27.2/pkg/scheduler/internal/queue/scheduling_queue.go#L588-L611
