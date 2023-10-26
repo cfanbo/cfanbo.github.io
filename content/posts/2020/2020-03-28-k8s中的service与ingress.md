@@ -15,7 +15,7 @@ tags:
 
 # Service 
 
-必须了解的一点是 Service 的访问信息在 Kubernetes 集群内是有效的，集群之外是无效的。
+必须了解的一点是对 Service 的访问只有在 Kubernetes 集群内有效，而在集群之外是无效的。
 
 Service可以看作是一组提供相同服务的Pod对外的访问接口。借助Service，应用可以方便地实现服务发现和负载均衡。对于Service 的工作原理请参考
 
