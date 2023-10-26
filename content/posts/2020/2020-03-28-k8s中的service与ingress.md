@@ -2,6 +2,7 @@
 title: k8s中的Service与Ingress
 author: admin
 type: post
+toc: true
 date: 2020-03-28T09:40:26+00:00
 url: /archives/19945
 categories:
@@ -245,6 +246,6 @@ Nginx Ingress Controller 的示例请参考 [https://time.geekbang.org/column/ar
  * [https://kubernetes.io/zh/docs/concepts/services-networking/ingress/](https://kubernetes.io/zh/docs/concepts/services-networking/ingress/)
  * [https://kubernetes.io/docs/reference/kubernetes-api/service-resources/](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/)
 
- [1]: https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers
- [2]: https://kubernetes.github.io/ingress-nginx/deploy/
- [3]: https://kubernetes.io/zh/docs/concepts/services-networking/service/
+[1]: https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers
+[2]: https://kubernetes.github.io/ingress-nginx/deploy/
+[3]: https://kubernetes.io/zh/docs/concepts/services-networking/service/
