@@ -86,7 +86,7 @@ type mcache struct {
 
 Go将内存块分为大小不同的 `67` 种，然后再把这 `67` 种大内存块，逐个分为小块(可以近似理解为大小不同的相当于`page`)称之为`span`(连续的`page`)
 
-> 经常提到的span和mspan其实是同一个东西，在runtime数据结构里span对应的实现结构体为 mspan
+> 经常提到的span和mspan其实是同一个东西，在runtime实现里span对应的结构体为 mspan
 
 ![6328562-c86d915ad1df4bbb](https://blogstatic.haohtml.com/uploads/2021/04/c3a0528cf9a2e30f31aab3a5c9066af2-24.png)mspans
 
