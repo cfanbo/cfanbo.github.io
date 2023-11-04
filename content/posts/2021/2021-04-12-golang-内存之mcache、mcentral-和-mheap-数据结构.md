@@ -82,17 +82,29 @@ type mcache struct {
 
 # mspan 
 
-`mspan` 是分配内存时的基本单元。当分配内存时，会在`mcache`中查找合适规格的可用 `mspan`，此时不需要加锁，因此分配效率极高。
+`mspan` 是分配内存时的基本单元。
 
-Go将内存块分为大小不同的 `67` 种，然后再把这 `67` 种大内存块，逐个分为小块(可以近似理解为大小不同的相当于`page`)称之为`span`(连续的`page`)
+对内存的使用最终还是要落脚到“对象”上。而“对象”肯定要放在`page`中，毕竟`page`是内存存储的基本单元。
+
+先看看一般情况下的对象和内存的分配是如何的，如下图
+
+![img](https://upload-images.jianshu.io/upload_images/6328562-893842db7198def1.png)
+
+我们依次分配了不同大小的内存，但当分配“p4”的时候，会出现“内存不足”和”内存碎片“两个突出问题。
+
+这种情况下，go是如何解决的呢？
+
+那就是 **按需分配**。 将内存块分为大小不同的 `67` 种，然后再把这 `67` 种大内存块，逐个分为小块(可以近似理解为大小不同的相当于`page`)称之为`span`(连续的`page`)。
 
 > 经常提到的span和mspan其实是同一个东西，在runtime实现里span对应的结构体为 mspan
 
+当分配内存时，会在当前P的`mcache`中查找根据对象的大小选择能容纳其大小的最小`span`。此时不需要加锁，因此分配效率极高。
+
 ![6328562-c86d915ad1df4bbb](https://blogstatic.haohtml.com/uploads/2021/04/c3a0528cf9a2e30f31aab3a5c9066af2-24.png)mspans
 
-对象分配的时候，根据对象的大小选择能容纳其大小的最小`span`。
 
-`spans` 与 `mcache` 的关系如下图所示![20210129154022](https://blogstatic.haohtml.com/uploads/2021/04/87f2fdbbff345ac3f85fdd3135b1b397-3.png)mspans
+
+`span` 与 `mcache` 的关系如下图所示![20210129154022](https://blogstatic.haohtml.com/uploads/2021/04/87f2fdbbff345ac3f85fdd3135b1b397-3.png)span对应的结构体为 `mspan`
 
 ```
 // mSpanList heads a linked list of spans.
