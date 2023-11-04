@@ -19,7 +19,7 @@ Golang中的内存组件关系如下图所示![components of memory allocation](
 
 在 Golang 中，`mcache`、`mspan`、`mcentral` 和 `mheap` 是内存管理的四大组件，`mcache` 管理线程在本地缓存的 `mspan`，而 `mcentral` 管理着全局的 `mspan` 为所有 `mcache` 提供所有线程。
 
-根据分配对象的大小，内部会使用不同的内存分配机制，详细参考函数 ` [mallocgo()](https://github.com/golang/go/blob/go1.16.2/src/runtime/malloc.go#L902-L1171) `，所于内存分配与回收，参考文件介绍 [malloc.go](https://github.com/golang/go/blob/go1.15.6/src/runtime/malloc.go#L5)
+根据分配对象的大小，内部会使用不同的内存分配机制，详细参考函数  [mallocgo()](https://github.com/golang/go/blob/go1.16.2/src/runtime/malloc.go#L902-L1171) ，所于内存分配与回收，参考文件介绍 [malloc.go](https://github.com/golang/go/blob/go1.16.2/src/runtime/malloc.go#L5)
 
  * `<16KB` 会使用微小对象内存分配器从 `P` 中的 `mcache` 分配，主要使用 `mcache.tinyXXX` 这类的字段
  * `16-32KB` 从 `P` 中的 `mcache` 中分配
