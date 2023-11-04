@@ -4,6 +4,7 @@ author: admin
 type: post
 date: 2021-04-12T09:42:59+00:00
 url: /archives/29385
+toc: true
 categories:
  - 程序开发
 tags:
@@ -38,7 +39,9 @@ Golang中的内存组件关系如下图所示![components of memory allocation](
 
 ![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-2.png)mcache
 
-当申请一个 `16b` 大小的内存时，会优先从运行当前 G 所在的 `P` 里的 `mcache` 字段里找到相匹配的 `mspan` 规格，此时是不需要锁的，这里最合适的是图中 `mspan3` 规格。
+当申请一个 `16k` 大小的内存时，会优先从运行当前 G 所在的 `P` 里的 `mcache` 字段里找到相匹配的 `mspan` 规格，此时是不需要锁的，这里最合适的是图中 `mspan3` 规格。
+
+> 上图中的16b，这里的 b 是指 bytes，并不是 bit
 
 mcache是从非GC内存中分配的，所以任何一个堆指针都必须经过特殊处理。源码文件： [https://github.com/golang/go/blob/go1.16.2/src/runtime/mcache.go](https://github.com/golang/go/blob/go1.16.2/src/runtime/mcache.go)
 
@@ -73,7 +76,7 @@ type mcache struct {
 
 `mcache.tiny` 是一个指针，当申请对象大小为 `<16KB` 的时候，会使用 `Tiny allocator` 分配器，会根据`tiny`、`tinyoffset` 和 `tinyAllocs` 这三个字段的情况进行申请。
 
-`span` 大小规格数据共有 `67` 类。源码里定义的虽然是 ` [_NumSizeClasses = 68](https://github.com/golang/go/blob/go1.16.2/src/runtime/sizeclasses.go#L80) ` 类，但其中包含一个大小为 `` 的规格，此规格表示大对象，即 `>32KB`，这种对象只会分配到`heap`上，所以不可能出现在 `mcache.alloc` 中。
+`span` 大小规格数据共有 `67` 类。源码里定义的虽然是 ` [_NumSizeClasses = 68](https://github.com/golang/go/blob/go1.16.2/src/runtime/sizeclasses.go#L80) ` 类，但其中包含一个大小为 `0` 的规格，此规格表示大对象，即 `>32KB`，这种对象只会分配到`heap`上，所以不可能出现在 `mcache.alloc` 中。
 
 `mcache.alloc` 是一个数组，值为 `*spans` 类型，它是 go 中管理内存的基本单元。对于`16-32 kb`大小的内存都会使用这个数组里的的 `spans` 中分配。每个span存在两次，一个`不包含指针`的对象列表和另一个`包含指针`的对象列表。这种区别将使垃圾收集工作变得更容易，因为它不必扫描不包含任何指针的范围。
 
@@ -81,7 +84,11 @@ type mcache struct {
 
 `mspan` 是分配内存时的基本单元。当分配内存时，会在`mcache`中查找合适规格的可用 `mspan`，此时不需要加锁，因此分配效率极高。
 
-Go将内存块分为大小不同的 `67` 种，然后再把这 `67` 种大内存块，逐个分为小块(可以近似理解为大小不同的相当于`page`)称之为`span`(连续的`page`)，在go语言中就是上文提及的`mspan`。![6328562-c86d915ad1df4bbb](https://blogstatic.haohtml.com/uploads/2021/04/c3a0528cf9a2e30f31aab3a5c9066af2-24.png)mspans
+Go将内存块分为大小不同的 `67` 种，然后再把这 `67` 种大内存块，逐个分为小块(可以近似理解为大小不同的相当于`page`)称之为`span`(连续的`page`)
+
+> 经常提到的span和mspan其实是同一个东西，在runtime数据结构里span对应的实现结构体为 mspan
+
+![6328562-c86d915ad1df4bbb](https://blogstatic.haohtml.com/uploads/2021/04/c3a0528cf9a2e30f31aab3a5c9066af2-24.png)mspans
 
 对象分配的时候，根据对象的大小选择能容纳其大小的最小`span`。
 
@@ -149,11 +156,11 @@ type mspan struct {
  * `npages` span中的页数（一个`span` 是由多个`page`组成的，与linux中的页不是同一个概念）
  * `manualFreeList` 在 `mSpanManual` spans中的空闲对象的列表
  * `freeindex` 标记 `0~nelems` 之间的插槽索引，标记的是在`span`中的分配内存时起始扫描位置;
- 每次分配内存都从 `allocBits` 的 `freeindex` 索引位置开始，直到遇到 `` ,表示空闲对象，然后调整 `freeindex` 使得下一次扫描能跳过上一次的分配；
- 若 `freeindex==nelem`，则当前`span`没有了空余对象；
- `allocBits` 是对象在 `span` 中的位图；
- 如果 `n >= freeindex and allocBits[n/8] & (1<<(n%8)) == 0` , 那么对象 `n` 是空闲的；
- 否则，对象 `n` 表示已被分配。从 `elem` 开始的是未定义的，将不应该被定义；
+ 每次分配内存都从 `allocBits` 的 `freeindex` 索引位置开始，直到遇到 `0` ,表示空闲对象，然后调整 `freeindex` 使得下一次扫描能跳过上一次的分配；
+  若 `freeindex==nelem`，则当前`span`没有了空余对象；
+  `allocBits` 是对象在 `span` 中的位图；
+  如果 `n >= freeindex and allocBits[n/8] & (1<<(n%8)) == 0` , 那么对象 `n` 是空闲的；
+  否则，对象 `n` 表示已被分配。从 `elem` 开始的是未定义的，将不应该被定义；
  * `nelems` span中对象数（`page`是内存存储的基本单元, 一个`span`由多个`page`组成，同时一个对象可能占用一个或多个`page`)；
  * `allocCache` 在 `freeindex` 位置的 `allocBits` 缓存；
  * `allocBits` 标记span中的elem哪些是“被使用”了的，哪些是未被使用的；清除后将释放 `allocBits` ，并将 `allocBits` 的值设置为 `gcmarkBits`；
@@ -171,7 +178,7 @@ type mspan struct {
 
  * （1）着为灰色对应的操作就是把指针对应的`gcmarkBits`标记位置为 `1`并加入工作队列。
  * （2）着为黑色对应的操作就是把对象对应的`gcmarkBits`标记位置为`1`。
- * （3）白色对象就是那些`gcmarkBits`中标记为 `` 的对象。
+ * （3）白色对象就是那些`gcmarkBits`中标记为 `0` 的对象。
 
 # mcentral 
 
@@ -227,9 +234,13 @@ func (c *mcentral) init(spc spanClass) {
 
 # mheap 
 
-还是上面的例子，假如申请 `16b` 内存时，依次经过 `mcache` 和 `mcentral` 都没有可用适宜规则的大小内存，这时候会向 `mheap` 申请一块内存。然后按指定规格划分为一些列表，并将其添加到相同规格大小的 `mcentral` 的 `not empty list` 后面；![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-3.png)mheap
+还是上面的例子，假如申请 `16b` 内存时，依次经过 `mcache` 和 `mcentral` 都没有可用适宜规则的大小内存，这时候会向 `mheap` 申请一块内存。
 
-Go 没法使用工作线程的本地缓存 mcache 和全局中心缓存 mcentral 上管理超过32KB的内存分配，所以对于那些超过32KB的内存申请，会直接从堆上(_mheap_)上分配对应的数量的内存页(每页大小是8KB)给程序。
+然后按指定规格划分为一些列表，并将其添加到相同规格大小的 `mcentral` 的 `not empty list` 后面![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-3.png)mheap
+
+同时，Go 没法使用工作线程的本地缓存 mcache 和全局中心缓存 mcentral 上管理超过32KB的内存分配，所以对于那些超过32KB的内存申请，会直接从堆上(_mheap_)上分配对应的数量的内存页(每页大小是8KB)给程序。
+
+![golang-mheap-allocation](https://blogstatic.haohtml.com//uploads/2023/09/image-20231104151421831.png)
 
 ```
 type mheap struct {
@@ -317,9 +328,9 @@ var mheap_ mheap
  * `reclaimCredit` 多余页面的备用信用。因为页回收器工作在大块中，它可能回收的比请求的要多，释放的任何备用页将转到此信用池
  * `arenas [1 << arenaL1Bits]*[1 << arenaL2Bits]*heapArena` **重要字段！**堆arena 映射。它指向整个可用虚拟地址空间的每个 arena 帧的堆元数据；
  使用arenaIndex将索引计算到此数组中；
- 对于没有Go堆支持的地址空间区域，arena映射包含`nil`；
- 一般来说，这是一个两级映射，由一个L1级映射和多个L2级映射组成；
- 当有大量的的 arena 帧时将节省空间，然而在许多平台(64位),arenaL1Bits 是0，这实际上是一个单级映射。这种情况下arenas[0]永远不会为零。
+  对于没有Go堆支持的地址空间区域，arena映射包含`nil`；
+  一般来说，这是一个两级映射，由一个L1级映射和多个L2级映射组成；
+  当有大量的的 arena 帧时将节省空间，然而在许多平台(64位),arenaL1Bits 是0，这实际上是一个单级映射。这种情况下arenas[0]永远不会为零。
  * `heapArenaAlloc` 是为分配 `heapArena` 对象而预先保留的空间。仅仅用于32位系统。
  * `arenaHints` 试图添加更多堆 arenas 的地址列表。它最初由一组通用少许地址填充，并随实 `heap arena` 的界限而增长。
  * `arena` linearAlloc
@@ -354,8 +365,8 @@ type heapArena struct {
 
  * `heapArena.bitmap` 中每两个 `bit` 对应标记 `arena` 中一个指针大小的`word`（也就是说 `bitmap` 中一个 `byte` 即 8 个位可以标记 `arena` 中连续四个指针大小的内存）；
  每个`word`对应的两个 `bit` 中，低位bit用于标记是否为指针，0为非指针，1为指针；
- 高位bit用于标记是否要继续扫描，高位bit为1就代表扫描完当前word并不能完成当前数据对象的扫描；
- ![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-6.png)HeapArena.bitmap
+  高位bit用于标记是否要继续扫描，高位bit为1就代表扫描完当前word并不能完成当前数据对象的扫描；
+  ![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-6.png)HeapArena.bitmap
 
  * `heapArena.spans` 是一个`*mspan` 类型的数组，用于记录当前arena中每一页对应到哪一个`mspan`。
  ![](https://blogstatic.haohtml.com/uploads/2021/04/d2b5ca33bd970f64a6301fa75ae2eb22-7.png)HeapArena.spans
