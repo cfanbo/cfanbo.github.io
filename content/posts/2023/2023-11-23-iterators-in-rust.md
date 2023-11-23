@@ -2,6 +2,7 @@
 title: Rust中的迭代器iter
 type: post
 toc: true
+date: 2023-11-16T07:31:19+00:00
 url: /posts/iterators-in-rust
 categories:
 - 程序开发
