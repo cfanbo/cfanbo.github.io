@@ -142,7 +142,7 @@ fn main() {
 
 # 所有权的迭代器 into_iter()
 
-```   rust
+```rust
 fn main() {
     let a = ["1".to_string(), "2".to_string(), "3".to_string()];
 
