@@ -1,6 +1,6 @@
 ---
 title: Rust 中的 Result 与 Option
-date: 2023-11-23T11:50:32+08:00
+date: 2023-11-07T11:50:32+08:00
 type: post
 toc: true
 url: "/posts/rust-result-and-option"
