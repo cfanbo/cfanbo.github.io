@@ -27,6 +27,8 @@ let get_range_count = || range.count();
 
 至于按哪一种类型来处理，这个没有办法得知，因为只有在Rust编译器在编译的时候才可以确定其类型，并且在确定类型时，还需要根据这个闭包捕获上下文环境变量时的行为来确定。
 
+# 闭包trait分类
+
 根据闭包行为划分为三类trait（ 主因是受到所有权影响）：
 
 1. `FnOnce` 适用于能被调用一次的闭包，`所有闭包`都至少实现了这个 trait，因为所有闭包都必须能够被调用。一个会将捕获的值移出闭包体的闭包只实现 `FnOnce` trait，这是因为它只能被调用一次。其获取了上下文环境变量的所有权。
@@ -50,7 +52,7 @@ trait Fn<Args>: FnMut<Args> {
 }
 ```
 
-
+注意这三者的关系，其中 `Fn`  继承了 `FnMut` ，而 `FnMut`  又继承了 `FnOnce`，它们三者有层次关系的。
 
 # 环境变量所有权 FnOnce
 
@@ -104,21 +106,18 @@ FnMut 代表的闭包类型能被调用多次，并且能修改上下文环境�
 
 ```rust
 fn main() {
-    let nums = vec![0, 4, 2, 8, 10, 7, 15, 18, 13];
-    let mut min = i32::MIN;
-    let ascending = nums.into_iter().filter(|&n| {
-        if n <= min {
-            false
-        } else {
-            min = n;  // 这里修改了环境变量min的值
-            true
-        }
-    }).collect::<Vec<_>>();
-    assert_eq!(vec![0, 4, 8, 10, 15, 18], ascending); // ✅
+    let mut x = 4;
+    let mut increment = || {
+        x += 1;
+        println!("x: {}", x);
+    };
+    
+    increment(); // 输出 "x: 5"
+    increment(); // 输出 "x: 6"
 }
 ```
 
-这个函数实现递增的整数向量闭包，这里使用了 `into_iter` 函数，表示获取迭代器元素的所有权，在上一节 https://blog.haohtml.com/posts/iterators-in-rust/ 我们对其用法进行了介绍。`|&n|` 代表闭包接受一个引用作为参数，而 `min` 作为一个可变变量（使用了 `mut` 关键字）可以在闭包内进行修改，程序执行完后，此时 `min` 变量值为 `18`。
+在这个例子中，闭包 `increment` 捕获了一个可变引用到变量 `x` 并对其进行操作。这是一个典型的 `FnMut` 闭包示例，因为它需要对它捕获的变量进行修改。注意，这个闭包也满足 `FnOnce` 特质，但不满足 `Fn` 特质，因为它需要对捕获的变量进行修改。
 
 # 环境变量不可变引用  Fn
 
@@ -135,9 +134,9 @@ fn main() {
 
 闭包过滤出所有大于min的元素值，在filter 函数里并没有对环境变量 `min` 做任何的修改。
 
-# 说明
+# 总结
 
-根据 Rust 的设计，trait 之间存在层次结构。
+根据 Rust 的设计(上方三个trait 的定义)，trait 之间存在层次结构。
 
 ![3种闭包维恩图](https://blogstatic.haohtml.com//uploads/2023/09/image-20231128124333557.png)
 
