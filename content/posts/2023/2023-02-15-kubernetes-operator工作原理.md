@@ -623,7 +623,7 @@ type sharedInformerFactory struct {
 }
 ```
 
-对于自定义控制器开发，即可以直接选择使用 [Controller Runtime](https://github.com/kubernetes-sigs/controller-runtime) 库开发，也可以基于 [Operator SDK][4]. 开发，还可以基于 [kubebuilder][5] 开发框架，其中后两者都会使用 Controller Runtime 库，而 kubebuiler 作为一款开发框架，由于其对开发者极其友好，因此是目前最优先的考虑，参考  [Kubebuilder’s Quick Start][6] 了解其用法。
+对于自定义控制器开发，即可以直接选择使用 [Controller Runtime](https://github.com/kubernetes-sigs/controller-runtime) ([官方Example](https://github.com/kubernetes-sigs/controller-runtime/blob/main/examples/README.md))库开发，也可以基于 [Operator SDK][4]. 开发，还可以基于 [kubebuilder][5] 开发框架，其中后两者都会使用 Controller Runtime 库，而 kubebuiler 作为一款开发框架，由于其对开发者极其友好，因此是目前最优先的考虑，参考  [Kubebuilder’s Quick Start][6] 了解其用法。
 
 **`CRD` 、`CR` 和 `控制器` 的区别**![](https://blogstatic.haohtml.com/uploads/2023/08/d2b5ca33bd970f64a6301fa75ae2eb22-1.png)
 
@@ -648,7 +648,7 @@ type sharedInformerFactory struct {
 
 # **参考文章** 
 
- 
+
  * [https://github.com/kubernetes-sigs/controller-runtime/blob/main/examples/README.md](https://github.com/kubernetes-sigs/controller-runtime/blob/main/examples/README.md)
 
  * [深入解析声明式API（二）：编写自定义控制器](https://time.geekbang.org/column/article/42076)
@@ -660,10 +660,10 @@ type sharedInformerFactory struct {
  * [官方所有依赖仓库清单](https://github.com/kubernetes/kubernetes/blob/master/staging/README.md)
  * [https://github.com/kubernetes-sigs/kubebuilder](https://github.com/kubernetes-sigs/kubebuilder)
 
- [1]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/README.md
- [2]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/main.go#L51-L67
- [3]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/main.go#L69-L88
- [4]: https://github.com/operator-framework/operator-sdk
- [5]: https://book.kubebuilder.io/
- [6]: https://book.kubebuilder.io/quick-start.html
- [7]: https://so.csdn.net/so/search?q=%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAkubernetes%E4%B9%8Bclient-go&t=blog&u=weixin_42663840
+[1]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/README.md
+[2]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/main.go#L51-L67
+[3]: https://github.com/kubernetes/client-go/blob/v12.0.0/examples/workqueue/main.go#L69-L88
+[4]: https://github.com/operator-framework/operator-sdk
+[5]: https://book.kubebuilder.io/
+[6]: https://book.kubebuilder.io/quick-start.html
+[7]: https://so.csdn.net/so/search?q=%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAkubernetes%E4%B9%8Bclient-go&t=blog&u=weixin_42663840
