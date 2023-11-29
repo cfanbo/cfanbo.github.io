@@ -61,7 +61,7 @@ FnOnce 代表的闭包类型只能被调用一次。
 ```rust
 fn main() {
     let range = 0..10;
-    let get_range_count = || range.count();
+    let get_range_count = move || range.count();
     assert_eq!(get_range_count(), 10); // ✅
     get_range_count(); // ❌
 }
@@ -80,10 +80,10 @@ error[E0382]: use of moved value: `get_range_count`
   |     ^^^^^^^^^^^^^^^ value used here after move
   |
 note: closure cannot be invoked more than once because it moves the variable `range` out of its environment
- --> src/main.rs:3:30
+ --> src/main.rs:3:35
   |
-3 |     let get_range_count = || range.count();
-  |                              ^^^^^
+3 |     let get_range_count = move || range.count();
+  |                                   ^^^^^
 note: this value implements `FnOnce`, which causes it to be moved when called
  --> src/main.rs:4:16
   |
@@ -94,9 +94,11 @@ For more information about this error, try `rustc --explain E0382`.
 error: could not compile `playground` (bin "playground") due to previous error
 ```
 
-在第一次调用这个函数时， `range` 变量的所有权已经交给了闭包函数，因此第二次调用闭包函数时会编译器发现变量所有权被移走而导致的错误。
+在第一次调用这个函数时， `range` 变量的所有权通过 `move` 已经交给了闭包函数，因此第二次调用闭包函数时会编译器发现变量所有权被移走而导致的错误。
 
-同时错误信息里给出闭包实现了 `FnOnce` 这个 `trait`，也就是说这个闭包函数只能调用一次。
+在本示例中即使将 `move` 关键字移除，但由于`range.count()`会移动`range`的所有权，所以闭包会实现`FnOnce`特质。这里`range.count()`调用会使`range`变量（它是 [`std::ops::Range`](https://doc.rust-lang.org/std/ops/struct.Range.html) 类型的一个实例）被消费。在方法调用时， `self`关键字被用于`Iterator::count(self)`，其方法定义为“消耗”的特性，这里消耗了`range`，因此再次调用的时候将出错。
+
+如果变量是一个数组类型，如 `[1, 2, 3]` 则可以正常运行。
 
 
 
@@ -156,6 +158,43 @@ fn main() {
 ```
 
 这里闭包满足了 `Fn` 这个trait，根据上面层次结构定义，它同样满足了 `FnOnce`  和 `FnMut` 这三个trait 条件。
+
+下面给出一个针对三种trait不同用法的完整示例：
+
+```rust
+fn main() {
+    let mut x = 10;
+
+    // Fn闭包：不可变地借用x
+    let fn_closure = || println!("Fn closure, x = {}", x);
+
+    // FnMut闭包：可变地借用x
+    let mut fnmut_closure = || {
+        x += 1;
+        println!("FnMut closure, x = {}", x);
+    };
+
+    // FnOnce闭包：消耗x
+    let fnonce_closure = move || {
+        let y = x;
+        println!("FnOnce closure, y = {}", y);
+    };
+
+    // 调用闭包
+    fn_closure();
+    fnmut_closure();
+    fnonce_closure();
+
+    // Fn和FnMut闭包可以再次被调用
+    fn_closure();
+    fnmut_closure();
+
+    // FnOnce闭包只能被调用一次，下面的代码会报错
+    // fnonce_closure(); // 错误：不能再次调用
+}
+```
+
+
 
 
 
