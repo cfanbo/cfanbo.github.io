@@ -150,6 +150,12 @@ fn main() {
 
 # 参考资料
 
+- https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html
+
 - https://kaisery.github.io/trpl-zh-cn/ch13-01-closures.html
+
 - https://rustwiki.org/zh-CN/rust-by-example/fn/closures/capture.html
+
 - https://time.geekbang.org/column/article/724942
+
+  
