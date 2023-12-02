@@ -6,15 +6,12 @@ toc: true
 date: 2023-12-02T17:55:53+00:00
 url: /posts/the-sandbox-of-pod-in-k8s
 keywords: sandbox、k8s、pod、containerd
-description: "sandbox"
 categories:
 - 程序开发
 tags:
 - k8s
 - containerd
 ---
-
-
 
 在上一篇《[创建Pod源码解析](https://blog.haohtml.com/archives/33163/)》文中，我们大概介绍了Pod的整体创建过程。其中有一步很重要，就是在创建三类容器之前必须先创建一个 ` sandbox` （[源码](https://github.com/kubernetes/kubernetes/blob/v1.27.3/pkg/kubelet/kuberuntime/kuberuntime_manager.go#L1079))，本篇就来分析一下sandbox这一块的 `netns` 实现过程。
 
