@@ -8,11 +8,10 @@ url: /posts/the-sandbox-of-pod-in-k8s
 keywords: sandbox、k8s、pod、containerd
 description: "sandbox"
 categories:
- - 程序开发
+- 程序开发
 tags:
- - k8s
- - containerd
-
+- k8s
+- containerd
 ---
 
 
