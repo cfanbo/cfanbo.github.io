@@ -427,7 +427,9 @@ func (ns *netNS) Set() error {
 
 # 总结
 
-函数最终返回的是一个nsPath路径，它对应的是 `/var/run/netns/`目录里的一个文件，如 `/var/run/netns/cni-9c52cfcd-f64b-7ba1-f05d-eb19bb474119`。
+函数 `NewNetNS()` 最终返回的其实是一个`nsPath`路径地址，它对应的是 `/var/run/netns/`目录里的一个文件，如 `/var/run/netns/cni-9c52cfcd-f64b-7ba1-f05d-eb19bb474119`。
+
+这里介绍了 `network namespace`，它提供了对网络栈的隔离。除此之外 还有一些其它类型的 namespace，如 `User namespace`、`Mount namespace`、`UTS Namespace`、`Process ID Namespace` 等，它们各自的隔离资源类型是不一样的。
 
 
 
