@@ -42,7 +42,7 @@ tags:
 
 注意这里写入 `workqueue` 队列的是API对象的 `key`， 即 `namespace/name`；接着在控制循环 `Control Loop` 里先从 `workqueue` 读取这个 `key`；然后根据 `key`从 `indexer` 缓存里读取对象。如果对象不存在则说明前面是通过 `DeleteFunc` 写入的，则需要删除key， 否则进行其它处理，执行控制器模式里的对比“`期望状态`” 和 “`实际状态`”的逻辑了。
 
-下面根据上面的架构图我们梳理一下所有的实现代码。
+下面根据官网给出的架构图，我们一起看一下它的实现代码。
 
 # 架构实现源码分析 
 
@@ -84,7 +84,7 @@ func NewController(queue workqueue.RateLimitingInterface, indexer cache.Indexer,
 
 这里创建的是一个 `pods` 类型的 `ListWatch`, 接着创建了一个带 **限速率** 功能的 `workqueue`（底层queue 的实现对应代码为 [https://github.com/kubernetes/client-go/blob/v12.0.0/util/workqueue/queue.go#L64-L88](https://github.com/kubernetes/client-go/blob/v12.0.0/util/workqueue/queue.go#L64-L88)）, 然后调用 `cache.NewIndexInformer` 来创建 `indexer` 和 `informer`。
 
-这里的 `workqueue` 主要是在回调的 `ResoureEventHandlers` 来调用的，对应的是第 `7) Enqueue Object Key` 步骤。
+这里的 `workqueue` 主要是在 `ResoureEventHandlers` 回调时调用，对应的是第 `7) Enqueue Object Key` 步骤。
 
 ```go
 // /examples/workqueue/main.go
@@ -122,7 +122,7 @@ func (c *Controller) Run(threadiness int, stopCh chan struct{}) {
 ```go
 // /tools/cache/controller.go
 func (c *controller) Run(stopCh <-chan struct{}) {
-​
+
     // 首先创建 Reflector
     r := NewReflector(
         c.config.ListerWatcher,
@@ -131,14 +131,14 @@ func (c *controller) Run(stopCh <-chan struct{}) {
         c.config.FullResyncPeriod,
     )
 
-​
+
     // 启用 Reflector 服务
     wg.StartWithChannel(stopCh, r.Run)
-​
+
 }
 ```
 
-这里首先创建一个 `Reflector` 对象，并注入 `podListWatcher` 和 `Delta Fifo Queue` 队列， 其中 `ObjectType` 为 `&v1.Pod{}`，接着启用 `Reflector` 服务（）
+首先创建一个 `Reflector` 对象，并注入 `podListWatcher` 和 `Delta Fifo Queue` 队列， 其中 `ObjectType` 为 `&v1.Pod{}`，接着启用 `Reflector` 服务（https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/reflector.go#L119-L128）
 
 ```go
 // /tools/cache/reflector.go
@@ -154,7 +154,7 @@ func (r *Reflector) Run(stopCh <-chan struct{}) {
 }
 ```
 
-接着看一下 `r.ListAndWatch()` 实现 （）
+接着看一下 `r.ListAndWatch()` 实现 （https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/reflector.go#L156-L307）
 
 ```go
 // It returns error if ListAndWatch didn't even try to initialize watch.
@@ -319,7 +319,7 @@ loop:
 }
 ```
 
-这里只是对增量队列 `Delta Fifo queue` 里的资源进行了更新操作，其实现代码见 ， 其对应的正是 `2）Add Object` 这一步。
+这里只是对增量队列 `Delta Fifo queue` 里的资源进行了更新操作，其实现代码见 https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/delta_fifo.go#L171-L220 ， 其对应的正是 `2）Add Object` 这一步。
 
 对于 `3）Pop Object` 这个操作入口函数为 `processLoop` ( [https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L139-L161](https://github.com/kubernetes/client-go/blob/v12.0.0/tools/cache/controller.go#L139-L161))
 
@@ -361,7 +361,7 @@ func (f *DeltaFIFO) Pop(process PopProcessFunc) (interface{}, error) {
             if f.IsClosed() {
                 return nil, FIFOClosedError
             }
-​
+
             f.cond.Wait()
         }
 
@@ -442,9 +442,9 @@ func newInformer(
 
 对应的是 `Config.Process` 这个函数。
 
-对于架构图中的 `4)Add Object` 和 `5）Store Object & Key` 对应的则是 `clientState` 的调用；
+对于架构图中的 `4)Add Object` 和 `5）Store Object & Key` 对应的则是对 `clientState` 的调用。
 
-而 `6）Dispatch Event Handler functions` 则为 对象 `h` ，其是一个实现了 `Resource Event Handlers` 接口的结构体，可以看到它有三个方法函数 `h.OnAdd` 、`h.OnUpdate` 和 `h.OnDelete`，而这三个函数原型已在 main 函数里实现
+而 `6）Dispatch Event Handler functions` 则为对 对象 `h` 的调用，它是一个实现了 `Resource Event Handlers` 接口的结构体，它有三个实现方法 `h.OnAdd` 、`h.OnUpdate` 和 `h.OnDelete`，而这三个方法原型已在 main 函数里实现。
 
 ```go
 // /examples/workqueue/main.go
@@ -484,9 +484,9 @@ func main() {
 
 这里使用的结构体名为 `cache.ResourceEventHandlerFuncs` ()
 
-而 `queue.Add(key)` 则对应的是步骤 `7) Enqueue Object key`。
+在 main 函数里的 `queue.Add(key)` 则对应的是步骤 `7) Enqueue Object key`, 将 `key` 写入一个 `workqueue` 队列。
 
-对于 `8）Get key` 则对应的是 [controller.processNextItem()][2]
+而对于 `8）Get key` 则对应的是 [controller.processNextItem()][2]
 
 ```go
 // /examples/workqueue/main.go
@@ -513,9 +513,9 @@ func (c *Controller) processNextItem() bool {
 }
 ```
 
-这里 `c.queue.Done()` 表示当前key处理完毕。
+从 `workqueue` 里获取一个key， 通过 [controller.syncToStdout()][3]  `9) Get Object for key`处理。最后调用 `c.queue.Done()` 表示当前 `key` 处理完毕。
 
-而 `9) Get Object for key` 则对应的是 [controller.syncToStdout()][3] 函数
+而 `9) Get Object for key` 对应 [controller.syncToStdout()][3] 函数的实现
 
 ```go
 // /examples/workqueue/main.go
@@ -539,7 +539,7 @@ func (c *Controller) syncToStdout(key string) error {
 }
 ```
 
-可以看到对 `workqueue` 的写入与读取全部在 `Custom Controller` 部分来实现的，有时候对一个对象处理会出现失败的情况，这种情况下就需要对其 key 进行 `RateLimited` 了.
+可以看到对 `workqueue` 的写入与读取全部在 `Custom Controller` 部分来实现的，有时候对一个对象处理会出现失败的情况，这种情况下就需要对其 key 进行 `RateLimited` 了。
 
 ```go
 // handleErr checks if an error happened and makes sure we will retry later.
@@ -569,9 +569,9 @@ func (c *Controller) handleErr(err error, key interface{}) {
 }
 ```
 
-`queue.AddRateLimted(key)` 表示**过一段时间**将当前 key重新写入 `workqueue` 里，同时累计当前key的重试次数, 如果重试多次（当前示例为5次）仍失败的话，则调用 `runtime.HandleError(err)` 处理。
+`queue.AddRateLimted(key)` 表示 **过一段时间** 将当前 key重新写入 `workqueue` 里，同时累计当前key的重试次数, 如果重试多次（当前示例为5次）仍失败的话，则调用 `runtime.HandleError(err)` 处理。
 
-`c.queue.Forget` 表示一旦key完成，则清除其试记录，避免影响下次重试，可以看出来 `Forget` 是对重试行为的处理，这个与 `c.queue.Done()` 的作用是不一样的。
+`c.queue.Forget` 表示一旦key完成，则清除其重试记录，避免影响下次重试，可以看出来 `Forget` 是对重试行为的处理，这个与 `c.queue.Done()` 的作用是不一样的。
 
 至此整个架构图中的每个步骤我们基本介绍完了，对于部分细节问题可能还需要花一些时间进行消化。
 
@@ -579,7 +579,7 @@ func (c *Controller) handleErr(err error, key interface{}) {
 
 如果在一个应用中有多处相互独立的业务逻辑都需要监控同一种资源对象，用户会编写多个 `Informer` 来进行处理。这会导致应用中发起对 K8s `API Server` 同一资源的多次 `ListAndWatch` 调用，并且每一个 `Informer` 中都有一份单独的本地缓存，增加了内存占用。
 
-K8s 在 `client go` 中基于 `Informer` 之上再做了一层封装，提供了 `SharedInformer` 机制。采用 `SharedInformer` 后，客户端对同一种资源对象只会有一个对 `API Server` 的 `ListAndWatch` 调用，多个 `Informer` 也会共用同一份缓存，减少了对 `API Server` 的请求，提高了性能。
+K8s 在 `client go` 中基于 `Informer` 之上再次做了一层封装，提供了 `SharedInformer` 机制。采用 `SharedInformer` 后，客户端对同一种资源对象只会有一个对 `API Server` 的 `ListAndWatch` 调用，多个 `Informer` 也会共用同一份缓存，减少了对 `API Server` 的请求，提高了性能。
 
 而对 `SharedInformer` 对象的获取一般是通过 _`SharedInformerFactory`_ 工厂模式来获取
 
