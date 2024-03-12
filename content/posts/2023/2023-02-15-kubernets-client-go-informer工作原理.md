@@ -13,7 +13,7 @@ tags:
  - k8s
 
 ---
-本方主要介绍有关 `client go` 架构实现原理，其中一个十分重要的组件就是 `informer`，它也是我们本文的重点，
+本文主要介绍有关 `client go` 架构实现原理，在整个client-go架构中有一个很重要的组件就是 `informer`，本节我们重点对其进行一些介绍。
 
 # Informer 机制 
 
