@@ -18,7 +18,7 @@ tags:
 
 
 
-这里先创建一个实现命名空间 `lab`
+这里先创建一个实验命名空间 `lab`
 
 ```shell
 $ kubectl create ns lab
@@ -188,9 +188,7 @@ Commercial support is available at
 
 **总结**
 
-如果要使用 `kubectl create service` 命令为 `deployment` 创建服务的话，只能将 `service` 的
-
-名称与其保持一致，使用方法有些不太灵活。
+如果要使用 `kubectl create service` 命令为 `deployment` 创建服务的话，只能将 `service` 的名称与其保持一致，使用方法有些不太灵活。
 
 有一种快速为 `deployment` 创建 `service` 的命令
 
