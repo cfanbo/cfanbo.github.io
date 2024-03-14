@@ -3,7 +3,7 @@ title: 使用kubectl create service 命令无法为pod创建service问题
 date: 2024-01-12T11:22:20+08:00
 type: post
 toc: true
-url: "/posts/k8s-Unable-to-create-service-for-deployment"
+url: /posts/k8s-Unable-to-create-service-for-deployment
 categories:
 - 程序开发
 tags:
@@ -12,7 +12,7 @@ tags:
 
 
 
-在做一个试验时，无意中发现使用通过 `kubectl create service` 命令无法为一个通过 `deployment` 创建出来的pod创建对应的 `service`， 顿时有点奇怪，经过分析才明白怎么回事，这里将过程记录一下。
+在做一个试验时，无意中发现使用通过 `kubectl create service` 命令无法为一个通过 `deployment` 创建出来的pod创建对应的 `service`， 感觉有点奇怪，经过分析才明白怎么回事，这里将过程记录一下。
 
 这里需要说明一下，本文操作全部是通过 `kubectl create` 命令来完成的，并没有使用 `kubectl apply -f pod.yaml` 这种方式。
 
@@ -51,13 +51,13 @@ pod/test-8544f5598b-d48js   1/1     Running   0          16s
 
 注意这里的名称是 `test`  。
 
-现在我们再用 `kubectl create service` 命令为这些 pod 创建对应的 `service` (这里并没有指定任何Lables)
+现在我们再用 `kubectl create service` 命令为这些 pod 创建对应的 `service` 
 
 ```shell
 $ kubectl create service clusterip mysvc --tcp=80:80 -n lab
 ```
 
-在同一个`namespace` 里创建一个 `mysvc `的 `service`, 并指定 `serviceType=clusterip`， 对应的端口号与上面保持一致。此命令表示当访问 `服务:80` 时，实现访问的是`容器:80`。
+在同一个`namespace` 里创建一个 `mysvc `的 `service`, 并指定 `serviceType=clusterip`，而`--tcp=80:80` 表示当访问 `服务:80` 时，实现访问的是`容器:80`。
 
 确认一下服务创建成功
 
@@ -72,7 +72,7 @@ mysvc   ClusterIP   10.96.147.26   <none>        80/TCP    100s
 我们在上面的容器里访问一下这个服务，验证一下。
 
 ```shell
-$ kubectl exec pod/test-8544f5598b-7tfq4 -- curl http://mysvc:80
+$ kubectl -n lab exec pod/test-8544f5598b-7tfq4 -- curl http://mysvc:80
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
@@ -85,7 +85,7 @@ command terminated with exit code 7
 我们知道 `service` 与 `pod` 的关系是通过 `EndPoints` 进行关系绑定的，我们先看一下这个服务绑定的 `EndPoints` 有哪些?
 
 ```shell
-$ kubectl get ep mysvc
+$ kubectl get ep mysvc -n lab
 NAME    ENDPOINTS   AGE
 mysvc   <none>      7m26s
 ```
@@ -95,7 +95,7 @@ mysvc   <none>      7m26s
 我们看一下这个 `service` 的定义
 
 ```shell
-$ kubectl describe svc mysvc
+$ kubectl describe svc mysvc -n lab
 kubectl describe svc mysvc
 Name:              mysvc
 Namespace:         lab
@@ -114,7 +114,11 @@ Session Affinity:  None
 Events:            <none>
 ```
 
-发现 `Labels` 标签竟然是 `app=mysvc` ，并不是我们想要的 `app=test`, 由此说明我们上面创建 `service` 的命令是错误的。
+发现 `Selector` 标签竟然是 `app=mysvc` ，并不是我们想要的 `app=test`, 由此对 Selector 字段的kv值是由读取的服务名称
+
+说明service对象查找符合条件的Pod时出错了。
+
+我们上面创建 `service` 的命令是错误的。
 
 原因找到了，我们指定一下 `selector` 标签试一下
 
@@ -149,7 +153,7 @@ test   10.244.1.6:80,10.244.1.7:80   17s
 我们在容器里访问一下这个服务测试一下，注意现在服务名称已由 `mysvc` 改为 `test` 
 
 ```shell
-$ kubectl exec pod/test-8544f5598b-7tfq4 -- curl http://test:80
+$ kubectl -n lab exec pod/test-8544f5598b-7tfq4 -- curl http://test:80
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100   615  100   615    0     0  85750      0 --:--:-- --:--:-- --:--:-- 87857
