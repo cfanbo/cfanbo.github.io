@@ -59,6 +59,8 @@ $ kubectl create service clusterip mysvc --tcp=80:80 -n lab
 
 在同一个`namespace` 里创建一个 `mysvc `的 `service`, 并指定 `serviceType=clusterip`，而`--tcp=80:80` 表示当访问 `服务:80` 时，实现访问的是`容器:80`。
 
+> 这里的 kubectl create service 命令属于创建没有Pod选择算符的 Service，因此不会自动创建对应的 EndpointSlice（和旧版的 Endpoints）对象, 参考 https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#services-without-selectors
+
 确认一下服务创建成功
 
 ```shell
@@ -82,7 +84,7 @@ command terminated with exit code 7
 
 可以看到这个服务无法访问，哪里出问题了呢？
 
-我们知道 `service` 与 `pod` 的关系是通过 `EndPoints` 进行关系绑定的，我们先看一下这个服务绑定的 `EndPoints` 有哪些?
+我们知道 `service` 与 `pod` 的关系是通过 `EndPoints(旧)` 或 [EndpointSlices(新)](https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#endpointslices) 进行绑定的，我们先看一下这个服务绑定的 `EndPoints` 有哪些?
 
 ```shell
 $ kubectl get ep mysvc -n lab
@@ -90,7 +92,15 @@ NAME    ENDPOINTS   AGE
 mysvc   <none>      7m26s
 ```
 
-发现 `ENDPOINTS` 值竟然是空的，说明 `service`  并未成功与 `Pod` 建立映射关系。
+发现 `ENDPOINTS` 值竟然是空的，说明 `service`  并未与 `Pod` 建立映射关系。
+
+> **Endpoints、EndPointsSlices 与 Service 的关系**:
+>
+> - `Service` 定义了一个逻辑集合,用于将请求路由到一组提供相同服务的 Pod。
+> - `Endpoints` 和 `EndpointSlices` 都是 Service 的后端,它们描述了哪些 Pod 属于特定 Service 的一部分,以及如何到达这些 Pod。
+> - `Service` 通过 **选择器** 选择一组 Pod,而 `Endpoints` 和 `EndpointSlices` 则列出了这些被选中的 Pod 的实际网络终结点。
+>
+> 从 Kubernetes 1.20 版本开始,`EndpointSlices` 已成为默认资源,并将最终完全取代 `Endpoints`。当我们为一组Pod创建对应的 service 时，也将自动创建 EndPointSlices 和 EndPoints 对象，它们内容表达的意思是完全一样的。
 
 我们看一下这个 `service` 的定义
 
