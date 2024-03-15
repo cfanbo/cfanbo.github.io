@@ -11,11 +11,11 @@ tags:
 
 ---
 
-在现实世界中，经常有一些工作是属于流水线类型的，它们每一个步骤都是紧密关联的，第一步先做什么，再做做么，最后做什么。特别是制造业这个行业，基本全是流水线生产车间。在我们开发中也经常遇到这类的业务场景。
+在现实世界中，经常有一些工作是属于流水线类型的，它们的每一个步骤都是紧密关联的，第一步先做什么，再做什么，最后做什么。特别是制造业这个行业，基本全是流水线生产车间。在我们开发中也经常遇到这类的业务场景。
 
 假如我们有个流水线共分三个步骤，分别是 job1、job2和job3。代码： [https://play.golang.org/p/e7ZlP9ofXB3](https://play.golang.org/p/e7ZlP9ofXB3)
 
-```
+```go
 package main
 
 import (
@@ -133,12 +133,12 @@ all finish
 duration: 21s
 ```
 
-共计计算21秒。主要是因为job2中的耗时太久导致，现在我们的主要任务就是解决掉这个问题了。
+共计计算 `21秒`。主要是因为job2中的耗时太久导致，现在我们的主要任务就是解决掉这个问题了。
 这里只用了一个job2来处理job1的结果，如果我们能多开启几个goroutine job2并行处理会不会提升性能呢?
 
 现在我们改进下代码，解决job2耗时的问题，需要注意一下，这里对ch的关闭也要作一下调整，由于启用了多个job2的goroutine，所以在job2内部进行关闭了。代码 [https://play.golang.org/p/qebQ00v973C](https://play.golang.org/p/qebQ00v973C)
 
-```
+```go
 package main
 
 import (
@@ -222,7 +222,7 @@ func main() {
 
 	firstResult := job1(10)
 
-	// 拆分成三个job2，即3个goroutine （扇出）
+	// 拆分成三个job2，即3个goroutine （扇出），可以理解成为 job2 搞三个车间
 	secondResult1 := job2(firstResult)
 	secondResult2 := job2(firstResult)
 	secondResult3 := job2(firstResult)
@@ -244,7 +244,7 @@ func main() {
 输出结果
 
 ```
-<pre class="wp-block-syntaxhighlighter-code">job1 finish: 1
+job1 finish: 1
 job1 finish: 1
 job1 finish: 1
 job2 finish: 2
@@ -285,14 +285,14 @@ job2 finish: 2
 job3 finish: 3
 3
 all finish
-duration: 12s</pre>
+duration: 12s
 ```
 
-可以看到，性能提升了90%，由原来的22s减少到12s。上面代码中为了演示效果，使用的缓冲chan很小，如果调大的话，性能更明显。
+可以看到，性能提升了90%，由原来的 `22s` 减少到 `12s`。上面代码中为了演示效果，使用的缓冲chan很小，如果调大的话，性能更明显。通过这种方式大大提高了工作效率。
 
-**FAN-OUT模式：多个goroutine从同一个通道读取数据，直到该通道关闭。**OUT是一种张开的模式（1对多），所以又被称为扇出，可以用来分发任务。
+**FAN-OUT模式：** 多个goroutine从同一个通道读取数据，直到该通道关闭。**OUT** 是一种张开的模式（1对多），所以又被称为扇出，可以用来分发任务。
 
-**FAN-IN模式：1个goroutine从多个通道读取数据，直到这些通道关闭。**IN是一种收敛的模式（多对1），所以又被称为扇入，用来收集处理的结果。
+**FAN-IN模式：** 1个goroutine从多个通道读取数据，直到这些通道关闭。**IN** 是一种收敛的模式（多对1），所以又被称为扇入，用来收集处理的结果。
 
 是不是很像扇子的状态, 先展开(扇出)再合并(扇入)。
 
