@@ -235,3 +235,8 @@ port 8000
 
 
 
+**参考资料**
+
+- https://kubernetes.io/zh-cn/docs/concepts/services-networking/endpoint-slices/#endpointslice-resource
+- https://kubernetes.io/zh-cn/docs/reference/kubernetes-api/service-resources/endpoint-slice-v1/
+- https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#endpoints
