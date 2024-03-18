@@ -12,7 +12,7 @@ tags:
 
 
 
-在做一个试验时，无意中发现使用通过 `kubectl create service` 命令无法为一个通过 `deployment` 创建出来的pod创建对应的 `service`， 感觉有点奇怪，经过分析才明白怎么回事，这里将过程记录一下。
+在做一个试验时，无意中发现使用 `kubectl create service` 命令无法为一个通过 `deployment` 创建出来的pod创建对应的 `service`， 感觉有点奇怪，经过分析才明白怎么回事，这里将过程记录一下。
 
 这里需要说明一下，本文操作全部是通过 `kubectl create` 命令来完成的，并没有使用 `kubectl apply -f pod.yaml` 这种方式。
 
