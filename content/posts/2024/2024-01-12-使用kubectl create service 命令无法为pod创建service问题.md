@@ -2,7 +2,6 @@
 title: 使用kubectl create service 命令无法为pod创建service问题
 date: 2024-01-12T11:22:20+08:00
 type: post
-toc: true
 url: /posts/k8s-Unable-to-create-service-for-deployment
 categories:
 - 程序开发
@@ -143,7 +142,7 @@ See 'kubectl create service clusterip --help' for usage.
 发现不支持 `--selector`。没办法只有将 `service` 名称与 `deployment` 名称保持一致了，我们试一下
 
 ```shell
-kubectl create service clusterip test --tcp=80:80 -n lab
+$ kubectl create service clusterip test --tcp=80:80 -n lab
 ```
 
 将命令中的 `mysvc` 修改为 `test`，执行并确认
