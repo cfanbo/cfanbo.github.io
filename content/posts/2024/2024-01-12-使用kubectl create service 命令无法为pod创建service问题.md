@@ -28,9 +28,9 @@ $ kubectl create ns lab
 
 首先创建一个`deployment` 对象
 
-````shell
+```shell
 $ kubectl create deployment test --image=nginx:1.23-alpine --replicas=2 --port=80 -n lab
-````
+```
 
 确认创建成功
 
