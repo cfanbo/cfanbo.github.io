@@ -22,13 +22,13 @@ Ubuntu 22.04.1 LTS \n \l
 
 ## 环境检查
 
-由于 k8s 会使用 8080 和 6443 这两个端口，因此要保证端口可用，其实禁用 swap。
+由于 k8s 会使用 8080 和 6443 这两个端口，因此要保证端口可用，然后禁用 swap。
 
 ```
 sudo swapoff -a
 ```
 
-对安装环境初始化，参考 https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
+最后对安装环境初始化，参考 https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 
 ## 安装 Docker
 
