@@ -598,7 +598,7 @@ Accept-Ranges: bytes
    一种解决方法是在接口上启用混杂模式：`sudo ifconfig＜device＞promisc`。例如：
 
    ```shell
-   sudo ifconfig wlan0 promic
+   sudo ifconfig wlan0 promisc
    ```
 
    确认
