@@ -366,13 +366,13 @@ NAME    CONTROLLER             PARAMETERS   AGE
 nginx   k8s.io/ingress-nginx   <none>       13m
 ```
 
-
-
 一旦 MetalLB 设置了 ingress-nginx LoadBalancer 服务的外部 IP 地址，就会在 iptables NAT 表中创建相应的条目，并且具有所选 IP 地址的节点开始响应 LoadBalancer 服务中配置的端口上的 HTTP 请求。
 
 不过目前我们还无法访问任何服务，到目前我们只是创建了一个流量入口而已，还需要创建一个 Ingress 来配置多个域名与它的关系。
 
 > 安装 ingress-nginx时，有些镜像需要从 registry.k8s.io 下载，请保证网络正常。
+>
+> 对于 ingress-nginx-controller 是一个以pod形式运行的 nginx 服务，扮演着webserver 的角色，用法并未有什么改变。主要是通过修改 nginx.conf 文件来实现流量入口的，感兴趣的话，可以到这个容器里观察一下 nginx.conf  的配置内容。
 
 ### 创建pod和service
 
@@ -586,6 +586,63 @@ Accept-Ranges: bytes
 > 命令中的"-D-"参数会让curl把服务器的响应头信息打印到标准输出。
 
 对于 ingress-nginx 更多用法，请参考 https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/
+
+如果在其它机器无法访问域名，请参考常见问题。
+
+## 常见问题
+
+1. 某些设备（如Raspberry Pi）在使用WiFi时不会响应ARP请求（Metallb 的 Speaker组件不进行广播）。这可能会导致服务最初是可访问的，但不久之后就会中断。在这个阶段，尝试arping将导致超时，并且无法访问服务。
+
+   参考文档 https://metallb.universe.tf/troubleshooting/
+
+   一种解决方法是在接口上启用混杂模式：`sudo ifconfig＜device＞promisc`。例如：
+
+   ```shell
+   sudo ifconfig wlan0 promic
+   ```
+
+   确认
+
+   ```shell
+   $ ip link show wlan0
+   3: wlan0: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DORMANT group default qlen 1000
+       link/ether e4:5f:01:56:9a:cb brd ff:ff:ff:ff:ff:ff
+   ```
+
+   存在 `PROMISC` 表示启用此网卡启用了混杂格式。
+
+   另外也可以手动进行广播
+
+   ```shell
+   arping -I wlan0 <Load Balancer IP>
+   ```
+
+   > 对于arp广播记录都会存在一个有效期，到期后arp记录将自动删除。
+
+​	有点遗憾的是，在我的RaspPI环境里，上面给出的方法并没有进行arp广播的。我用下面的命令临时解决掉了
+
+```
+$ arping -c 3 -S 192.168.1.200 192.168.1.108
+ARPING 192.168.1.108
+42 bytes from a4:5e:60:bb:0c:19 (192.168.1.108): index=0 time=103.134 msec
+42 bytes from a4:5e:60:bb:0c:19 (192.168.1.108): index=1 time=22.920 msec
+42 bytes from a4:5e:60:bb:0c:19 (192.168.1.108): index=2 time=47.132 msec
+
+--- 192.168.1.108 statistics ---
+3 packets transmitted, 3 packets received,   0% unanswered (0 extra)
+rtt min/avg/max/std-dev = 22.920/57.728/103.134/33.593 ms
+```
+
+表示将 LB IP 广播到指定机器 192.168.1.108。
+
+此时在 192.168.1.108 这台机器查看 arp 记录
+
+```shell
+$ arp -a | grep 192.168.1.200
+? (192.168.1.200) at e4:5f:1:56:9a:cb on en0 ifscope [ethernet]
+```
+
+此时再访问域名即可。
 
 ## 总结
 
