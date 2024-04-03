@@ -8,6 +8,10 @@ categories:
   - 程序开发
 tags:
   - k8s
+  - metallb
+  - ingress-nginx
+  - ingress
+  - containerd
 ---
 
 这里是 arm64 架构，**树莓派 4B**, 四核八 G 内存 配置，系统为 Ubuntu 22.04.1 LTS
