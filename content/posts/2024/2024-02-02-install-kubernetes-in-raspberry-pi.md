@@ -245,11 +245,13 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.4/confi
 
 ### 启用ARP广播功能
 
-由于从 `0.13.4`版本开始(见[#2285](https://github.com/metallb/metallb/issues/2285))，MetalLB不会从标记为 `exclude-from-external-load-balancers`的节点上进行广告，也就是说不会进行ARP广播，将导致其它机器无法找到 Load Balancer IP，要解决这个问题需要将 master 节点的这个 Label 删除。
+由于从 `0.13.4`版本开始(见 [#2274](https://github.com/metallb/metallb/issues/2274#issuecomment-1928226470)、[#2285](https://github.com/metallb/metallb/issues/2285))，MetalLB不会从标记为 `exclude-from-external-load-balancers`的节点上进行公告，也就是说不会在存在此Label的节点上进行ARP广播，将导致其它机器无法找到 Load Balancer IP，要解决这个问题需要将 master 节点的这个 Label 删除。
 
 ```shell
 kubectl label node ubuntu node.kubernetes.io/exclude-from-external-load-balancers-
 ```
+
+> 这种情况一般是由于使用单节点的集群时，kubeadm 会给master节点添加一个 `exclude-from-external-load-balancers` 标签，导致无法
 
 ### 设置Load Balancer IP池
 
