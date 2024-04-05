@@ -1,6 +1,6 @@
 ---
 title: Raspberry Pi 安装Kubernetes
-date: 2024-04-02T21:53:47+08:00
+date: 2024-02-02T21:53:47+08:00
 type: post
 toc: true
 url: /posts/install-kubernetes-in-raspberry-pi
