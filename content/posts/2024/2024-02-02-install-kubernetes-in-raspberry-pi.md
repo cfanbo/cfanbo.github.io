@@ -222,16 +222,14 @@ registry.aliyuncs.com/google_containers/kube-scheduler            v1.28.8       
 registry.aliyuncs.com/google_containers/pause                     3.9                 829e9de338bd5       268kB
 ```
 
-
-
 ## 安装 Load Balancer 器
 
-对于自建k8s集群的Load Balancer 这里选择 [Metallb](https://metallb.universe.tf/)。
+对于自建 k8s 集群的 Load Balancer 这里选择 [Metallb](https://metallb.universe.tf/)。
 
 MetalLB 主要有两个组件：
 
-- **Controller**：实现地址分配，以 *Deployment* 方式运行，用于监听 Service 的变更，分配/回收 IP 地址。
-- **Speaker**：实现地址对外广播，以 *DaemonSet* 方式运行，对外广播 Service 的 IP 地址。
+- **Controller**：实现地址分配，以 _Deployment_ 方式运行，用于监听 Service 的变更，分配/回收 IP 地址。
+- **Speaker**：实现地址对外广播，以 _DaemonSet_ 方式运行，对外广播 Service 的 IP 地址。
 
 配置模式分 [BGP](https://metallb.universe.tf/configuration/_advanced_bgp_configuration/) 和 [L2](https://metallb.universe.tf/configuration/_advanced_l2_configuration/) 两种，对于小集群选择 L2 模式即可, 安装文档 https://metallb.universe.tf/configuration/_advanced_l2_configuration/
 
@@ -243,17 +241,17 @@ MetalLB 主要有两个组件：
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.4/config/manifests/metallb-native.yaml
 ```
 
-### 启用ARP广播功能
+### 启用 ARP 广播功能
 
-由于从 `0.13.4`版本开始(见 [#2274](https://github.com/metallb/metallb/issues/2274#issuecomment-1928226470)、[#2285](https://github.com/metallb/metallb/issues/2285))，MetalLB不会从标记为 `exclude-from-external-load-balancers`的节点上进行公告，也就是说不会在存在此Label的节点上进行ARP广播，将导致其它机器无法找到 Load Balancer IP，要解决这个问题需要将 master 节点的这个 Label 删除。
+由于从 `0.13.4`版本开始(见 [#2274](https://github.com/metallb/metallb/issues/2274#issuecomment-1928226470)、[#2285](https://github.com/metallb/metallb/issues/2285))，MetalLB 不会从标记为 `exclude-from-external-load-balancers`的节点上进行公告，也就是说不会在存在此 Label 的节点上进行 ARP 广播，将导致其它机器无法找到 Load Balancer IP，要解决这个问题需要将 master 节点的这个 Label 删除。
 
 ```shell
 kubectl label node ubuntu node.kubernetes.io/exclude-from-external-load-balancers-
 ```
 
-> 这种情况一般是由于使用单节点的集群时，kubeadm 会给master节点添加一个 `exclude-from-external-load-balancers` 标签，导致无法
+> 这种情况一般是由于使用单节点的集群时，kubeadm 会给 master 节点添加一个 `exclude-from-external-load-balancers` 标签，导致无法
 
-### 设置Load Balancer IP池
+### 设置 Load Balancer IP 池
 
 参考文档 https://metallb.universe.tf/configuration/_advanced_ipaddresspool_configuration/
 
@@ -265,20 +263,20 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 192.168.1.100-192.168.1.250
+    - 192.168.1.100-192.168.1.250
 ```
 
-创建一个名为 `first-pool` 的IP池，表示从指定IP段选择一个空闲的IP作为 `Load Balancer IP`。您也可以使用网络掩码格式写法，如 `192.168.1.0/24`。
+创建一个名为 `first-pool` 的 IP 池，表示从指定 IP 段选择一个空闲的 IP 作为 `Load Balancer IP`。您也可以使用网络掩码格式写法，如 `192.168.1.0/24`。
 
- 如果需要指定一个固定的IP地址话，可直接使用 `192.168.1.64/32`。
+如果需要指定一个固定的 IP 地址话，可直接使用 `192.168.1.64/32`。
 
 如果没有 IPAddressPool 选择器则被解释为该实例与所有可用的 IPAddressPools 相关联。
 
-> 这里的IP段是我内网所属IP段，根据您的实际情况可能需要做调整。
+> 这里的 IP 段是我内网所属 IP 段，根据您的实际情况可能需要做调整。
 
 ### L2 模式配置
 
-一旦一个IP被分配给一个service，就必须对其进行公告。上面说过有主要有两种方式，这里我们选择 L2模式，只选择一个节点来通告来自的IP。通常，Speaker 运行的所有节点都有资格获得给定的 IP。
+一旦一个 IP 被分配给一个 service，就必须对其进行公告。上面说过有主要有两种方式，这里我们选择 L2 模式，只选择一个节点来通告来自的 IP。通常，Speaker 运行的所有节点都有资格获得给定的 IP。
 
 ```yaml
 apiVersion: metallb.io/v1beta1
@@ -288,14 +286,14 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools:
-  - first-pool
+    - first-pool
 ```
 
-这里选择了上面声明的IPPool。
+这里选择了上面声明的 IPPool。
 
 如果想将 Speaker 安装在指定节点，也可以使用 `nodeSelector` 字段，官方文档有对此用法的介绍。
 
-### 测试Load Balancer
+### 测试 Load Balancer
 
 至此，我们已经安装 Load Balancer 器完成，现在我们创建一个 服务试一下
 
@@ -304,7 +302,7 @@ kubectl create deployment nginx --image=nginx:1.23-alpine --port=80
 kubectl expose deployment nginx --port=80 --target-port=80  --type=LoadBalancer
 ```
 
-查看 service  的 EXTERNAL-IP
+查看 service 的 EXTERNAL-IP
 
 ```shell
 $ kubectl get svc nginx
@@ -343,9 +341,9 @@ Commercial support is available at
 
 ## 安装 Ingress 控制器
 
-上面我们对一个service分配了一个LB IP，如果有多个服务的话，每个 service 都分配一个IP的话，实在太浪费IP了。
+上面我们对一个 service 分配了一个 LB IP，如果有多个服务的话，每个 service 都分配一个 IP 的话，实在太浪费 IP 了。
 
-对于常用的 HTTP  服务，一般是多个域名对应同一个IP地址，这里就需要使用到  [Ingress](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/) 。但只有一个Ingress还不行，还得需要有一个想对应的 Ingress-controller 才可以。常见的控制器见 https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress-controllers/
+对于常用的 HTTP 服务，一般是多个域名对应同一个 IP 地址，这里就需要使用到 [Ingress](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/) 。但只有一个 Ingress 还不行，还得需要有一个想对应的 Ingress-controller 才可以。常见的控制器见 https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress-controllers/
 
 这里我们以最流行的 [nginx Ingress controller](https://github.com/kubernetes/ingress-nginx/blob/main/README.md#readme) 为例。
 
@@ -378,13 +376,13 @@ nginx   k8s.io/ingress-nginx   <none>       13m
 
 不过目前我们还无法访问任何服务，到目前我们只是创建了一个流量入口而已，还需要创建一个 Ingress 来配置多个域名与它的关系。
 
-> 安装 ingress-nginx时，有些镜像需要从 registry.k8s.io 下载，请保证网络正常。
+> 安装 ingress-nginx 时，有些镜像需要从 registry.k8s.io 下载，请保证网络正常。
 >
-> 对于 ingress-nginx-controller 是一个以pod形式运行的 nginx 服务，扮演着webserver 的角色，用法并未有什么改变。主要是通过修改 nginx.conf 文件来实现流量入口的，感兴趣的话，可以到这个容器里观察一下 nginx.conf  的配置内容。
+> 对于 ingress-nginx-controller 是一个以 pod 形式运行的 nginx 服务，扮演着 webserver 的角色，用法并未有什么改变。主要是通过修改 nginx.conf 文件来实现流量入口的，感兴趣的话，可以到这个容器里观察一下 nginx.conf 的配置内容。
 
-### 创建pod和service
+### 创建 pod 和 service
 
-首先创建一些pod和service
+首先创建一些 pod 和 service
 
 ```yaml
 apiVersion: apps/v1
@@ -402,10 +400,10 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.23-alpine
-        ports:
-        - containerPort: 80
+        - name: nginx
+          image: nginx:1.23-alpine
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -434,10 +432,10 @@ spec:
         app: apache
     spec:
       containers:
-      - name: apache
-        image: httpd:alpine3.19
-        ports:
-        - containerPort: 80
+        - name: apache
+          image: httpd:alpine3.19
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -450,10 +448,9 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-
 ```
 
-这里创建了两个服务，myservicea 对应的是nginx服务，myserviceb 对应的是apache服务。
+这里创建了两个服务，myservicea 对应的是 nginx 服务，myserviceb 对应的是 apache 服务。
 
 查看服务
 
@@ -469,11 +466,11 @@ myservicea   10.244.0.19:80,10.244.0.24:80,10.244.0.25:80   5m5s
 myserviceb   10.244.0.26:80,10.244.0.27:80                  118s
 ```
 
-> 这里 myservicea 有3个 endpoint, 主要是我们当前集群中已有一个nginx pod。
+> 这里 myservicea 有 3 个 endpoint, 主要是我们当前集群中已有一个 nginx pod。
 
-### 配置 Ingress 
+### 配置 Ingress
 
-通过 ingress 来指定 域名和后端 service  关系，参考文档 https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
+通过 ingress 来指定 域名和后端 service 关系，参考文档 https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -482,16 +479,16 @@ metadata:
   name: ingress-myservicea
 spec:
   rules:
-  - host: myservicea.foo.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: myservicea
-            port:
-              number: 80
+    - host: myservicea.foo.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myservicea
+                port:
+                  number: 80
   ingressClassName: nginx
 ---
 apiVersion: networking.k8s.io/v1
@@ -500,24 +497,22 @@ metadata:
   name: ingress-myserviceb
 spec:
   rules:
-  - host: myserviceb.foo.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: myserviceb
-            port:
-              number: 80
+    - host: myserviceb.foo.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myserviceb
+                port:
+                  number: 80
   ingressClassName: nginx
 ```
 
-这里通过在ingress里定义 `ingressClassName` 的字段指定当前ingress使用的 ingress controller。如果你不为 Ingress 指定 IngressClass，并且你的集群中只有一个 IngressClass 被标记为默认，那么 Kubernetes 会将此集群的默认 IngressClass [应用](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/#default-ingress-class)到 Ingress 上。 你可以通过将 [`ingressclass.kubernetes.io/is-default-class` 注解](https://kubernetes.io/zh-cn/docs/reference/labels-annotations-taints/#ingressclass-kubernetes-io-is-default-class) 的值设置为 `"true"` 来将一个 IngressClass 标记为集群默认。
+这里通过在 ingress 里定义 `ingressClassName` 的字段指定当前 ingress 使用的 ingress controller。如果你不为 Ingress 指定 IngressClass，并且你的集群中只有一个 IngressClass 被标记为默认，那么 Kubernetes 会将此集群的默认 IngressClass [应用](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/#default-ingress-class)到 Ingress 上。 你可以通过将 [`ingressclass.kubernetes.io/is-default-class` 注解](https://kubernetes.io/zh-cn/docs/reference/labels-annotations-taints/#ingressclass-kubernetes-io-is-default-class) 的值设置为 `"true"` 来将一个 IngressClass 标记为集群默认。
 
-
-
- 确认结果
+确认结果
 
 ```shell
 $ kubectl get ingress
@@ -531,11 +526,11 @@ ingress-nginx-controller             LoadBalancer   10.103.50.74     192.168.1.1
 ingress-nginx-controller-admission   ClusterIP      10.100.134.238   <none>          443/TCP                      40m
 ```
 
-可以看到两个域名绑定的IP是 ingress-nginx 服务的IP地址。
+可以看到两个域名绑定的 IP 是 ingress-nginx 服务的 IP 地址。
 
 ### 访问域名
 
-用curl访问域名 `myservicea.foo.org`，对应的是 myservicea service 是 `nginx` 服务。
+用 curl 访问域名 `myservicea.foo.org`，对应的是 myservicea service 是 `nginx` 服务。
 
 ```shell
 $ curl -D- http://192.168.1.100 -H 'Host: myservicea.foo.org'
@@ -575,7 +570,7 @@ Commercial support is available at
 
 服务正常。
 
-再访问另一个myserviceb service 对应的是apache服务，域名 `myserviceb.foo.org`
+再访问另一个 myserviceb service 对应的是 apache 服务，域名 `myserviceb.foo.org`
 
 ```shell
 $ curl -D- http://192.168.1.100 -H 'Host: myserviceb.foo.org'
@@ -591,7 +586,7 @@ Accept-Ranges: bytes
 <html><body><h1>It works!</h1></body></html>
 ```
 
-> 命令中的"-D-"参数会让curl把服务器的响应头信息打印到标准输出。
+> 命令中的"-D-"参数会让 curl 把服务器的响应头信息打印到标准输出。
 
 对于 ingress-nginx 更多用法，请参考 https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/
 
@@ -599,7 +594,7 @@ Accept-Ranges: bytes
 
 ## 常见问题
 
-1. 某些设备（如Raspberry Pi）在使用WiFi时不会响应ARP请求（Metallb 的 Speaker组件不进行广播）。这可能会导致服务最初是可访问的，但不久之后就会中断。在这个阶段，尝试arping将导致超时，并且无法访问服务。
+1. 某些设备（如 Raspberry Pi）在使用 WiFi 时不会响应 ARP 请求（Metallb 的 Speaker 组件不进行广播）。这可能会导致服务最初是可访问的，但不久之后就会中断。在这个阶段，尝试 arping 将导致超时，并且无法访问服务。
 
    参考文档 https://metallb.universe.tf/troubleshooting/
 
@@ -625,7 +620,7 @@ Accept-Ranges: bytes
    arping -I wlan0 <Load Balancer IP>
    ```
 
-​	遗憾的是，在我的RaspPI环境里，上面给出的方法仍没有进行arp广播的，目前不确定是什么原因。暂时用下面的命令解决掉了
+​ 遗憾的是，在我的 RaspPI 环境里，上面给出的方法仍没有进行 arp 广播的，目前不确定是什么原因。暂时用下面的命令解决掉了
 
 ```
 $ arping -c 3 -S 192.168.1.200 192.168.1.108
@@ -650,14 +645,16 @@ $ arp -a | grep 192.168.1.200
 
 此时再访问域名即可。
 
->  对于arp广播记录都会存在一个有效期，到期后arp记录将自动删除。如果手动进行广播的话，过一段时间服务可能会出现无法访问的情况。
+> 对于 arp 广播记录都会存在一个有效期，到期后 arp 记录将自动删除。如果手动进行广播的话，过一段时间服务可能会出现无法访问的情况。
+
+最终解决办法是将 `master` 节点移除 `exclude-from-external-load-balancers` 标签，见 https://github.com/metallb/metallb/issues/2285
 
 ## 总结
 
 本文主要介绍内容
 
-1. 安装 kubernetes集群，并使用 containerd 运行时
-2. 为集群安装 Load Balancer 
+1. 安装 kubernetes 集群，并使用 containerd 运行时
+2. 为集群安装 Load Balancer
 3. 安装 Ingress 控制器，通过 Ingress 来通过域名访问集群内的 service
 
 ## 参考文档
