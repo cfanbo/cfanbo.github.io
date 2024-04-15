@@ -17,6 +17,8 @@ tags:
 
 本文的环境安装了 MetallB，它指定分配 IP Pool 为内网 IP 地址，实验环境为 https://blog.haohtml.com/posts/install-kubernetes-in-raspberry-pi/。
 
+# 将请求从外部流入集群节点
+
 当我们需要访问一台机器时,无论是使用 IP 地址还是域名,最终都需要将其解析为 IP 地址。而要真正建立连接并传输数据,我们必须获取目标 IP 地址对应的 MAC 地址,这是由于 TCP/IP 协议分层机制决定的。
 
 在 TCP/IP 协议栈的链路层,数据是通过封装成数据帧的方式在局域网内传输的。数据帧中包含了目标 MAC 地址,用于标识应该将数据发送到哪个网络设备。因此,如果我们想要与某台机器建立通信,就必须首先知道其 IP 地址对应的 MAC 地址。
@@ -68,6 +70,8 @@ ingress-nginx-controller-admission   ClusterIP      10.100.134.238   <none>     
 
 > arp 记录有一个有效期，如果长时间不访问此记录将从本机删除掉，对于普通的服务器绑定的真实 IP 来讲，这条记录会经常通过 ARP 进行局域网广播（因为其服务器都存在一些服务与局域网进行通讯），但对于 LoadBalancer IP 它是一个虚拟 IP 地址，此 IP 没有任何服务，因此只有用户访问此 IP 时才会产生 ARP 记录。
 > 如果使用`ping 192.168.1.200`的话，则不会有响应，因它这是一个虚拟 IP
+
+# 将流入节点的流量流入到集群
 
 好了，现在已经让用户访问 IP 的流量流入到了我们的 master 节点，剩下的一个问题就是如何再将这些流量流入到集群内部到真正提供服务的 POD。
 
@@ -198,4 +202,12 @@ Chain KUBE-SVL-CG5I4G2RS3ZVWGLK (1 references)
 $ kubectl exec -it ingress-nginx-controller-6bfd765bdc-876lz -n ingress-nginx -- cat /etc/nginx/nginx.conf
 ```
 
-本文安装 MetalLB 时选择了 `Layer2` 模式，针对此模式的介绍推荐阅读一下官方对其的介绍 https://metallb.universe.tf/concepts/layer2/
+# 总结
+
+1. 流量从外部流入集群节点，主要是通过 metalLB 进行 arp 响应来实现的。另外此节点并不一定是 master 节点，原因见 layer2 模式的介绍 https://metallb.universe.tf/concepts/layer2/
+2. 当流量到达节点后，主要通过 iptables 将流量流入到 ingress-nginx-controller 这个 pod，这里 nginx 扮演的是一个反向代理的角色。
+
+# 参考
+
+- https://metallb.universe.tf/concepts/layer2/
+- https://blog.haohtml.com/posts/install-kubernetes-in-raspberry-pi/
