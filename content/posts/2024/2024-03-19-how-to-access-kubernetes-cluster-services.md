@@ -197,3 +197,5 @@ Chain KUBE-SVL-CG5I4G2RS3ZVWGLK (1 references)
 ```shell
 $ kubectl exec -it ingress-nginx-controller-6bfd765bdc-876lz -n ingress-nginx -- cat /etc/nginx/nginx.conf
 ```
+
+本文安装 MetalLB 时选择了 `Layer2` 模式，针对此模式的介绍推荐阅读一下官方对其的介绍 https://metallb.universe.tf/concepts/layer2/
