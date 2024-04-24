@@ -100,7 +100,7 @@ v1beta1.metrics.k8s.io                 kube-system/metrics-server               
 
 ## VPA
 
-上面我们介绍了HPA以及其应用场景和缺点，这里我们再看一下VPA，以及其适合的场景有哪些？
+上面我们介绍了HPA以及其应用场景和缺点，这里我们再看一下VPA（Vertical Pod Autoscaler），以及其适合的场景有哪些？
 
 上面我们已说过VPA 可以理解为对单个服务资源进行扩容，如CPU、内存之类。它一般应用于一些中心化的单体应用，且无法对其进行部署多份副本的场景，如 Prometheus 或 Jenkins 这类的应用。
 
