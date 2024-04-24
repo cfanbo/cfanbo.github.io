@@ -40,6 +40,7 @@ date: 2013-04-19T05:12:25+00:00
 - [Go 高性能编程技法-腾讯技术工程](https://mp.weixin.qq.com/s/Lv2XTD-SPnxT2vnPNeREbg)
 - [5 步让你的代码更快更高效](https://docs.google.com/presentation/d/1MD_Vlb9d32aMDPu9MOlyVO796mK1Y6GrRcXOl63C7g4/edit#slide=id.p)
 - [net/http 库中常见的几种goroutine泄漏场景](https://www.51cto.com/article/763439.html)
+- [Golang异步编程方式和技巧](https://mp.weixin.qq.com/s/PuNu65ggHyB6jxRqhbN_VQ)
 
 # 编译器&汇编
 
