@@ -84,7 +84,7 @@ v1beta1.metrics.k8s.io                 kube-system/metrics-server               
 
 - 对于资源指标，使用  metrics.k8s.io [API](https://kubernetes.io/zh-cn/docs/reference/external-api/metrics.v1beta1/)， 一般由 [metrics-server](https://github.com/kubernetes-sigs/metrics-server) 提供。 它可以作为集群插件启动。
 
-- 对于自定义指标，使用  custom.metrics.k8s.io [API](https://kubernetes.io/zh-cn/docs/reference/external-api/metrics.v1beta1/)。 它由其他“适配器（Adapter）” API 服务器提供。从上面的命令输出可以看出，这里是由 prometheus-adapter 来提供的。
+- 对于自定义指标，使用  custom.metrics.k8s.io [API](https://kubernetes.io/zh-cn/docs/reference/external-api/metrics.v1beta1/)。 它由其他“适配器（Adapter）” API 服务器提供。从上面的命令输出可以看出，这里是由 [prometheus-adapter](https://github.com/kubernetes-sigs/prometheus-adapter) 来提供的。
 
 - 对于外部指标，将使用  external.metrics.k8s.io [API](https://kubernetes.io/zh-cn/docs/reference/external-api/metrics.v1beta1/)。
 
