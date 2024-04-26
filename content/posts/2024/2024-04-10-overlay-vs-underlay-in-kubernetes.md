@@ -1,5 +1,5 @@
 ---
-title: kubernetes中的overlay网络与underlay网络的区别
+title: kubernetes中overlay网络与underlay网络的区别
 date: 2024-04-10T16:04:36+08:00
 type: post
 toc: true
