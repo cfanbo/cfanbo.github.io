@@ -122,6 +122,10 @@ v1beta1.metrics.k8s.io                 kube-system/metrics-server               
 
 本文不打算对其进行详细的介绍，有兴趣的话可参考官方文档 https://keda.sh/docs/2.13/deploy/，这里只做一些概括总结。
 
+## 架构
+
+下图显示了 KEDA 如何与 Kubernetes Horizontal Pod Autoscaler、外部事件源和 Kubernetes 的 etcd 数据存储结合使用。
+
 ![KEDA 的架构](https://blogstatic.haohtml.com//uploads/2024/04/f5c3b1c7cab06ca36fb15349141d864d.jpg)
 
 主要由以下几个部分组成：
@@ -134,7 +138,288 @@ v1beta1.metrics.k8s.io                 kube-system/metrics-server               
 
 `Metrics Adapter` 是 KEDA 与 Kubernetes HPA（Horizontal Pod Autoscaler）之间的桥梁，用于将 Scaler 查询到的事件数量转化为 Kubernetes HPA 可以理解的度量值。
 
+## Event Sources 和 Scalers
 
+KEDA有一系列的缩放器，既可以检测是否应该激活或停用部署，也可以为特定的事件源提供自定义度量。支持的i常见缩放器有 ActiveMQ、Kafka、RabbitMQ、ETCD、MongoDB、MySQL、MSSQL、Redis、Prometheus、elasticsearch等，更多缩放器见 https://keda.sh/docs/2.14/concepts/#event-sources-and-scalers
+
+## Custom Resources (CRD)
+
+参考文档https://keda.sh/docs/2.14/deploy/部署KEDA，将自动安装以下四个 CRD
+
+- `scaledobjects.keda.sh`
+- `scaledjobs.keda.sh`
+- `triggerauthentications.keda.sh`
+- `clustertriggerauthentications.keda.sh`
+
+这些自定义资源使您能够将事件源（以及对该事件源的身份验证）映射到 Deployment、StatefulSet、 Custom Resource 或 Job 以进行扩缩容。
+
+- `ScaledObjects` 表示 `event sources`（例如 Rabbit MQ）与 Kubernetes [Deployment](https://keda.sh/docs/2.14/concepts/scaling-deployments/#scaling-of-deployments-and-statefulsets)、[StatefulSet](https://keda.sh/docs/2.14/concepts/scaling-deployments/#scaling-of-deployments-and-statefulsets) 或 任何定义了 `/scale` 子资源的 [Custom Resource](https://keda.sh/docs/2.14/concepts/scaling-deployments/#scaling-of-custom-resources) 之间所需的映射。ScaledObject spec [`scaledobject_types.go`](https://github.com/kedacore/keda/blob/main/apis/keda/v1alpha1/scaledobject_types.go)
+
+  ```yaml
+  apiVersion: keda.sh/v1alpha1
+  kind: ScaledObject
+  metadata:
+    name: {scaled-object-name}
+    annotations:
+      scaledobject.keda.sh/transfer-hpa-ownership: "true"     # Optional. Use to transfer an existing HPA ownership to this ScaledObject
+      validations.keda.sh/hpa-ownership: "true"               # Optional. Use to disable HPA ownership validation on this ScaledObject
+      autoscaling.keda.sh/paused: "true"                      # Optional. Use to pause autoscaling of objects explicitly
+  spec:
+    scaleTargetRef:
+      apiVersion:    {api-version-of-target-resource}         # Optional. Default: apps/v1
+      kind:          {kind-of-target-resource}                # Optional. Default: Deployment
+      name:          {name-of-target-resource}                # Mandatory. Must be in the same namespace as the ScaledObject
+      envSourceContainerName: {container-name}                # Optional. Default: .spec.template.spec.containers[0]
+    pollingInterval:  30                                      # Optional. Default: 30 seconds
+    cooldownPeriod:   300                                     # Optional. Default: 300 seconds
+    idleReplicaCount: 0                                       # Optional. Default: ignored, must be less than minReplicaCount
+    minReplicaCount:  1                                       # Optional. Default: 0
+    maxReplicaCount:  100                                     # Optional. Default: 100
+    fallback:                                                 # Optional. Section to specify fallback options
+      failureThreshold: 3                                     # Mandatory if fallback section is included
+      replicas: 6                                             # Mandatory if fallback section is included
+    advanced:                                                 # Optional. Section to specify advanced options
+      restoreToOriginalReplicaCount: true/false               # Optional. Default: false
+      horizontalPodAutoscalerConfig:                          # Optional. Section to specify HPA related options
+        name: {name-of-hpa-resource}                          # Optional. Default: keda-hpa-{scaled-object-name}
+        behavior:                                             # Optional. Use to modify HPA's scaling behavior
+          scaleDown:
+            stabilizationWindowSeconds: 300
+            policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+    triggers:
+    # {list of triggers to activate scaling of the target resource}
+    # ref: https://keda.sh/docs/2.14/scalers/
+  ```
+
+  对 ScaledObject 介绍参考 https://keda.sh/docs/2.14/concepts/scaling-deployments/#scaling-of-custom-resources
+
+- `ScaledJobs` 表示 `event sources` 和 Kubernetes [Job](https://keda.sh/docs/2.14/concepts/scaling-jobs/) 之间的映射。ScaledJob spec [`scaledjob_types.go`](https://github.com/kedacore/keda/blob/main/apis/keda/v1alpha1/scaledjob_types.go)
+
+  ```yaml
+  apiVersion: keda.sh/v1alpha1
+  kind: ScaledJob
+  metadata:
+    name: {scaled-job-name}
+    labels:
+      my-label: {my-label-value}                # Optional. ScaledJob labels are applied to child Jobs
+    annotations:
+      autoscaling.keda.sh/paused: true          # Optional. Use to pause autoscaling of Jobs
+      my-annotation: {my-annotation-value}      # Optional. ScaledJob annotations are applied to child Jobs
+  spec:
+    jobTargetRef:
+      parallelism: 1                            # [max number of desired pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
+      completions: 1                            # [desired number of successfully finished pods](https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism)
+      activeDeadlineSeconds: 600                #  Specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it; value must be positive integer
+      backoffLimit: 6                           # Specifies the number of retries before marking this job failed. Defaults to 6
+      template:
+        # describes the [job template](https://kubernetes.io/docs/concepts/workloads/controllers/job)
+    pollingInterval: 30                         # Optional. Default: 30 seconds
+    successfulJobsHistoryLimit: 5               # Optional. Default: 100. How many completed jobs should be kept.
+    failedJobsHistoryLimit: 5                   # Optional. Default: 100. How many failed jobs should be kept.
+    envSourceContainerName: {container-name}    # Optional. Default: .spec.JobTargetRef.template.spec.containers[0]
+    minReplicaCount: 10                         # Optional. Default: 0
+    maxReplicaCount: 100                        # Optional. Default: 100
+    rolloutStrategy: gradual                    # Deprecated: Use rollout.strategy instead (see below).
+    rollout:
+      strategy: gradual                         # Optional. Default: default. Which Rollout Strategy KEDA will use.
+      propagationPolicy: foreground             # Optional. Default: background. Kubernetes propagation policy for cleaning up existing jobs during rollout.
+    scalingStrategy:
+      strategy: "custom"                        # Optional. Default: default. Which Scaling Strategy to use. 
+      customScalingQueueLengthDeduction: 1      # Optional. A parameter to optimize custom ScalingStrategy.
+      customScalingRunningJobPercentage: "0.5"  # Optional. A parameter to optimize custom ScalingStrategy.
+      pendingPodConditions:                     # Optional. A parameter to calculate pending job count per the specified pod conditions
+        - "Ready"
+        - "PodScheduled"
+        - "AnyOtherCustomPodCondition"
+      multipleScalersCalculation : "max" # Optional. Default: max. Specifies how to calculate the target metrics when multiple scalers are defined.
+    triggers:
+    # {list of triggers to create jobs} 
+    # ref: https://keda.sh/docs/2.14/scalers/
+  ```
+
+- `ScaledObject`/`ScaledJob` 通过引用 `TriggerAuthentication` 或 `ClusterTriggerAuthentication`，其中包含用于监视事件源的身份验证配置或 `secret`。介绍文档参考 https://keda.sh/docs/2.14/concepts/authentication/
+
+  有时候对于一些敏感信息我们可能需要进行加密，如果使用 RabbitMQ 缩放器 ，则该 `host` 参数可能包含密码，因此需要作为参考。可以使用 `host` 字符串的值创建机密，在部署中引用该机密，并将其映射到 `ScaledObject` 元数据参数，如下所示：
+
+  ```yaml
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: {secret-name}
+  data:
+    {secret-key-name}: YW1xcDovL3VzZXI6UEFTU1dPUkRAcmFiYml0bXEuZGVmYXVsdC5zdmMuY2x1c3Rlci5sb2NhbDo1Njcy #base64 encoded per secret spec
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: {deployment-name}
+    namespace: default
+    labels:
+      app: {deployment-name}
+  spec:
+    selector:
+      matchLabels:
+        app: {deployment-name}
+    template:
+      metadata:
+        labels:
+          app: {deployment-name}
+      spec:
+        containers:
+        - name: {deployment-name}
+          image: {container-image}
+          envFrom:
+          - secretRef:
+              name: {secret-name}
+  ---
+  apiVersion: keda.sh/v1alpha1
+  kind: ScaledObject
+  metadata:
+    name: {scaled-object-name}
+    namespace: default
+  spec:
+    scaleTargetRef:
+      name: {deployment-name}
+    triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: hello
+        host: {secret-key-name}
+        queueLength  : '5'
+  ```
+
+  上面 ScaledObject 使用的 event sources 为 rabbitmq，并指定了queueName、host 和 queueLength。
+
+  但这种用法存在一些缺点，见 https://keda.sh/docs/2.14/concepts/authentication/#the-downsides
+
+  出于这些原因和其他原因，我们还提供了一个 `TriggerAuthentication` 资源，用于将身份验证定义为 `ScaledObject` 。这允许您直接引用密钥、配置为使用 Pod 身份或使用由其他团队管理的身份验证对象。
+
+  `TriggerAuthentication` 允许您描述独立 `ScaledObject` 于部署容器的身份验证参数。它还支持更高级的身份验证方法，例如“pod 身份”、身份验证重用或允许 IT 配置身份验证。
+
+  ```yaml
+  apiVersion: keda.sh/v1alpha1
+  kind: TriggerAuthentication
+  metadata:
+    name: {trigger-authentication-name}
+    namespace: default # must be same namespace as the ScaledObject
+  spec:
+    podIdentity:
+        provider: none | azure | azure-workload | aws | aws-eks | aws-kiam | gcp  # Optional. Default: none
+        identityId: <identity-id>                                           # Optional. Only used by azure & azure-workload providers.
+        roleArn: <role-arn>                                                 # Optional. Only used by aws provider.
+        identityOwner: keda|workload                                        # Optional. Only used by aws provider.
+    secretTargetRef:                                                        # Optional.
+    - parameter: {scaledObject-parameter-name}                              # Required.
+      name: {secret-name}                                                   # Required.
+      key: {secret-key-name}                                                # Required.
+    env:                                                                    # Optional.
+    - parameter: {scaledObject-parameter-name}                              # Required.
+      name: {env-name}                                                      # Required.
+      containerName: {container-name}                                       # Optional. Default: scaleTargetRef.envSourceContainerName of ScaledObject
+    hashiCorpVault:                                                         # Optional.
+      address: {hashicorp-vault-address}                                    # Required.
+      namespace: {hashicorp-vault-namespace}                                # Optional. Default is root namespace. Useful for Vault Enterprise
+      authentication: token | kubernetes                                    # Required.
+      role: {hashicorp-vault-role}                                          # Optional.
+      mount: {hashicorp-vault-mount}                                        # Optional.
+      credential:                                                           # Optional.
+        token: {hashicorp-vault-token}                                      # Optional.
+        serviceAccount: {path-to-service-account-file}                      # Optional.
+      secrets:                                                              # Required.
+      - parameter: {scaledObject-parameter-name}                            # Required.
+        key: {hashicorp-vault-secret-key-name}                               # Required.
+        path: {hashicorp-vault-secret-path}                                  # Required.
+    azureKeyVault:                                                          # Optional.
+      vaultUri: {key-vault-address}                                         # Required.
+      podIdentity:                                                          # Optional. Required when using pod identity.
+        provider: azure | azure-workload                                    # Required.
+        identityId: <identity-id>                                           # Optional
+      credentials:                                                          # Optional. Required when not using pod identity.
+        clientId: {azure-ad-client-id}                                      # Required.
+        clientSecret:                                                       # Required.
+          valueFrom:                                                        # Required.
+            secretKeyRef:                                                   # Required.
+              name: {k8s-secret-with-azure-ad-secret}                       # Required.
+              key: {key-within-the-secret}                                  # Required.
+        tenantId: {azure-ad-tenant-id}                                      # Required.
+      cloud:                                                                # Optional.
+        type: AzurePublicCloud | AzureUSGovernmentCloud | AzureChinaCloud | AzureGermanCloud | Private # Required.
+        keyVaultResourceURL: {key-vault-resource-url-for-cloud}             # Required when type = Private.
+        activeDirectoryEndpoint: {active-directory-endpoint-for-cloud}      # Required when type = Private.
+      secrets:                                                              # Required.
+      - parameter: {param-name-used-for-auth}                               # Required.
+        name: {key-vault-secret-name}                                       # Required.
+        version: {key-vault-secret-version}                                 # Optional.
+    awsSecretManager:
+      podIdentity:                                                          # Optional.
+        provider: aws                                                       # Required.
+      credentials:                                                          # Optional.
+        accessKey:                                                          # Required.
+          valueFrom:                                                        # Required.
+            secretKeyRef:                                                   # Required.
+              name: {k8s-secret-with-aws-credentials}                       # Required.
+              key: AWS_ACCESS_KEY_ID                                        # Required.
+        accessSecretKey:                                                    # Required.
+          valueFrom:                                                        # Required.
+            secretKeyRef:                                                   # Required.
+              name: {k8s-secret-with-aws-credentials}                       # Required.
+              key: AWS_SECRET_ACCESS_KEY                                    # Required.
+      region: {aws-region}                                                  # Optional.
+      secrets:                                                              # Required.
+      - parameter: {param-name-used-for-auth}                               # Required.
+        name: {aws-secret-name}                                             # Required.
+        version: {aws-secret-version}                                       # Optional.
+    gcpSecretManager:                                                       # Optional.
+      secrets:                                                              # Required.
+        - parameter: {param-name-used-for-auth}                             # Required.
+          id: {secret-manager-secret-name}                                  # Required.
+          version: {secret-manager-secret-name}                             # Optional.
+      podIdentity:                                                          # Optional.
+        provider: gcp                                                       # Required.
+      credentials:                                                          # Optional.
+        clientSecret:                                                       # Required.
+          valueFrom:                                                        # Required.
+            secretKeyRef:                                                   # Required.
+              name: {k8s-secret-with-gcp-iam-sa-secret}                     # Required.
+              key: {key-within-the-secret}  
+  ```
+
+  在定义中 `TriggerAuthentication` 定义的每个参数都不需要包含在 `ScaledObject` 定义的触发器中 `metadata` 。若要从  `ScaledObject` 引用  `TriggerAuthentication` ，请将添加到 `authenticationRef` 触发器中。
+
+  ```yaml
+  # some Scaled Object
+  # ...
+    triggers:
+    - type: {scaler-type}
+      metadata:
+        param1: {some-value}
+      authenticationRef:
+        name: {trigger-authentication-name} # this may define other params not defined in metadata
+  ```
+
+  每个 `TriggerAuthentication` 都定义在一个命名空间中，并且只能由同一命名空间中的 a `ScaledObject` 使用。如果要在多个命名空间中的缩放器之间共享一组凭据，则可以改为 `ClusterTriggerAuthentication` 创建一个 .作为全局对象，可以从任何命名空间使用它。若要将触发器设置为使用 `ClusterTriggerAuthentication` ，请向身份验证引用添加一个 `kind` 字段：
+
+  ```yaml
+      authenticationRef:
+        name: {cluster-trigger-authentication-name}
+        kind: ClusterTriggerAuthentication
+  ```
+
+  定义  `ClusterTriggerAuthentication` 的工作方式几乎与 `TriggerAuthentication` 相同，只是没有 `metadata.namespace` 值：
+
+  ```yaml
+  apiVersion: keda.sh/v1alpha1
+  kind: ClusterTriggerAuthentication
+  metadata:
+    name: {cluster-trigger-authentication-name}
+  spec:
+    # As before ...
+  ```
+
+  
 
 **它的优势**
 
@@ -154,7 +439,7 @@ v1beta1.metrics.k8s.io                 kube-system/metrics-server               
 
 # 总结
 
-上面我们分别介绍了基于指标驱动的 HAP&VPA 和 基于事件驱动的 KEDA 两种扩缩容解决方案，具体要采用哪一种方案则需要根据实现情况而定。
+本文我们分别介绍了基于指标驱动的 HAP&VPA 和 基于事件驱动的 KEDA 两种扩缩容解决方案，具体采用哪一种方案则需要根据实现情况而定。
 
 选择 KEDA 还是 Prometheus-Adapter，取决于我们的具体需求。
 
