@@ -435,7 +435,9 @@ KEDA有一系列的缩放器，既可以检测是否应该激活或停用部署�
 3. 资源利用率高
    KEDA 利用了 [Predictkube](https://keda.sh/blog/2022-02-09-predictkube-scaler/) 这个 AI-Base 的 Kubernetes 扩容插件。 PredictKube 插件可以使用 Prometheus 历史数据来预测未来的负载，并提前扩容 Pod，以确保应用始终有足够的资源来处理负载，避免资源浪费或不足。
 
+## 实验
 
+参考官方实例 https://github.com/kedacore/sample-go-rabbitmq，event sources 采用 rabbitmq, scale 对象为 rabbitMQ Consume
 
 # 总结
 
@@ -464,3 +466,4 @@ KEDA有一系列的缩放器，既可以检测是否应该激活或停用部署�
 - https://github.com/kedacore/keda
 - https://time.geekbang.org/column/article/768082
 - https://github.com/AliyunContainerService/kubernetes-cronhpa-controller
+- https://github.com/kedacore/samples
