@@ -3,7 +3,7 @@ title: Kubernetes集群扩缩容方案
 date: 2024-04-22T14:31:27+08:00
 type: post
 toc: true
-url: /posts/overlay-vs-underlay-in-kubernetes-network
+url: /posts/autoscaling-in-kubernetes
 categories:
   - 程序开发
 tags:
