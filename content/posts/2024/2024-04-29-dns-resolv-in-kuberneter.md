@@ -302,3 +302,4 @@ options ndots:2 edns0
 
 - https://kubernetes.io/zh-cn/docs/concepts/services-networking/dns-pod-service/
 - https://github.com/kubernetes/dns/blob/master/docs/specification.md
+- [CoreDNS 概述及运维实践](https://mp.weixin.qq.com/s/W0Ds8s0RkKujoI4ldtlw8w)
