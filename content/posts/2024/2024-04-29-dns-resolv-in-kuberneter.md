@@ -96,15 +96,32 @@ options ndots:5
 
 这里一共三类配置，分别为 `search`、 `name server` 和 `options`。
 
-先看一下 search 配置
+1. search 配置
 
 ```
 search default.svc.cluster.local svc.cluster.local cluster.local
 ```
 
-这里的 `cluster.local` 域是我们在创建 kubernetes 时默认的集群域名，当然也以在安装时进行手动修改。
+这一行设置了 DNS 搜索域的顺序,当执行单标签名称查询时,DNS 解析器会按照列出的顺序依次附加这些域,尝试进行 FQDN(完全限定域名)解析。
 
-假如在 pod 里要访问域名 `mysvc`，DNS 解析器会按先后顺序依次尝试以下完全限定域名(FQDN)进行查询:
+- `default.svc.cluster.local` 是 Kubernetes 集群中的 DNS 域,用于解析同一个命名空间中的服务。
+- `svc.cluster.local` 用于解析集群中所有命名空间中的服务。
+- `cluster.local` 是整个集群的域。
+
+2. `nameserver 10.96.0.10`:
+
+- 这一行指定了集群 DNS 服务的 IP 地址,一般是 Kubernetes DNS 插件(如 CoreDNS)在集群中的 ClusterIP 服务地址。
+- 所有节点上的 DNS 查询都会发送到这个地址。
+
+3. `options ndots:5`
+
+- 这个选项设置了执行 DNS 查询前,判断主机名是否为 FQDN 所需的点号数。
+- `ndots:5` 表示如果主机名中包含至少 5 个点号,则会被视为 FQDN,直接查询而不会追加搜索域。
+- 如果主机名中点号少于 5 个,则会依次附加上面设置的搜索域进行查询。
+
+这些配置确保了 Kubernetes 集群内的应用可以正确解析集群内部的 DNS 记录,包括服务、Pod 等,同时也支持外部 DNS 解析。由于应用通常使用短名称相互访问,因此设置合理的 DNS 解析行为对集群内的服务发现非常重要。
+
+假如在 `default` 命名空间的 pod 里要访问域名 `mysvc`，DNS 解析器会按 search 配置的多个域的先后顺序依次尝试以下完全限定域名(FQDN)进行查询:
 
 1. `mysvc.default.svc.cluster.local.`
 2. `mysvc.svc.cluster.local.`
@@ -114,12 +131,12 @@ search default.svc.cluster.local svc.cluster.local cluster.local
 
 1. 首先尝试将 `mysvc` 解析为 `mysvc.default.svc.cluster.local.`
 
-   - 因为 `default.svc.cluster.local.` 是 search 列表中的第一个域。这里的 `default` 对应的是当前 pod 所属的命名空间（上面创建 pod 时未指定 namespace），因此这里将在当前 default 命名空间里查进行域名解析
+   - 因为 `default.svc.cluster.local.` 是 search 列表中的第一个域。这里的 `default` 对应的是当前 pod 所属的命名空间（上面创建 pod 时未指定 namespace）
    - 会在 `mysvc` 后面添加 `.default.svc.cluster.local.` 并查询这个 FQDN
 
 2. 如果第一次查询失败,则尝试 `mysvc.svc.cluster.local.`
 
-   - 在 `mysvc` 后面添加 `.svc.cluster.local.` 这个 search 域重新解析。这里指不限定 namespace
+   - 在 `mysvc` 后面添加 `.svc.cluster.local.` 这个 search 域重新解析。这里表示不限定 namespace
 
 3. 如果还失败,则再尝试 `mysvc.cluster.local.`
 
@@ -138,6 +155,8 @@ search default.svc.cluster.local svc.cluster.local cluster.local
 - 如果都失败再考虑其他外部域名解析选项
 
 这样可以优先解析集群内部服务,同时也支持外部域名查询,充分满足了 Kubernetes 集群内应用的需求。
+
+我们再来看一下 `nameserver 10.96.0.10`, 这里配置的正是 `svc/kube-dns`的 IP，也就是 DNS 服务器地址，对一个域名进行解析时，需要到这个地址进行查询。
 
 这里我们再创建一个 http pod,作为服务端。
 
