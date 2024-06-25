@@ -93,19 +93,19 @@ ef505cc (HEAD -> main) modify a
 e2bebb1 add file a.txt
 ```
 
-这里假如我们在第二次提交 20bb75b 后，发现提交的内容有误，这时经过修改正确后，再按正常的方法来提交，会发现在 `git log` 里会有两条记录，但它们所做的事情都是一样的，就是为了修改 a.txt 文件内容。如果此类误操作比较多的话，在 git log 会显的不够清晰整洁，而如果我们及时的发现并修正成一条操作commit 就显的比较合适了, 这里我们就可以通过  amend commit 来实现。
+这里假如当我们在第二次提交( 20bb75b )后，立刻发现提交的内容有误，经过修正后，再按原来的方法提交，会发现在 `git log` 里会有两条记录，但它们所做的事情是一样的，都是为了修正 a.txt 文件内容。如果此类误操作比较多的话，在使用 git log 查看历史记录时，就会显的不够干净整洁。而如果我们及时的发现并修正成一条commit 就显的比较合适了, 这里我们就可以通过  `amend commit` 来实现这一点。
 
 下面我们模拟修正最后一次提交操作，将上次修改的文件内容内容 1234 改为 12345。
 
 ```shell
-echo '12345' > a.txt && git add . 
-git commit -m 'modify a' --amend
+$ echo '12345' > a.txt && git add . 
+$ git commit -m 'modify a' --amend
 [main ade9cca] modify a
  Date: Tue Jun 25 19:47:20 2024 +0800
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-git log 日志
+查看 git log 日志
 
 ```shell
 $ git log --oneline
@@ -114,9 +114,9 @@ ade9cca (HEAD -> main) modify a
 e2bebb1 add file a.txt
 ```
 
-可以看到最后一次的 commit `ef505cc` 不见了，出现一个新的 commit `ade9cca`。
+可以看到原来的最后一次 commit `ef505cc` 消失不见了，但出现了一个新的 commit `ade9cca`。
 
-可以发现对于 amend commit 只能修正最后一次的提交，如果对于多次提交怎么解决呢？就像这里的 两次commit `ade9cca` 和  `20bb75b` ，如果将它们合并成一个commit 呢？这个就需要用到另一个命令 `squash`
+因此 amend commit 可以理解为只能修正上次的提交，而如果对于已有的多次提交想合并成一条commit，这种情况如何解决呢？就像这里的两次commit `ade9cca` 和  `20bb75b` ，如果将它们合并成一个commit ，这时就需要用到另一个命令 `squash`。
 
 ## 注意事项
 
