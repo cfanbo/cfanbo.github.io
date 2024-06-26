@@ -60,3 +60,7 @@ tags:
 # 总结
 
 虽然排查问题走了一点弯路，但最终分析方向是没有错误的，搞清楚 vpn 的实现原理才是分析问题的前提。
+
+# 参考链接
+
+- [Linux 中的 Tun/Tap 介绍](https://blog.haohtml.com/archives/31687/)
