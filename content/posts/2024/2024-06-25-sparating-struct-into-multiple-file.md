@@ -1,18 +1,17 @@
 ---
-title: Rust中将一个模块拆分成多个文件
+title: Rust中将一个结构体拆分成多个文件
 date: 2024-06-25T12:06:34+08:00
 type: post
 toc: true
-url: /posts/sparating-modules-into-multiple-file
+url: /posts/sparating-struct-into-multiple-file
 categories:
   - 程序开发
 tags:
   - rust
   - mod
-
 ---
 
-官方文档将[一个模块拆分成多个文件](https://kaisery.github.io/trpl-zh-cn/ch07-05-separating-modules-into-different-files.html)时，介绍的是将原来多个模块写在同一个文件中，拆分成了每个模块一个文件。不过还有一种情况没有提到，如果一个模块内容过多时，仍写在同一个模块文件的话，维护成本就显的比较高了，这时我们可能还需要进一步将一个模块拆分成多个文件。
+官方文档将[一个模块拆分成多个文件](https://kaisery.github.io/trpl-zh-cn/ch07-05-separating-modules-into-different-files.html)时，介绍的是将原来多个模块写在同一个文件中，拆分成了每个模块一个文件。不过还有一种情况没有提到，如果一个模块中的某个 struct 实现代码过多时，仍写在同一个模块文件的话，维护成本就显的比较高了，这时我们可能还需要对这个 struct 的实现按某种粒度拆分成多个文件来实现。
 
 ```shell
 ✗ tree
@@ -80,7 +79,7 @@ impl Student {
 
 ```
 
- 主函数  `main.rs`
+主函数 `main.rs`
 
 ```rust
 // src/main.rs
@@ -104,11 +103,11 @@ fn main() {
 
 以上是多数项目的结构。
 
-但是，当随着业务的增加，Student 添加的方法越来越多，如果全部写在`user.rs`一个文件里，后期维护起来可能很不方便。那能否按一定的功能将结构体的实现拆分成多个文件里呢？如对db的操作单独在 `user_db.rs`文件实现，而搜索单独在 `user_search.rs`实现呢？答案是肯定的。
+但是，当随着业务的增加，Student 添加的方法越来越多，如果全部写在`user.rs`一个文件里，后期维护起来可能很不方便。那能否按一定的功能将结构体的实现拆分成多个文件里呢？如对 db 的操作单独在 `user_db.rs`文件实现，而搜索单独在 `user_search.rs`实现呢？答案是肯定的。
 
 # 方法拆分
 
- 这里以 `user_db.rs` 为例，目录结构
+这里以 `user_db.rs` 为例，目录结构
 
 ```
 ➜ tree model
@@ -118,7 +117,7 @@ model
 ├── user_db.rs
 ```
 
- `user_db.rs`文件
+`user_db.rs`文件
 
 ```rust
 // src/model/user_db.rs
@@ -149,7 +148,7 @@ impl Student {
 pub mod user_db;
 ```
 
-通过 pub 关键字表示此 user_db模块(user_db.rs) 里的内容向外公开，这样才可以被其它地方调用。
+通过 pub 关键字表示此 user_db 模块(user_db.rs) 里的内容向外公开，这样才可以被其它地方调用。
 
 好了，现在改行工作已经结束，下面让我们测试一下结果。
 
@@ -171,7 +170,7 @@ fn main() {
 
     // user print
     user::Student::print();
-    
+
     // 调用数据库方法
     user::Student::query();
     user::Student::insert();
@@ -184,12 +183,14 @@ fn main() {
 
 本文主要介绍将一个结构体的实现如何拆分成多个文件，以便减少当一个结构体实现代码量过大导致的维护成本过高的问题。
 
-当在一个新文件实现已存在struct时，首先需要将这个 struct 引入到当前文件，然后才可以通过 impl 编写相关代码，最后还需要记得将这个文件通过 `pub mod `公开出去，不然此模块方法没有办法被调用。
+当在一个新文件实现已存在 struct 时，首先需要将这个 struct 引入到当前文件，然后才可以通过 impl 编写相关代码，最后还需要记得将这个文件通过 `pub mod `公开出去，不然此模块方法没有办法被调用。
 
+每当创建一个新文件时，这个文件即被视为一个新模块，所以需要通过 `pub mod `关键字来公开此模块内容，这样才可以在其它地方调用此模块里的内容。
 
+本例中 user_db 模块是对在其它模块 user 中声明结构体 Student 的继续实现，因此调用时，需要指定 struct 声明时所在的模块 user，而结构体对数据库操作的方法实现在 user_db 模块中，因此还需要将 user_db 模块通过 `pub mod user_db` 进行分开因此调用时使用 `user::Student::query()`, 而不是 `user_db::student::query()`。
+
+对于调用语句也可以拆分成两部分理解，通过这个`user::Student` 找到要调用的结构体，而对于 `query()` 方法已经通过在 `src/model.rs` 文件中通过 `pub mod user_db` 公开，因此可以直接调用 `user::Student::query()`，如果不公开 user_db 的话，则系统将找不到这个方法。
 
 # 参考资料
 
 - [将模块拆分成多个文件](https://kaisery.github.io/trpl-zh-cn/ch07-05-separating-modules-into-different-files.html#将模块拆分成多个文件)
-
-  
