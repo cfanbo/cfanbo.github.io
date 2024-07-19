@@ -68,7 +68,11 @@ for {
 
 由此可以看出 kubelet 组件在 Node 节点的重要性，每个 Node 节点也只有一个 `kubelet` 组件。
 
-总体来讲，对于 k8s 里 containerd 和 runC 的关系，Containerd 是一个用于管理容器生命周期的守护进程，它作为一个容器运行时，负责管理容器的创建、运行和销毁等操作。而 runC 是由 Open Container Initiative（OCI）开发的一个用于容器运行时的工具，它负责解析并执行 OCI 容器规范定义的容器配置和运行时环境。runC 实际上是 containerd 的默认容器运行时，用于实际运行和管理容器。 从整体上看，Containerd 和 runC 是 Kubernetes 中容器运行时的两个组件，Containerd 实际上使用 runC 来执行容器。这种分层架构使得 Kubernetes 的容器运行时非常灵活和可扩展，因为容器运行时和容器管理器可以独立地进行升级和替换。
+总体来讲，对于 k8s 里 containerd 和 runC 的关系，Containerd 是一个用于管理容器生命周期的守护进程，它作为一个容器运行时，负责管理容器的创建、运行和销毁等操作。而 runC 是由 Open Container Initiative（OCI）开发的一个用于容器运行时的工具，它负责解析并执行 OCI 容器规范定义的容器配置和运行时环境。runC 实际上是 containerd 的默认容器运行时，用于实际运行和管理容器。
+
+![img](https://blogstatic.haohtml.com/uploads/2024/04/62c591c4d832d44fed6f76f60be88e3d.png)
+
+ 从整体上看，Containerd 和 runC 是 Kubernetes 中容器运行时的两个组件，Containerd 实际上使用 runC 来执行容器。这种分层架构使得 Kubernetes 的容器运行时非常灵活和可扩展，因为容器运行时和容器管理器可以独立地进行升级和替换。
 
 本文主要从全局观来讲了一个 kubernetes 的主要架构，相信以后随着更深入的学习对它们每个组件的理解会更加深刻。
 
