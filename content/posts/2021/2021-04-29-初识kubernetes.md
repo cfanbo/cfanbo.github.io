@@ -59,7 +59,9 @@ for {
 对于 CRI 接口的定义![](https://blogstatic.haohtml.com/uploads/2023/07/d2b5ca33bd970f64a6301fa75ae2eb22-4.png)
 
 **CRI 分为两组：**
+
 第一组，是 RuntimeService。它提供的接口，主要是跟容器相关的操作。比如，创建和启动容器、删除容器、执行 exec 命令等等。
+
 第二组，则是 ImageService。它提供的接口，主要是容器镜像相关的操作，比如拉取镜像、删除镜像等等。
 
 `kubelet` 组件还通过 gRPC 协议与 `Device Plugin` 插件进行通讯, 实现 k8s 项目管理 GPU 等物理设备核心硬件。
@@ -68,7 +70,7 @@ for {
 
 由此可以看出 kubelet 组件在 Node 节点的重要性，每个 Node 节点也只有一个 `kubelet` 组件。
 
-总体来讲，对于 k8s 里 containerd 和 runC 的关系，Containerd 是一个用于管理容器生命周期的守护进程，它作为一个容器运行时，负责管理容器的创建、运行和销毁等操作。而 runC 是由 Open Container Initiative（OCI）开发的一个用于容器运行时的工具，它负责解析并执行 OCI 容器规范定义的容器配置和运行时环境。runC 实际上是 containerd 的默认容器运行时，用于实际运行和管理容器。
+总体来讲，对于 k8s 里 containerd 和 runC 的关系，Containerd 是一个用于管理容器生命周期的守护进程，它作为一个容器运行时，负责管理容器的创建、运行和销毁等操作。而 runC 是由 Open Container Initiative（OCI）开发的一个用于容器运行时的工具，它负责解析并执行 OCI 容器规范定义的容器配置和运行时环境。runC 实际上是 containerd 的默认容器运行时，用于实际运行和管理容器，如设置容器 namespace、Cgroups和 chroot 待基础操作。
 
 ![img](https://blogstatic.haohtml.com/uploads/2024/04/62c591c4d832d44fed6f76f60be88e3d.png)
 
