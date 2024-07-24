@@ -185,7 +185,9 @@ impl Network {
 }
 ```
 
-在 Rust中对struct的定义和实现是分开的，这里声明了一个空的结构体Network，接着通过impl 来实现具体的逻辑功能。
+在 Rust中对struct的定义和实现是**分开**的，这里声明了一个空的结构体 `Network`，接着通过 `impl` 来实现具体的逻辑功能。
+
+在 Rust 中，声明结构体（struct）时，如果结构体没有任何字段，是可以省略花括号 `{}` 的。这种结构体称为**单元结构体**（unit struct）。
 
 `src/main.rs`:
 
