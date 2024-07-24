@@ -192,7 +192,7 @@ impl Network {
 `src/main.rs`:
 
 ```rust
-use my_project::util::Network; 
+use my_project::util::Network;  // 使用包名 my_project+模块的方式 引用库 crate 的模块
 
 fn main() {
     let net = Network::new();
