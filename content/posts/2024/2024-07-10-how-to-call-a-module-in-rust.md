@@ -19,7 +19,7 @@ tags:
 
 我们先看一下通过 `cargo new` 创建一个 `my_project` 包。
 
-```
+```shell
 ➜  cargo new my_project   
     Creating binary (application) `my_project` package
 note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -65,7 +65,7 @@ edition = "2021"
 
 - 声明模块: 在 crate 根文件中，你可以声明一个新模块；比如，你用
 
-  ```
+  ```rust
   mod garden;
   ```
 
@@ -77,7 +77,7 @@ edition = "2021"
 
 - 声明子模块: 在除了 crate 根节点以外的其他文件中，你可以定义子模块。比如，你可能在`src/garden.rs`中定义了
 
-  ```
+  ```rust
   mod vegetables;
   ```
 
