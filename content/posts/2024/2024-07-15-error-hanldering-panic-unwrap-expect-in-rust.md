@@ -1,5 +1,5 @@
 ---
-title: Rust 中常见的几种错误处理用法总结
+title: Rust 中常见的几种错误处理方法
 date: 2024-07-15T13:34:41+08:00
 type: post
 toc: true
