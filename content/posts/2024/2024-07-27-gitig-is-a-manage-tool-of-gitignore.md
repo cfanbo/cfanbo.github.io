@@ -12,23 +12,23 @@ tags:
   - git
 ---
 
-`gitig` 是一款基于  https://github.com/github/gitgnore 仓库开发的`.gitignore` 客户端CLI 管理工具，也是每个开发者必不可少的提高工作效率的必务工具。
+`gitig` 是一款基于  https://github.com/github/gitgnore 仓库开发的`.gitignore` 客户端CLI 管理工具，也是每个开发者必不可少的提高工作效率的必具工具。
 
-它基于官方仓库丰富的 `.gitignore` 数据源，帮助开发者快速实现添加各类开发项目的git版本控制忽略文件清单。
+它基于官方仓库  https://github.com/github/gitgnore  丰富的 `.gitignore` 数据源，帮助开发者快速实现添加各类开发项目的git版本控制忽略文件清单。
 
 # 开发背景
 
-工作中，经常需要开发各类项目，如基于 vscode 编写  rust 项目工具，对于版本控制基本会采用 `Git`，这时为了方便进行管理控制，有些项目文件是不需要提交到git仓库的，因此需要将一些文件写到 `.gitignore` 文件忽略。
+工作中，经常需要开发各类项目，如基于 vscode 编写  rust 项目，这时为了方便进行Git管理控制，有些项目文件可能并不需要提交到git仓库，需要将一些文件写入 `.gitignore` 文件进行忽略。
 
-如果手动编辑 `.gitignore`文件将这些忽略项写进去的话，则可能会有一些忽略项被遗忘或写错，这时如果有一些工具可以将行业能用的配置项一键写入 `.gitignore` 文件似乎是一个不错的主意。
+如果手动编辑 `.gitignore`文件可能有些麻烦，另外也能会有一些文件项被遗忘或写错，这时如果有一些工具可以将行业能用的忽略配置项一键写入 `.gitignore` 文件似乎是一个不错的主意。
 
-其中著名的 https://github.com/github/gitgnore  仓库就是一个专门收集各类开发语句或IDE 需要忽略的 `.gitignore` 推荐配置，目前也一直在更新。
+其中著名的 https://github.com/github/gitignore  就是一个专门收集各类开发语句或IDE 需要忽略的 `.gitignore` 推荐配置的仓库，目前star 已高达 `160K`，它也是由 GitHub 官方旗下的一个仓库，目前仍在更新。
 
 官方对它的介绍
 
 > This is GitHub’s collection of [`.gitignore`](http://git-scm.com/docs/gitignore) file templates. We use this list to populate the `.gitignore` template choosers available in the GitHub.com interface when creating new repositories and files.
 
-收集的各种开发语言或ide 推荐忽略文件
+可以看下收集的各种开发语言或ide 推荐忽略文件
 
 ![image-20240730155036672](https://blogstatic.haohtml.com//uploads/2024/04/image-20240730155036672.png)
 
