@@ -27,15 +27,20 @@ name = "Golang"
 url = "/golang/"
 weight = 4
 [[menu.main]]
+identifier = "Rust"
+name = "rust"
+url = "/tags/rust"
+weight = 5
+[[menu.main]]
 identifier = "kubernetes"
 name = "Kubernetes"
 url = "/tags/k8s"
-weight = 5
+weight = 6
 [[menu.main]]
 identifier = "IETF"
 name = "IETF"
 url = "https://datatracker.ietf.org/"
-weight = 6
+weight = 7
 
 [markup]
   [markup.tableOfContents]
