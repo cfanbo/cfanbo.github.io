@@ -14,12 +14,12 @@ googleAnalytics = "G-544832BXMX"
 [[menu.main]]
 identifier = "linux"
 name = "Linux"
-url = "/tags/linux/"
+url = "/linux/"
 weight = 2
 [[menu.main]]
 identifier = "mysql"
 name = "MySQL"
-url = "/tags/mysql/"
+url = "/mysql/"
 weight = 3
 [[menu.main]]
 identifier = "golang"
@@ -28,7 +28,7 @@ url = "/golang/"
 weight = 4
 [[menu.main]]
 identifier = "Rust"
-name = "rust"
+name = "Rust"
 url = "/tags/rust"
 weight = 5
 [[menu.main]]
@@ -37,10 +37,15 @@ name = "Kubernetes"
 url = "/tags/k8s"
 weight = 6
 [[menu.main]]
+identifier = "Github"
+name = "Github"
+url = "https://github.com/cfanbo/"
+weight = 7
+[[menu.main]]
 identifier = "IETF"
 name = "IETF"
 url = "https://datatracker.ietf.org/"
-weight = 7
+weight = 8
 
 [markup]
   [markup.tableOfContents]
