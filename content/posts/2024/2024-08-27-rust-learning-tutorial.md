@@ -36,10 +36,11 @@ tags:
 
 # 进阶教程
 
-1. [Command Line Applications in Rust](https://rust-cli.github.io/book/index.html)
-2. [The Rustonomicon](https://doc.rust-lang.org/nomicon/)
-3. [Rust 宏小册](https://zjp-cn.github.io/tlborm/#rust-宏小册)
-4. [Rust and WebAssembly](https://rustwasm.github.io/docs/book/) WASM开发手册
+1. [Tokio 异步运行时](https://tokio.rs/tokio/tutorial) 强烈推荐 ！！！一个强大的运行时，目前市场占有绝对的优势，每个RUST必学
+2. [Command Line Applications in Rust](https://rust-cli.github.io/book/index.html)
+3. [The Rustonomicon](https://doc.rust-lang.org/nomicon/)
+4. [Rust 宏小册](https://zjp-cn.github.io/tlborm/#rust-宏小册)
+5. [Rust and WebAssembly](https://rustwasm.github.io/docs/book/) WASM开发手册
 
 
 
