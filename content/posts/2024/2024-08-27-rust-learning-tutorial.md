@@ -53,20 +53,21 @@ tags:
 
 如果习惯看视频学习的话，可以看以下列出的一些B站UP主视频，前两个UP主的视频与一些教程是同步的，以视频的形式重新对教程进行了讲解。
 
- UP主 [软件工艺师](https://space.bilibili.com/361469957)
+1. [软件工艺师](https://space.bilibili.com/361469957)
 
-1. [Rust编程语言入门教程] (https://www.bilibili.com/video/BV1hp4y1k7SV/) 目前B站点击量Top1的视频，如果你看完 Rust程序设计语言，再通过视频看一篇，可能会有一些新的理解
-1. [Rust 编程语言中级教程 -- 接口设计的建议] (https://www.bilibili.com/video/BV1Pu4y1Z7dT)
+- [Rust编程语言入门教程] (https://www.bilibili.com/video/BV1hp4y1k7SV/) 目前B站点击量Top1的视频，如果你看完 Rust程序设计语言，再通过视频看一篇，可能会有一些新的理解
 
-UP主 [清华邓博士](https://space.bilibili.com/504069720/channel/collectiondetail?sid=3642485)
+- [Rust 编程语言中级教程 -- 接口设计的建议] (https://www.bilibili.com/video/BV1Pu4y1Z7dT)
 
-1. [The Golden Rust语言  系列](https://space.bilibili.com/504069720/channel/collectiondetail?sid=3642485) 主要针对Goolge Andrioid团队出品的 [Comprehensive Rust](https://google.github.io/comprehensive-rust/)  进行视频讲解
+2.  [清华邓博士](https://space.bilibili.com/504069720/channel/collectiondetail?sid=3642485)
 
-UP主 [wharton0](https://space.bilibili.com/35891473)  经常分享一些不错的文章，个人觉得很不错
+- [The Golden Rust语言  系列](https://space.bilibili.com/504069720/channel/collectiondetail?sid=3642485) 主要针对Goolge Andrioid团队出品的 [Comprehensive Rust](https://google.github.io/comprehensive-rust/)  进行视频讲解
 
-UP主 [ppt的bug](https://space.bilibili.com/294056147/)
+3.  [wharton0](https://space.bilibili.com/35891473)  经常分享一些不错的文章，个人觉得很不错
 
-UP主 [木子牙膏](https://space.bilibili.com/240421008/)
+4. [ppt的bug](https://space.bilibili.com/294056147/)
+
+5. [木子牙膏](https://space.bilibili.com/240421008/)
 
 
 
