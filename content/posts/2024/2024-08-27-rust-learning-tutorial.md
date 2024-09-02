@@ -21,7 +21,7 @@ tags:
 
 1. [Rust 程序设计语言 https://doc.rust-lang.org/book/](https://doc.rust-lang.org/book/) / ([中文版](https://kaisery.github.io/trpl-zh-cn/))
 
-   官方教程，强烈推荐，同时还有非官方翻译的中文版。遗憾的是仍有些概念介绍的有一些模糊，可通过下方的一些资料自行补习。
+   官方教程，强烈推荐，同时还有非官方翻译的中文版。遗憾的是这个教程有许多概念介绍的都有点不清不楚，只能通过下方的一些资料自行补习。
 
 2. https://play.rust-lang.org/   在线 RUST 程序 Playground，类似golang的 Playground，非常的方便
 3. [Rust Language Cheat Sheet](https://cheats.rs/#data-layout)  看完官方的教程后，紧接着就看这篇，先了解一些内存布局，后面再看其它教程就更容易理解了
@@ -37,11 +37,11 @@ tags:
 # 进阶教程
 
 1. [Tokio 异步运行时](https://tokio.rs/tokio/tutorial) 强烈推荐 ！！！一个强大的运行时，目前市场占有绝对的优势，每个RUST必学
-2. [Command Line Applications in Rust](https://rust-cli.github.io/book/index.html)
+2. [Command Line Applications in Rust](https://rust-cli.github.io/book/index.html)  开发命令行工具必具。有一个 [clap](https://crates.io/crates/clap) 的crate，它有 `Builder` 和 `Derive` 两种用法，本人在开发 [gitig](https://github.com/cfanbo/gitig) 和  [minkv](https://github.com/cfanbo/minkv) 两个项目时分别使用到了这两种用法，推荐使用 `Derive` 用法，比较简单易理解
 3. [The Rustonomicon](https://doc.rust-lang.org/nomicon/)
 4. [Rust 宏小册](https://zjp-cn.github.io/tlborm/#rust-宏小册)
 5. [Rust and WebAssembly](https://rustwasm.github.io/docs/book/) WASM开发手册
-6. [深入RUST标准库](https://github.com/Warrenren/inside-rust-std-library)
+6. [深入RUST标准库](https://github.com/Warrenren/inside-rust-std-library) 国内同学翻译的，不过是两年前翻译的，可能与现在使用的标准库有些差别，不过作为阅读标准库的参考书也不错
 
 
 
