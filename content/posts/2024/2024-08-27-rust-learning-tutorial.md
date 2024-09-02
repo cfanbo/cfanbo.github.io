@@ -41,6 +41,7 @@ tags:
 3. [The Rustonomicon](https://doc.rust-lang.org/nomicon/)
 4. [Rust 宏小册](https://zjp-cn.github.io/tlborm/#rust-宏小册)
 5. [Rust and WebAssembly](https://rustwasm.github.io/docs/book/) WASM开发手册
+6. [深入RUST标准库](https://github.com/Warrenren/inside-rust-std-library)
 
 
 
