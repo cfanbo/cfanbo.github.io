@@ -47,6 +47,7 @@ tags:
 
 # 开发规范
 
+- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
 - [PingCAP Style Guide](https://pingcap.github.io/style-guide/rust/)
 
 
@@ -83,6 +84,12 @@ tags:
 # 嵌入式开发
 
 1. [The Embedded Rust Book](https://doc.rust-lang.org/stable/embedded-book/) 嵌入式开发手册
+
+
+
+# 电子书下载
+
+- https://github.com/rust-lang/api-guidelines
 
 
 
