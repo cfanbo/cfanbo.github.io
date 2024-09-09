@@ -74,10 +74,11 @@ tags:
 
 
 
-# RUST crate 仓库
+# RUST crate 仓库/文档
 
 - https://crates.io/
 - https://lib.rs/
+- https://query.rs
 
 
 
