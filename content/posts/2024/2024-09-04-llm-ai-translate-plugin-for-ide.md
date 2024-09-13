@@ -14,7 +14,7 @@ tags:
  
 ---
 
-![logo.png](https://github.com/cfanbo/ai-translate/blob/main/img/logo.png?raw=true)
+![logo.png](https://blogstatic.haohtml.com/uploads/2024/09/logo.png)
 
 AI Translate 是一款基于LLM实现的IDE专用翻译插件，主要为开发人员在查看项目源码时，可以快速对一些代码英文注释进行中文翻译，这对于英文有些弱的同学很有帮助，下面讲一下为什么开发这款IDE插件，以及它比其它同类翻译插件有什么好处。
 
