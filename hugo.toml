@@ -3,7 +3,7 @@ languageCode = 'en-us'
 title = "学习笔记"
 Subtitle = '系统架构 高性能 云原生 Golang kubernetes MySQL'
 theme = 'ananke'
-paginate = 15
+pagination.pagerSiz = 15
 [params]
   enableGitalk = true
   recent_posts_number = 5
