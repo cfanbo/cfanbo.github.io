@@ -37,7 +37,7 @@ tags:
 
 ```json
 {
-    "assistant": {
+  "assistant": {
     "default_model": {
       "provider": "openai",
       "model": "deepseek-chat"
