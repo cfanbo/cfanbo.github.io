@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: tilburgsciencehub/algolia-uploader@master
+      - uses: cfanbo/algolia-uploader@master
         with:
           app_id: ${{secrets.APPLICATION_ID}}
           admin_key: ${{secrets.ADMIN_API_KEY}}
