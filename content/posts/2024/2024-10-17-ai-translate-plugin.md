@@ -13,7 +13,7 @@ tags:
   - plugin
 ---
 
-IDE 插件 `AI Translate `经过几个小版本的迭代，目前已经支持市场上主流的 LLM 服务提供商，主要有以下几个服务提供商：
+IDE 插件 `AI Translate `经过几个小版本的迭代，目前已经支持市面上主流的 LLM 服务提供商，主要有以下几个服务提供商：
 
 - OpenAI
 - Anthropic
@@ -44,4 +44,6 @@ IDE 插件 `AI Translate `经过几个小版本的迭代，目前已经支持市
 
 
 
-如果你想免费使用 `OpenAI`  模型的话，推荐注册 https://gh.io/models 服务，它提供了 `GPT_4o`、`GPT_4o mini`、`o1-mini`、`o1-preview` ，甚至还提供了两个 `Embedding model ` 。
+如果你想免费使用 `OpenAI`  模型的话，推荐注册 https://gh.io/models 服务，它提供了 `GPT_4o`、`GPT_4o mini`、`o1-mini`、`o1-preview` 模型，甚至还提供了两个 `Embedding `模型，这一切都是免费的。Github 还为每个用户提供了一个 codesapce ，它是一个远程服务器环境，可以直接作为免费的试验环境，很值得推荐的。
+
+> 目前不清楚新用户注册是否还需要审核。我是前几个月前在产品出来之前申请的，当时是需要等待审核的。
