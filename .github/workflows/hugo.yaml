@@ -65,7 +65,12 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./public
-
+      - uses: tilburgsciencehub/algolia-uploader@master
+        with:
+          app_id: ${{secrets.APPLICATION_ID}}
+          admin_key: ${{secrets.ADMIN_API_KEY}}
+          index_name: ${{secrets.INDEX_NAME}}
+          index_file_path: ${{secrets.FILE_PATH}}
   # Deployment job
   deploy:
     environment:
