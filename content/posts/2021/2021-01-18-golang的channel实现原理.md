@@ -4,6 +4,7 @@ author: admin
 type: post
 date: 2021-01-18T09:32:21+00:00
 url: /archives/20760
+toc: true
 categories:
  - 程序开发
 tags:
@@ -199,8 +200,8 @@ func makechan(t *chantype, size int) *hchan {
  1. 数据合法性检查，包括发送数据的类型和大小
  2. 根据不同场景分配内存，主要针对buf字段
  a. 内存大小为0，注意这时c.buf 的值为`c.raceaddr()`
- b. 元素不包含指针，一次性分配一段内存地址
- c. 元素包含指针，分配内存
+    b. 元素不包含指针，一次性分配一段内存地址
+    c. 元素包含指针，分配内存
  3. 初始化其它字段
 
 第一个参数 *chantype 结构定义
@@ -871,5 +872,5 @@ close 操作会触发goroutine的调度行为。
  * [https://studygolang.com/articles/20714](https://studygolang.com/articles/20714)
  * [https://github.com/qcrao/Go-Questions/tree/master/channel](https://github.com/qcrao/Go-Questions/tree/master/channel)
 
- [1]: https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L442-L446
- [2]: https://github.com/qcrao/Go-Questions/blob/master/channel/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%85%B3%E9%97%AD%20channel.md
+[1]: https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L442-L446
+[2]: https://github.com/qcrao/Go-Questions/blob/master/channel/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%85%B3%E9%97%AD%20channel.md
