@@ -21,7 +21,7 @@ channel是golang中特有的一种数据结构，通常与goroutine一起使用�
 
 ### hchan结构体 
 
-```
+```go
 // src/runtime/chan.go
 
 type hchan struct {
@@ -44,6 +44,7 @@ type hchan struct {
 	// with stack shrinking.
 	lock mutex
 }
+
 ```
 
 字段说明
@@ -66,7 +67,7 @@ type hchan struct {
 
 ### waitq结构体 
 
-```
+```go
 // src/runtime/chan.go
 
 type waitq struct {
@@ -77,7 +78,7 @@ type waitq struct {
 
 ### sudog结构体 
 
-```
+```go
 // src/runtime/runtime2.go
 
 // sudog represents a g in a wait list, such as for sending/receiving
@@ -123,13 +124,17 @@ type sudog struct {
 
 这里 `sudog` 实际上是对 `goroutine` 的一个封装，一个 sudog 就是一个goroutine，用在channal上发送和接收。
 
-`sudogs` 是通过一个特殊的池来分配的，通过` [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357) `和` [releaseSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L359-L407) `进行获取和释放。
+`sudogs` 是通过一个特殊的池来分配的，通过 [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357)  和  [releaseSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L359-L407)  进行获取和释放。
 
 sudog里的字段是由 `hchan.lock` 锁来进行保护。
 
-### channel 整体结构图 ![](https://blogstatic.haohtml.com/uploads/2021/01/e5efb25464faf28d6ad5c41f5d209519.png)hchan 结构图（来源： [互联网技术窝](https://mp.weixin.qq.com/s?__biz=MzUzMjk0ODI0OA==&mid=2247483766&idx=1&sn=eb605a64bed0b2066a12083f26fb04b6&chksm=faaa3501cdddbc177121ba14a6604743d5ea881ca8299d5609ac8eb9b6eca4f2a142ad5aabfd&token=1213124593&lang=zh_CN#rd))
+### channel 整体结构图
 
-```
+ ![channel 结构](https://blogstatic.haohtml.com/uploads/2021/01/e5efb25464faf28d6ad5c41f5d209519.png) 
+
+hchan 结构图（来源： [互联网技术窝](https://mp.weixin.qq.com/s?__biz=MzUzMjk0ODI0OA==&mid=2247483766&idx=1&sn=eb605a64bed0b2066a12083f26fb04b6&chksm=faaa3501cdddbc177121ba14a6604743d5ea881ca8299d5609ac8eb9b6eca4f2a142ad5aabfd&token=1213124593&lang=zh_CN#rd))
+
+```go
 // 无缓冲通道
 ch1 := make(chan int)
 // 有缓冲通道
@@ -138,9 +143,9 @@ ch2 := make(chan int, 10)
 
 ## 创建 
 
-通过编译可以发现channel的创建是由` [makechan()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L71-L118) `函数来完成的。源码
+通过编译可以发现channel的创建是由  [makechan()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L71-L118)  函数来完成的。源码
 
-```
+```go
 // src/runtime/chan.go
 
 func makechan(t *chantype, size int) *hchan {
@@ -204,9 +209,9 @@ func makechan(t *chantype, size int) *hchan {
     c. 元素包含指针，分配内存
  3. 初始化其它字段
 
-第一个参数 *chantype 结构定义
+第一个参数 `*chantype` 结构定义
 
-```
+```go
 // src/runtime/type.go
 
 type chantype struct {
@@ -222,9 +227,9 @@ type chantype struct {
 
 ## 发送数据 
 
-对于channel的写操作是由` [chansend()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L146-L284) ` 函数来实现的。
+对于channel的写操作是由  [chansend()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L146-L284)  函数来实现的。
 
-```
+```go
 /*
  * generic single channel send/recv
  * If block is not nil,
@@ -258,7 +263,7 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
 ### 直接发送 
 
-```
+```go
 func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 	......
 
@@ -277,11 +282,11 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
 如果接收队列中有接收者，则优化从接收者从队列**头部**取出一个sg(`sg := c.recvq.dequeue()`)，然后再通过调用 send() 函数将数据发送给接收者即可。![](https://blogstatic.haohtml.com/uploads/2021/01/e4b2840cddcf0a213a0f1d2d7f757e83.png)channel send
 
-在send()函数里,会执行一个回调函数主要用来进行解锁`c.lock`。真正的发送操作是函数 ` [sendDirect()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L325-L346) `，通过` [memmove(dst, src, t.size)](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L345) ` 将数据复制过去。
+在send()函数里,会执行一个回调函数主要用来进行解锁`c.lock`。真正的发送操作是函数  [sendDirect()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L325-L346)  ，通过  [memmove(dst, src, t.size)](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L345)  将数据复制过去。
 
 ### 缓冲区发送 
 
-```
+```go
 func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 	......
 
@@ -332,7 +337,7 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
 ### 阻塞发送 
 
-```
+```go
 func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 	......
 
@@ -409,13 +414,13 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 **总结**
 
  * 阻塞发送并不会更新 `c.qcount` 数量个数
- * ` [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357) `和 [releaseSudog(mysg)](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L360-L407) 是配对一起使用。
+ *  [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357) 和 [releaseSudog(mysg)](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L360-L407) 是配对一起使用。
 
 ## 读取数据 
 
 对于channel的读取方式:
 
-```
+```go
 v <- ch
 v, ok <- ch
 ```
@@ -424,7 +429,7 @@ v, ok <- ch
 
 我们先看一下官方文档对这个函数的说明
 
-```
+```go
 // chanrecv receives on channel c and writes the received data to ep.
 // ep may be nil, in which case received data is ignored.
 // If block == false and no elements are available, returns (false, false).
@@ -440,7 +445,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
  * 如果chan已关闭，零值 \*ep 和返回值将是true, false，否则使用一个元素代替\*ep并返回 (true, true)
  * 一个非nil的 ep, 必须指向heap或者调用stack
 
-```
+```go
 // src/runtime/chan.go
 
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
@@ -475,7 +480,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 如果当前读取的 chan 为nil的话，且非阻塞的情况，则会产生死锁，最终提示
 
-```
+```go
 fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan receive (nil chan)]:
@@ -487,7 +492,7 @@ goroutine 1 [chan receive (nil chan)]:
 
 如果读取的chan已关闭，则读取出来的值为零值（函数说明第四条)。
 
-```
+```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
 	...
 
@@ -534,7 +539,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 这段代码主要是对重复读的情况，进行了双重检测，暂时未理解 code 中考虑的情况，改天再消化消化。
 
-```
+```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
 	...
 
@@ -567,7 +572,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 ### 直接读取 
 
-```
+```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
 	...
 
@@ -586,11 +591,11 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 获取一个待发送者，如果buffer大小为0，则直接从发送者接收数据。否则从队列**头部**接收，并将发送者发送的数据放在队列尾部。![](https://blogstatic.haohtml.com/uploads/2021/01/256e4523776ca8fdd34309d7766b6974.png)chan recv
 
-从c.sendq队列里读取一个 *sudog，通过调用 `recv()` 函数，将数据从发送者复制到ep中，并返回true,true，表示读取成功。真正读取函数为 ` [recvDirect()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L615) `。
+从c.sendq队列里读取一个 *sudog，通过调用 `recv()` 函数，将数据从发送者复制到ep中，并返回true,true，表示读取成功。真正读取函数为  [recvDirect()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L615) 。
 
 ### 缓冲区读取 
 
-```
+```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
 	...
 
@@ -630,7 +635,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 ### 阻塞读取 
 
-```
+```go
 func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
 	......
 
@@ -677,7 +682,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 ```
 
  1. 通过 `getg()` 获取一个goroutine
- 2. 调用函数 ` [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357) ` 从当前P的 `sudogcache` （或 `sched.sudogcache`）中获取一个 `sudog` 结构体
+ 2. 调用函数  [acquireSudog()](https://github.com/golang/go/blob/go1.15.6/src/runtime/proc.go#L321-L357)  从当前P的 `sudogcache` （或 `sched.sudogcache`）中获取一个 `sudog` 结构体
  3. 绑定两者关系(将当前 g 封装在 `sudog` 结构体中)
  4. 调用 `c.recvq.enqueue(mysg)` 加入 `c.recvq` 队列的尾部
  5. 设置goroutine为等待唤醒状态
@@ -687,13 +692,13 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 关闭chan语句
 
-```
+```go
 close(ch)
 ```
 
 对于已关闭的chan，是不允许再次关闭的，否则会产生panic。对应的函数为 ` [runtime.closechan()](https://github.com/golang/go/blob/go1.15.6/src/runtime/chan.go#L357-L424) `。
 
-```
+```go
 // src/runtime/chan.go
 
 func closechan(c *hchan) {
@@ -716,7 +721,7 @@ func closechan(c *hchan) {
 
 对于一个未初始化的chan，或者已关闭的chan，如果再次关闭则会触发panic。
 
-```
+```go
 func closechan(c *hchan) {
 	......
 	// 设置chan关闭状态
@@ -791,7 +796,7 @@ func closechan(c *hchan) {
 
 文章里提到在对`c.sendq` 处理的时候可能会触发panic。这是因为关闭chan后，执行了 `goready()` 对原来sendq里的sudogs 进行了进行了重新调度，这时候发现chan已经关闭了，所以会panic。如这里的一个 [**例子**](https://go.dev/play/p/80ne5TQoJg9)
 
-```
+```go
 package main
 
 import (
