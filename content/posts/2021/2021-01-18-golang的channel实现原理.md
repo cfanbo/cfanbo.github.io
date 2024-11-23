@@ -324,7 +324,7 @@ func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
 
 这时第一步先计算出 `s.sendx` 索引位置的内存地址，然后调用 `typememmove()` 函数将 `qp` 复制到内存地址，再将 `s.sendx` 索引值 `+1`，同时`c.qcount++`。
 
-当 `sendx = dataqsiz` 的时候，说明已到了数组最后一个元素，下次存储数据的话，则需要重新从0开始了，所以需要重置为``。
+当 `sendx = dataqsiz` 的时候，说明已到了数组最后一个元素，下次存储数据的话，则需要重新从0开始了，所以需要重置为`0`。
 
 `buf`是一个由数组组成的队列，满足队列的`FIFO`的机制，最新存储的数据优先消费，最多可以存储 `dataqsiz` 个数量。超出这个数据量就需要使用第三种 `阻塞发送` 方式了。
 
@@ -568,7 +568,7 @@ func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool)
 
 读取之前先加锁。
 
-对chan的读取与发送一样，同样有三种方式，为直接读取、缓冲区读取和阻塞读取。
+对chan的读取与发送一样，同样有三种方式，为`直接读取`、`缓冲区读取`和`阻塞读取`。
 
 ### 直接读取 
 
