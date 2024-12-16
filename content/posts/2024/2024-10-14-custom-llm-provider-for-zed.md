@@ -1,5 +1,5 @@
 ---
-title: 为 zed IDE 设置自定义 LLM provider
+title: 为 Zed IDE 设置自定义 LLM provider
 date: 2024-10-14T15:24:01+08:00
 type: post
 toc: true
