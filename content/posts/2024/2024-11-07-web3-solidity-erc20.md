@@ -1,5 +1,5 @@
 ---
-title: 彻底理解 ERC-20:代币标准中的转账逻辑
+title: 彻底理解 ERC20 代币标准中的转账逻辑
 date: 2024-11-07T11:55:42+08:00
 type: post
 toc: true
