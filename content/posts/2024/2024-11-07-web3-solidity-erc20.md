@@ -16,9 +16,9 @@ tags:
 
 在看文档 https://solidity-by-example.org/app/erc20/ 介绍时，对于其中一段授权额的使用逻辑有点不明白，经过一翻查找资料才算彻底搞明白它的操作逻辑，这里特意将其记录一下。
 
+# ERC20代币标准
 
-
-在ERC20代币标准(https://eips.ethereum.org/EIPS/eip-20) 定义了一系列的接口方法
+在ERC20代币标准(https://eips.ethereum.org/EIPS/eip-20) 中定义了一系列的接口方法
 ```solidity
 interface IERC20 {
   function totalSupply() external view returns (uint256); // 返回代币总供应量。
@@ -29,14 +29,23 @@ interface IERC20 {
   function transferFrom(address sender, address recipient, uint256 amount) external returns (bool); // 由授权地址代表其他地址转移代币。
 }
 ```
+除此之外还有两个事件，虽然不是必须的，但还是强烈建议实现，方便以后排查错误。
+注意上面的接口并不表示一定全部实现，需要根据场景来做判断。有些函数如 `totalSupply() `，如果使用声明变量 `uint256 public totalSupply`; 的方式的话，将自动生成对应的getter函数,因此就没有必要手动再实现了。
 
-但并没有讲到这些方法在转账场景中的调用时机，这里简单说一下。在普通场景中，假设 `账户A` 转币给 `账户B`，直接转账即可，但通过合约账户或第三方交易平台（下方称为 `X`）进行转账时（实现ERC20代币标准接口），这时的交易则由 合约X或三方平台 来实现，大概步骤如下：
+# 转账方式
 
+在ERC20标准中，转账有两种方式：
+- transfer 转账
+常见的转账方式，适应于普通场景，假设 `账户A` 转币给 `账户B`，调用这个底层函数会直接从调用者的账户中扣除代币，并将其转账到指定的接收者。
+- transferFrom 转账
+这是另一种转账方式，通常用于需要授权的情况下，允许第三方代币持有者转账代币。此方法需要先通过 approve 授权一个代理账户（spender），表示代理可以从发送者账户中提取一定数量的代币（下方称为 `X`）。
+
+大概步骤：
 1. 首先 `账户A`给合约`账户X`一定的授权额度(最高)，表示 `合约X` 可以从 `A账户`里划走 `amount` 数量币，由 `账户A` 主动调用函数 `approve()`完成
 2. 然后合约 `账户X` 才可以将币转给 `账户B`, 当然转账前必须检查授权额度是否足够才可以，如果足够则对两个账户的向进行加减，由`合约X` 调用函数 `transferFrom` 完成
 
 可以看到相比普通转账，合约转账多了一个中间代理人而已，其它并没有什么不同。
-> 这里主要介绍 transferFrom 与 approve 两个函数，以于
+以下主要对授权转账方式中的疑问做分析。
 
 # 授权转账疑问
 
