@@ -14,7 +14,7 @@ tags:
 
 
 
-在看文档 https://solidity-by-example.org/app/erc20/ 介绍时，对于其中一段授权额的使用逻辑有点不明白，经过一翻查找资料才算彻底搞明白它的操作逻辑，这里特意将其记录一下。
+在看 Solidity 文档 https://solidity-by-example.org/app/erc20/ 时，对于其中一段授权额的编码逻辑有点不明白，经过一翻查找资料才算彻底搞明白它的操作逻辑，这里特意将其记录一下。
 
 # ERC20代币标准
 
