@@ -130,11 +130,22 @@ allowance[账户A][合约X] = amount;
 
 # 其它
 
-对于还有一个 transfer 函数，它是基础的转账函数，它常用于直接转账，它的使用场景就是我们上面讲到的普通场景；
+1. transferFrom 与 transfer 区别
+对于接口中的 transfer 函数，它是基础的转账函数，它常用于直接转账，它的使用场景就是我们上面讲到的普通场景；
 
 而 transferFrom 函数一般用于授权转账。它通常用于去中心化交易所（DEX）或其他需要第三方代币转账的场景。授权方通过调用 approve 函数授权代理人可以从自己的账户转移一定数量的代币，然后代理人可以调用 transferFrom 来完成代币的转账。
 
-
+2. 参数命名 sender 与 spender 的区别
+参数命名时注意 `sender` 与 `spender` 的区别，其中 `sender` 一般表示代币发送者（账户A）, 如
+```ts
+ function transferFrom(address sender, address recipient, uint256 amount)
+```
+这里 `sender` 是代币发送者， 表示将`账户A`的钱转给 `账户B`; 
+而 `spender` 则表示授权方（合约X)，如
+```ts
+  function approve(address spender, uint256 amount) external returns (bool);
+```
+这里 `spender` 是授权方，表示将当前调用指令的账户A的钱授权给 `合约X`。
 
 # 参考资料
 
