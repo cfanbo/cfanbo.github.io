@@ -19,15 +19,16 @@ tags:
 
 
 在ERC20代币标准(https://eips.ethereum.org/EIPS/eip-20) 定义了一系列的接口方法
-
->interface IERC20 {
->	function totalSupply() external view returns (uint256); // 返回代币总供应量。
->	function balanceOf(address account) external view returns (uint256); // 查询某个账户的代币余额。
->	function transfer(address recipient, uint256 amount) external returns (bool); // 从调用者账户向其他地址转移代币。
->	function allowance(address owner, address spender) external view returns (uint256); // 查询某地址被授权从另一个账户转移的额度。
->	function approve(address spender, uint256 amount) external returns (bool); // 授权某地址从调用者账户转移一定数量的代币。
->	function transferFrom(address sender, address recipient, uint256 amount) external returns (bool); // 由授权地址代表其他地址转移代币。
->}
+```solidity
+interface IERC20 {
+  function totalSupply() external view returns (uint256); // 返回代币总供应量。
+  function balanceOf(address account) external view returns (uint256); // 查询某个账户的代币余额。
+  function transfer(address recipient, uint256 amount) external returns (bool); // 从调用者账户向其他地址转移代币。
+  function allowance(address owner, address spender) external view returns (uint256); // 查询某地址被授权从另一个账户转移的额度。
+  function approve(address spender, uint256 amount) external returns (bool); // 授权某地址从调用者账户转移一定数量的代币。
+  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool); // 由授权地址代表其他地址转移代币。
+}
+```
 
 但并没有讲到这些方法在转账场景中的调用时机，这里简单说一下。在普通场景中，假设 `账户A` 转币给 `账户B`，直接转账即可，但通过合约账户或第三方交易平台（下方称为 `X`）进行转账时（实现ERC20代币标准接口），这时的交易则由 合约X或三方平台 来实现，大概步骤如下：
 
