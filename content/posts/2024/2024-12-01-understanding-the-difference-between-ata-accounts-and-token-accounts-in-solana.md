@@ -315,7 +315,13 @@ payer代币余额: 400
 
 ![image-20250107142446122](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107142446122.png)
 
-> 上面的 Token Program 是合约ID。
+上面的 Token Program 是合约ID，它是 Solana 官方的代币程序地址.
+
+![image-20250107183026034](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107183026034.png)
+
+> 凡是使用 spl-token program 这种方式开发的程序，这个合约ID就永远不会改变。
+>
+> 如果你是自己的开发合约，在客户端里调用合约的话，则这个合约ID就是部署的合约ID。··
 
 第二笔转账 （user1ATA => user2ATA, 50),
 浏览器地址 https://solscan.io/tx/5QRKXbzZ3udfQF7doGHqJvubNKvosoKeaa5b2rRy4rBbDBoJjgZUUzfKwqC36AXmsKeVcnd8HRu2UefcjM9JRwW7?cluster=custom&customUrl=http://127.0.0.1:8899/
