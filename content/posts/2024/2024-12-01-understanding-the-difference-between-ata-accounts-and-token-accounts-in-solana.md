@@ -5,8 +5,10 @@ type: post
 url: /posts/understanding-the-difference-between-ata-accounts-and-token-accounts-in-solana
 categories:
 - 程序开发
+- web3
 tags:
 - solana
+- web3
 ---
 
 本文主要通过示例让大家理解在 Solana 中 `ATA` 账户与普通账户的关系。
