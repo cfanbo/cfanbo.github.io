@@ -26,6 +26,7 @@ tags:
 - [@solana/spl-token](https://solana-labs.github.io/solana-program-library/token/js/index.html) 用于实现与 SPL Token 和 Token-2022 程序交互。
 
 
+本文通过脚本实现 SPL Token 标准功能，并不需要调用已创建好的智能合约，因此不需要 programId.
 
 # 设置网络环境
 
@@ -90,33 +91,11 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
 配置使用 localhost 作为 RPC 端点
 
 ```type
-  // 1.1 填写合约ID, 即 programID
-  const programId = new PublicKey(
-    "GRw8aJXJaMHYtAkyMer9VqsiUc3e6qRYiuMNYGVhb8oC",
-  );
-
-  // 1.2 设置localhost:8899 rpc
+  // 1 设置localhost:8899 rpc
   // Connect to a solana cluster. Either to your local test validator or to devnet
   //const connection = new Connection("https://api.devnet.solana.com", "confirmed");
   const connection = new Connection("http://localhost:8899", "confirmed");
 ```
-
- 这里的 programId 是指合约部署后生成的 programID, 当合约部署后会看到这个地址。
-
-```
-➜  my-solana-program git:(master) ✗ solana program deploy ./target/deploy/hello_world.so
-Program Id: GRw8aJXJaMHYtAkyMer9VqsiUc3e6qRYiuMNYGVhb8oC
-
-Signature: 3qB7C9DxuZ5WQ3JMj88bFuKLBE71RSw1aEsvNe21qfaLpukcDP3jcwkwTNgHBQraaY1vN91UGVp8BUD3ZEwHwgU1
-```
-
-
-
-如果使用的是 https://beta.solpg.io 网站，它对应
-
-![image-20250107124831399](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107124831399.png)
-
-
 
 # 创建账号
 
@@ -335,6 +314,8 @@ payer代币余额: 400
 浏览器地址 https://solscan.io/tx/d13q4KCfvTjCZrW9qKJVn3JfrAeH4CGR6oPbvpnVzzowxbTUnqnXWv14sEQYn3XjedjkFbdVLejkJC4AeaacRWs?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 ![image-20250107142446122](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107142446122.png)
+
+> 上面的 Token Program 是合约ID。
 
 第二笔转账 （user1ATA => user2ATA, 50),
 浏览器地址 https://solscan.io/tx/5QRKXbzZ3udfQF7doGHqJvubNKvosoKeaa5b2rRy4rBbDBoJjgZUUzfKwqC36AXmsKeVcnd8HRu2UefcjM9JRwW7?cluster=custom&customUrl=http://127.0.0.1:8899/
