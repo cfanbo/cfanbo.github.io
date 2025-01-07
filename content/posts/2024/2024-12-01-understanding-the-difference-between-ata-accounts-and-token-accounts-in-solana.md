@@ -391,7 +391,7 @@ payer代币余额: 400
 
 ![image-20250107145307758](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107145307758.png)
 
-仔细观察的话，会发现这个账户没有 `Owner` 属性，其它两个账户都正常的，这是怎么回事呢？具体原因见：
+仔细观察的话，会发现这个账户没有 `Owner` 属性，其它两个账户都正常的，这是怎么回事呢？具体原因见：https://blog.haohtml.com/posts/why-token-account-have-no-owner-property-in-solana/ 
 
 # 总结
 
