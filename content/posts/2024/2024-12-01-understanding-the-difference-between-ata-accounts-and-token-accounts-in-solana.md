@@ -311,7 +311,7 @@ payer代币余额: 400
 ### ATA 账户详情
 
 第一笔转账 （payerATa => user1ATA, 100）
-浏览器地址 https://solscan.io/tx/d13q4KCfvTjCZrW9qKJVn3JfrAeH4CGR6oPbvpnVzzowxbTUnqnXWv14sEQYn3XjedjkFbdVLejkJC4AeaacRWs?cluster=custom&customUrl=http://127.0.0.1:8899/
+
 
 ![image-20250107142446122](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107142446122.png)
 
@@ -324,22 +324,18 @@ payer代币余额: 400
 > 如果你是自己的开发合约，在客户端里调用合约的话，则这个合约ID就是部署的合约ID。··
 
 第二笔转账 （user1ATA => user2ATA, 50),
-浏览器地址 https://solscan.io/tx/5QRKXbzZ3udfQF7doGHqJvubNKvosoKeaa5b2rRy4rBbDBoJjgZUUzfKwqC36AXmsKeVcnd8HRu2UefcjM9JRwW7?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 ![image-20250107142619368](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107142619368.png)
 
 **payerATA**
-浏览器地址 https://solscan.io/account/GpbxDBXKfdkSCsveExFANyFtPAonBD9xJbGCLp7az1KV?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 ![image-20250107143640932](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107143640932.png)
 
 **user1ATA**
-浏览器地址 https://solscan.io/account/4WGgzpBd1E618VP88w3ihbzHfKuQKSy9pvfJfjNpWci1?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 ![image-20250107143501210](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107143501210.png)
 
 **user2ATA**
- 浏览器地址 https://solscan.io/account/7Ue8JtXa8kW91P3Zo5pw8VeKTzcDN51SNKcrDCHCpZY?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 ![image-20250107143311163](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107143311163.png)
 
