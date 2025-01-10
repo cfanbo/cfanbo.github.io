@@ -103,7 +103,6 @@ main().catch(console.error);
 账户是否存在: true
 账户信息: { owner: 'System Program', lamports: 1000000000 }
 ```
-浏览器地址 https://solscan.io/account/HYpaTT1EsmfyLBWjNcP6AhEW4uaiS8rKXSa5iyK7tGMV?cluster=custom&customUrl=http://127.0.0.1:8899/
 
 可以看到，在账户未初始化时，账户信息是空， 因此浏览里没有显示owner 属性。
 
@@ -111,4 +110,4 @@ main().catch(console.error);
 
 ![image-20250107162031002](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250107162031002.png)
 
-参考资料：https://solana.com/zh/docs/core/accounts
+参考资料： https://solana.com/zh/docs/core/accounts
