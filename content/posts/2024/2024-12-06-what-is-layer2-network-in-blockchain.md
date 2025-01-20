@@ -45,14 +45,14 @@ Rollups 的核心思想是将大量交易打包成一个**批次（Rollup）**�
 
 ## [Optimistic rollups](https://ethereum.org/developers/docs/scaling/optimistic-rollups/)
 
-它假如所有交易都是有效的，但如果怀疑存在无效交易，则提出挑战(质疑)，此时将运行错误证明以查看是否发生这种情况。
+它假设所有交易都是有效的，但如果怀疑存在无效交易，则提出挑战(质疑)，此时将运行错误证明以查看是否发生这种情况。
 
 - **原理**：
 
   - 用户将交易发送到 Optimistic rollups 网络，并将这些交易合并成一个批次，并计算新的状态。
   - 将所有交易数据进行压缩，并和新的状态根提交给 layer1 ，并在layer1进行存储
   - 假设此时所有交易都是有效的，而如果有人质疑批次中的交易，则可以提出挑战(在挑战期内)。
-  - 如果发现无效交易，挑战者可以提交欺诈证明（Fraud Proof），触发状态回滚。
+  - 如果发现无效交易，挑战者可以提交欺诈证明（Fraud Proof），触发状态回滚，并对提交无效交易人进行惩罚。
 
 - **优点**：
 
@@ -96,9 +96,11 @@ Rollups 的核心思想是将大量交易打包成一个**批次（Rollup）**�
   - **zkSync**：https://zksync.io/ 由 Matter Labs 开发，支持以太坊兼容的智能合约。
   - **StarkWare**：https://starkware.co/ 专注于高性能的 ZK-Rollups。
 
+上面提到的两种类型各有优缺点，不同场景需要选择不同的方法，目前使用 Optimistic Rollups 比较多。
+
 ## 总结
 
-上面提到的两种类型各有优缺点，不同场景需要选择不同的方法，目前使用 Optimistic Rollups 比较多。
+**Layer 2 网络**是指通过一层网络主网共识获得安全性的链下解决方案。
 
 Rollups 一句话描述就是通过 **链下计算** 和 **链上存储** 提高区块链的性能和可扩展性。
 
@@ -112,7 +114,7 @@ Rollups 一句话描述就是通过 **链下计算** 和 **链上存储** 提高
 
 # 参考资料
 
-- https://ethereum.org/zh/layer-2/
 - https://ethereum.org/zh/layer-2/learn/
+- https://ethereum.org/zh/developers/docs/scaling/
 - https://ethereum.org/zh/developers/docs/scaling/optimistic-rollups/
 - https://ethereum.org/zh/developers/docs/scaling/zk-rollups/
