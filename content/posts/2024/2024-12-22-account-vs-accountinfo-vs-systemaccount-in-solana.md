@@ -187,7 +187,7 @@ pub struct SystemAccount<'info> {
 
 我们接着再看下 Owner 关系
 
-![image-20250120145751154](/Users/sxf/Library/Application Support/typora-user-images/image-20250120145751154.png)
+![image-20250120145751154](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120145751154.png)
 
 ![image-20250120145818318](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120145818318.png)
 
