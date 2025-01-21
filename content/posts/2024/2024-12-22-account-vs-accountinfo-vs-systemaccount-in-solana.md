@@ -163,7 +163,7 @@ pub struct SystemAccount<'info> {
 >
 > 这里介绍一下合约部署时发生了什么？
 >
-> 说起合约就不得不说一下 Program Account(https://solana.com/docs/core/accounts#program-account) 。
+> 说起合约就不得不提起 Program Account(https://solana.com/docs/core/accounts#program-account) 。
 >
 > 当一个新程序被部署在Solana上后，将创建三个独立的账户，分别为 **Program Account**、**Program Executable Data Account** 和 **Buffer Account**。
 >
