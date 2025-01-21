@@ -145,29 +145,43 @@ pub struct SystemAccount<'info> {
 
 这里的定义要简洁很好，只有一个字段，由此看到相比 Account 账户类型它是没有自定义数据功能的。
 
-那为什么还单独用一个新的struct 对  AccountInfo 呢，直接使用 AccountInfo 不一样么？
+那为什么还单独用一个新的struct 对  AccountInfo 封装呢，直接使用 AccountInfo 不一样么？
 
-答案就在注释内容的描述， 它主要用来验证 `SystemAccount.info.owner == SystemProgram`。注意这时用到了 owner 字段哟，这个很重要，它在用来处理权限判断的，一个账户必须有一个所属者，不同的所属者权限也不一样，这个在 Solana中很重要，下面示例中会发现它们的区别。
+答案就是注释内容，它的主要作用就是验证 `SystemAccount.info.owner == SystemProgram`。注意这里用到了 owner 字段，这个字段很重要，可以用来wdtd权限判断处理。一个账户必须有一个所属者，不同的所属者权限也不一样，这个在 Solana中很重要，在下面的示例中会发现它们的区别。
 
 如这里有一个账户 `9ox8Dd9CSmBuoGqm94aMfvNiPdHZWn71PDEPQCiYhCec`，它的 Owner 是 `E4G3M284c1e5egPntBSYb39BsDwm14qzR7NEPfat7kcp`。
 
 ![image-20250120145324073](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120145324073.png)
 
-而它是一个 Program 类型，也就是合约程序，因此 `executable` 为 TRUE，这一点我们在上面介绍过。
+而它是一个 Program 类型，也就是说它是一个合约程序，因此 `executable` 为 `TRUE`，这一点我们在上面介绍过。
 
 ![image-20250120145633128](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120145633128.png)
 
+细心的话，会发现这里有一个 Executable Data 字段，它其实就是 AccountInfo.data 字段，只不过它现在由于是一个 Program Account ，因此它的 data 字段里存储的是一个存储合约程序源码的特殊的账户地址，这个账户被称为 ”Program Executable Data Account“。
+
 > 说明： 
 >
-> 这里介绍一下 Program Account(https://solana.com/docs/core/accounts#program-account) 。当一个新程序被部署在Solana上后，将创建三个独立的账户，分别为 **Program Account**、**Program Executable Data Account** 和 **Buffer Account**。
+> 这里介绍一下合约部署时发生了什么？
+>
+> 说起合约就不得不说一下 Program Account(https://solana.com/docs/core/accounts#program-account) 。
+>
+> 当一个新程序被部署在Solana上后，将创建三个独立的账户，分别为 **Program Account**、**Program Executable Data Account** 和 **Buffer Account**。
 >
 > 
 >
 > ![Program and Executable Data Accounts](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/program-account-expanded.svg)
 >
-> 因此上图中的 Executable Data 也是一个公钥地址 `2nV7Nv...oMAvCr`，它是一个 Program Executable Data Account，只不过它主要存储的是合约程序代码，因此其 data 字段也比较大。
+> 1. Program Account 
+>
+>    它主要存放合约的一些属性信息，如 Executable: True、Owner: BPF Loader、Lamports 和 Data，只不过这里的 data 存放的是另一个特殊账户(Program Executable Data Account )的公钥地址，这里合约程序源码并没有存放在 Program Account 账户里。
+>
+> 2.  Program Executable Data Account
+>
+> 这个账户主要是用来存储合约程序代码，因此其 data 字段一般都比较大。
 >
 > ![image-20250120151030456](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120151030456.png)
+>
+> 3. Buffer Account
 >
 > 对于 Buffer Account 它是一个临时账户，在部署期间或升级期间会自动创建。一旦该过程完成，数据将被转移至Program Executable Data Account，且缓冲账户随即关闭，它所占用的存储空间会被 **释放**。
 
@@ -187,11 +201,11 @@ pub struct SystemAccount<'info> {
 
 这种账户映射网络同名账户，不创建新账户。
 
-下面为了更好一理解这三种账户，我们通过一个示例来看一下它的执行结果
+下面为了更好的理解这三种账户的区别，通过分析合约指令的输出日志来看看能不能发现些什么？
 
-# 示例讲解
+# 日志分析
 
-为了详细了解这三种账户的区别，这里给出一个示例源码 https://beta.solpg.io/678e3346cffcf4b13384d566
+这里给出合约源码 https://beta.solpg.io/678e3346cffcf4b13384d566
 
 ```rust
 use anchor_lang::prelude::*;
@@ -237,14 +251,15 @@ pub struct NewAccount {
     val: u64,
     new_value: u64,
 }
-
 ```
 
-我们通过 beta.solpg.io 网站左侧的 Test 菜单里填写内容如下：
+我们通过 https://beta.solpg.io 网站左侧的 Test 菜单里填写内容如下：
 
 ![image-20250120192853383](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120192853383.png)
 
-这里一共有五个账户，我们只关心中间的三个账户， 执行输出结果为
+这里一共有五个账户，根据字段命名可以找到其对应的账户类型，这里有两个签名账户。
+
+ signer 是一个payer账户，主要用来支付手续费，最后一个 systemProgram 账户是用来创建账户的，如果没有这个账户将无法创建新账户。这里我们只关心中间的三个账户， 输出日志内容
 
 ```shell
 Testing 'initialize'...
@@ -298,6 +313,8 @@ Confirmed
 
 如果只通过查看这些输出日志理解交易的话，可能有点困难。所以我们这里对比着在浏览器 solscan.io 查看到的交易详情理解的话，可能会比较容易。
 
+最上面的几行是我们当前使用的网络环境，这里使用的 localnet 环境。
+
 ## Solt Number
 
 ```
@@ -306,7 +323,7 @@ Transaction executed in slot 113:
 
 表示当前交易所在的 slot。
 
-对应交易详情
+对应浏览器交易详情
 
 ![image-20250120202752374](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120202752374.png)
 
@@ -371,7 +388,7 @@ Account 4 账户对应 system_program 字段声明的账户，它是指 System P
 
 Program 是指当前合约ID, 接着是指令的一些账户信息以及传递的参数数据，其中 Data 的前八个字节对应的是 ctx参数，后面的两个字节对应的分别是value 和 new_value 参数。
 
-对应浏览器输出
+对应浏览器日志
 
 ![image-20250120202302729](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120202302729.png)
 
@@ -396,7 +413,7 @@ Account 0 账户是支付费用的账户，可以看到余额发生减少；
 
 Account 1 账户 account 账户，它是一个新创建的账户。账户刚创建时初始化余额为0，后续又给这个账户转入了一些sol，因此看到余额发生变化。
 
-对应浏览器日志详情
+对应浏览器日志
 
 ![image-20250120203415674](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120203415674.png)
 
@@ -429,7 +446,7 @@ Confirmed
 
 这里以 Program Log 开头的表示系统日志或用户自定义日志输出。
 
-浏览器日志输出详情
+对应浏览器日志
 
 ![image-20250120201955679](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250120201955679.png)
 
@@ -439,9 +456,13 @@ Confirmed
 
 最后两行日志是执行合约消耗的计算单元和最终执行结果success。
 
+## 总结
+
+通过上面的指令输出，可以看到 AccountInfo 和  SystemAccount 都没有创建账户，只有 Account<'info, T> 账户被创建，同时还了解的一个账户创建的过程被分成两步。
+
 ## 其它
 
-请注意，只有[System Program](https://solana.com/docs/core/accounts#system-program)能够创建新账户，这也是我们在定义 Accounts 时，如果有需要创建新账户的话，必须包含 System Program 的原因（这里指 system_program 字段）。
+请注意，只有 [System Program](https://solana.com/docs/core/accounts#system-program) 能够创建新账户，这也是我们在定义 Accounts 时，如果有需要创建新账户的话，必须包含 System Program 的原因（这里指 system_program 字段）。
 
 下图是一个总署合约时，创建的合约账户信息，`HWKNoRTHV34VJfsc5cnXqNGUeVseFLC61SBNpNZrAfna` 就是我们当前要部署的合约ID。
 
@@ -460,7 +481,7 @@ System Program 一旦创建了账户，便可以将该新账户的所有权转�
 
 # 总结
 
-可能看到对于账户只有 Account<'info, T> 类型的账户调用了创建账户 Create Account 指令（需要在系统内存储数据）。其它两个账户并没有创建， 在合约内 AccountInfo 是指向已经存在账户的引用，不需要初始化，只要在使用的时候，将账户传递给合约即可。对于 SystemAccount 同样也不会创建，它是一个系统账户，在执行一些系统级操作时，需要使用这种账户类型。
+可能看到对于账户只有 `Account<'info, T>` 类型的账户调用了创建账户 `create_account` 指令（需要在系统内存储数据）。其它两个账户并没有创建， 在合约内 AccountInfo 是指向已经存在账户的引用，不需要初始化，只要在使用的时候，将账户地址传递给合约即可。对于 SystemAccount 同样也不会创建，它是一个系统账户，在执行一些系统级操作时，需要使用这种账户类型的权限。
 
 在 Anchor 里只有 Account 可以实现自定义数据的存储，如果要在其它账户上实现此功能的知，只能自己来手动扩展，实现序列化与反序列化了。
 
@@ -474,7 +495,7 @@ System Program 一旦创建了账户，便可以将该新账户的所有权转�
 | **安全性**         | 程序员负责           | Anchor 自动检查        | Anchor 自动检查   |
 | **用途**           | 灵活处理所有账户类型 | 管理带自定义数据的账户 | 仅存储和转账 SOL  |
 
-本篇主要讲了账户在执行指令时，它们的区别，后面会再写一篇通过转账合约示例的文章来看一下三个账户的在转账时用法区别。
+本篇主要讲了在执行指令时它们三者的区别，后面会再写一篇通过转账合约示例的文章来看一下三个账户的在转账时用法区别。
 
 # 其它账户描述
 
