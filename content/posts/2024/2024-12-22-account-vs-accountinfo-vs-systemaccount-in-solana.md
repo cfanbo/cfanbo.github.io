@@ -79,7 +79,7 @@ pub struct Account<'info, T: AccountSerialize + AccountDeserialize + Clone> {
 }
 ```
 
-这里一共两个字段，其中一下 info 字段就是我们上面介绍过的 AdminInfo 结构体。而 account 就是我们的自定义数据，它是一个 T 泛型参数，实现了三个trait。
+这里一共两个字段，其中一下 info 字段就是我们上面介绍过的 `AccountInfo` 结构体。而 account 就是我们的自定义数据，它是一个 T 泛型参数，实现了三个trait。
 
 这三个 trait 用来实现在 `info.data` 和 T 之间进行序列化和反序列化，当然这一切操作完全是由anchor框架来完成的。否则的话，只能由开发人员来自行完成，这就显的太过于繁琐了。
 
