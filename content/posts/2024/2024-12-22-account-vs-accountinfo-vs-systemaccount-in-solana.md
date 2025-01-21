@@ -1,6 +1,6 @@
 ---
 title: Solana中账户类型 Account、AccountInfo与 SystemAccount 的区别
-date: 2024-22-06T17:02:20+08:00
+date: 2024-12-22T17:02:20+08:00
 type: post
 url: /posts/account-vs-accountinfo-vs-systemaccount-in-solana
 categories:
