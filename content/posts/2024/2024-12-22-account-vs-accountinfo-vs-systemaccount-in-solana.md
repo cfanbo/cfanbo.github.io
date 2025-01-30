@@ -519,4 +519,5 @@ System Program 一旦创建了账户，便可以将该新账户的所有权转�
 - https://solana.com/docs/core/accounts
 - https://www.anchor-lang.com/docs/account-types
 - https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html
+- https://docs.rs/anchor-lang/latest/anchor_lang/attr.account.html
 - https://docs.rs/anchor-lang/0.30.1/anchor_lang/?search=Account
