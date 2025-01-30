@@ -103,7 +103,7 @@ pub struct NewAccount {
 
 这里 NewAccount 是我们业务中需要用到的处理数据。
 
-对于它的序列化操作(数据存储)，可以在 [exit_with_expected_owner](https://docs.rs/anchor-lang/0.30.1/src/anchor_lang/accounts/account.rs.html#253-267) 函数中看到一些套路，这里不再介绍
+对于它的序列化操作(数据存储)，可以在 [exit_with_expected_owner](https://docs.rs/anchor-lang/0.30.1/src/anchor_lang/accounts/account.rs.html#253-267) 函数中看到序列化实现，它实现了 [AccountsExit](https://docs.rs/anchor-lang/0.30.1/src/anchor_lang/lib.rs.html#132-140) trait，这里不再介绍。
 
 ```rust
     pub(crate) fn exit_with_expected_owner(
@@ -147,7 +147,7 @@ pub struct SystemAccount<'info> {
 
 那为什么还单独用一个新的struct 对  AccountInfo 封装呢，直接使用 AccountInfo 不一样么？
 
-答案就是注释内容，它的主要作用就是验证 `SystemAccount.info.owner == SystemProgram`。注意这里用到了 owner 字段，这个字段很重要，可以用来wdtd权限判断处理。一个账户必须有一个所属者，不同的所属者权限也不一样，这个在 Solana中很重要，在下面的示例中会发现它们的区别。
+答案就是注释内容，它的主要作用就是验证 `SystemAccount.info.owner == SystemProgram`。注意这里用到了 owner 字段，这个字段很重要，可以用来做权限判断处理。一个账户必须有一个所属者，不同的所属者权限也不一样，这个在 Solana中很重要，在下面的示例中会发现它们的区别。
 
 如这里有一个账户 `9ox8Dd9CSmBuoGqm94aMfvNiPdHZWn71PDEPQCiYhCec`，它的 Owner 是 `E4G3M284c1e5egPntBSYb39BsDwm14qzR7NEPfat7kcp`。
 
@@ -517,4 +517,6 @@ System Program 一旦创建了账户，便可以将该新账户的所有权转�
 # 参考资料
 
 - https://solana.com/docs/core/accounts
+- https://www.anchor-lang.com/docs/account-types
+- https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html
 - https://docs.rs/anchor-lang/0.30.1/anchor_lang/?search=Account
