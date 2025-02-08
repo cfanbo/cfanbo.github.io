@@ -143,7 +143,7 @@ pub struct SystemAccount<'info> {
 }
 ```
 
-这里的定义要简洁很好，只有一个字段，由此看到相比 Account 账户类型它是没有自定义数据功能的。
+这里的定义要简洁很多，只有一个 `info` 字段，因此相比 `Account` 账户类型它是没有自定义数据功能的。
 
 那为什么还单独用一个新的struct 对  AccountInfo 封装呢，直接使用 AccountInfo 不一样么？
 
