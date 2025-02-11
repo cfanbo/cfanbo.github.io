@@ -16,7 +16,7 @@ tags:
 
 # 目的
 
-主要实是为了让开发者加深到 solana中 Account 这一概念的理解，同时搞清楚 `关联代币账户(ATA) ` 在 Solana 中的使用场景和用法，以及多个账户之间的交易和手续费扣除情况。
+主篇内容目的是为了让开发者加深对 solana 中 Account 这一概念的理解，同时搞清楚 `关联代币账户(ATA) ` 在 Solana 开发中的使用场景和用法，以及在多个账户之间的交易和手续费扣除情况。
 
 本篇实现源码会在 [github.com/cfanbo/solana-repos/](https://github.com/cfanbo/solana-repos/tree/main/tokenaccount-and-ata) 中找到。
 
