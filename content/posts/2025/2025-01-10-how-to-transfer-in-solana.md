@@ -17,7 +17,7 @@ tags:
 
 # 修改结构体字段
 
-一种是在不调用（`invoking` ）系统程序（ `System Program` ）的情况下，将 `lamports` 从一个账户转移到另一个账户。它的实现是直接通过修改数据数据结构的字段值来实现的。
+一种是在不调用（`invoking` ）系统程序（ `System Program` ）的情况下，将 `lamports` 从一个账户转移到另一个账户。它的实现是直接通过修改结构体的 `lamports` 字段值来实现的。
 
 这种方法可以实现将 lamports 从任何由您的程序**拥有**的账户转移到任何账户。[文档](https://solana.com/zh/developers/cookbook/programs/transfer-sol)
 
@@ -46,7 +46,7 @@ fn transfer_service_fee_lamports(
 
 # CPI 调用转账
 
-另一种是通过系统调用（System Program）来实现转账，一般是指CPI 跨程序调用，一般是通过 invoke 和 invoke_signed 来实现。同时还有一些函数也可以实现CPI转账，但它们底层均是对这两个函数的封装。
+另一种是通过系统调用（System Program）来实现转账，一般是指CPI 跨程序调用，一般是通过 [invoke](https://docs.rs/solana-sdk/latest/solana_sdk/program/fn.invoke.html) 和 [invoke_signed](https://docs.rs/solana-sdk/latest/solana_sdk/program/fn.invoke_signed.html) 两个函数来实现(还有两个不常用的 [invoke_signed_unchecked](https://docs.rs/solana-sdk/latest/solana_sdk/program/fn.invoke_signed_unchecked.html) 和 [invoke_unchecked](https://docs.rs/solana-sdk/latest/solana_sdk/program/fn.invoke_unchecked.html) 函数)。同时还有一些函数也可以实现CPI转账，但它们底层均是对这两个函数的封装，如 `anchor_lang::system_program::transfer()`。
 
 跨程序调用参考 https://solana.com/zh/developers/cookbook/programs/cross-program-invocation。
 
@@ -54,11 +54,11 @@ CPI 转账调用示例 https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree
 
 这在 Solana 中是推荐的使用方法，CPI 是开发中经常使用到的一种方法，很值的了解学习它的用法。
 
-则对于CPI 的调用，也有三种
+则对于CPI 的调用，也有几种，有兴趣的话可以看这里 https://www.anchor-lang.com/docs/basics/cpi#example-explanation-1
 
 # 区别
 
-第一种方法比较高效，但有一个缺点，那就是没有交易记录，你在链上看不到账户余额的变化，因此平时都推荐使用第二种CPI的方式转账，有兴趣的可以看这里 https://www.anchor-lang.com/docs/basics/cpi#example-explanation-1。
+第一种方法比较高效，但有一个缺点，那就是没有交易记录，你在链上看不到账户余额的变化，因此平时都推荐使用第二种CPI的方式转账。
 
 # 参考文档
 
