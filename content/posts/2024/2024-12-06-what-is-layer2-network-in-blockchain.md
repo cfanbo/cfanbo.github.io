@@ -1,8 +1,8 @@
 ---
-title: 什么是Layer 2网络
+title: 什么是Layer2网络
 date: 2024-12-06T14:02:20+08:00
 type: post
-url: /posts/what-is-Layer 2-network-in-blockchain
+url: /posts/what-is-Layer2-network-in-blockchain
 categories:
 - 程序开发
 - web3
