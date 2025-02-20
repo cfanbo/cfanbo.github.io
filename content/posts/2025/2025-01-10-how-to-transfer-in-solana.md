@@ -54,7 +54,7 @@ CPI 转账调用示例 https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree
 
 这在 Solana 中是推荐的使用方法，CPI 是开发中经常使用到的一种方法，很值的了解学习它的用法。
 
-对于转账的场景，有一个情况需要考虑到。如果支付账户是否为 PDA 账户，因为转账需要交易签名，而PDA账户是没有私钥的，因此没有办法直接调用 `invoke` 函数转账，只能通过 `invoke_signed` 函数调用，同时指定生成PTA账号的签名信息才可以。如 
+对于转账的场景，有一个情况需要考虑到。如果支付账户为 PDA 账户，而转账需要对交易进行签名，而PDA账户是没有私钥的，因此没有办法直接调用 `invoke` 函数转账，只能通过 `invoke_signed` 函数调用，同时指定生成PTA账号的签名信息才可以。如 
 
 ```rust
     pub fn sol_transfer_two(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
