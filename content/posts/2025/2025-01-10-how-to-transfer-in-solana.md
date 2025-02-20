@@ -74,7 +74,7 @@ CPI 转账调用示例 https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree
     }
 ```
 
-这里 `from_pubkey` 是一个 `PDA` 账号，它没有私钥，只能通过组装 `signer_seeds` 作为签名实现转账功能。
+这里 `from_pubkey` 是一个 `PDA` 账号，它没有私钥，只能通过组装 `signer_seeds` 作为签名实现转账功能。类似的还有 https://github.com/solana-developers/program-examples/blob/main/tokens/token-fundraiser/anchor/programs/fundraiser/src/instructions/refund.rs#L72-L92 。
 
 对于CPI 的调用，也分几种情况，有兴趣的话可以看这里 https://www.anchor-lang.com/docs/basics/cpi#example-explanation-1
 
