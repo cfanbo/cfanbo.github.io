@@ -3,6 +3,7 @@ title: Solana中 PDA、ATA 与 普通Account 的区别与关系
 date: 2025-02-15T10:02:20+08:00
 type: post
 url: /posts/pda-ata-account-in-solana
+toc: true
 categories:
 - 程序开发
 - web3

@@ -2,6 +2,7 @@
 title: Solana中如何实现转账
 date: 2025-01-10T10:02:20+08:00
 type: post
+toc: true
 url: /posts/how-to-transfer-in-solana
 categories:
 - 程序开发
