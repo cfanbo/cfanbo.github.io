@@ -3,6 +3,7 @@ title: 在Solana中为什么Token Account没有owner属性
 date: 2024-12-02T15:12:40+08:00
 type: post
 url: /posts/why-token-account-have-no-owner-property-in-solana
+toc: true
 categories:
 - 程序开发
 - web3

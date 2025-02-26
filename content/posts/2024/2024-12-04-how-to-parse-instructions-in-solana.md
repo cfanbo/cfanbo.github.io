@@ -3,6 +3,7 @@ title: Solana中如何解析指令
 date: 2024-12-04T12:35:20+08:00
 type: post
 url: /posts/how-to-parse-instructions-in-solana
+toc: true
 categories:
 - 程序开发
 - web3

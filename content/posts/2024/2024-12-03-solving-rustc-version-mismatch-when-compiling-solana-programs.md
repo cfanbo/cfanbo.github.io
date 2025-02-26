@@ -3,6 +3,7 @@ title: 解决编译solana程序 rustc版本号过低的问题
 date: 2024-12-03T13:52:20+08:00
 type: post
 url: /posts/solving-rustc-version-mismatch-when-compiling-solana-programs
+toc: true
 categories:
 - 程序开发
 - web3
