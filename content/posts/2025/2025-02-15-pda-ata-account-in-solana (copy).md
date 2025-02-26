@@ -78,11 +78,11 @@ Solana 地址直接使用公钥并通过 Base58 编码，而以太坊则先对�
 
 一个普通的账户地址是指在Ed25519 曲线（椭圆曲线加密）上的一个点，如 Alice 和 Bob 它们都属于基本账户，都有公钥和私钥。
 
-![On Curve Address](https://solana.com/assets/docs/core/pda/address-on-curve.svg)
+![On Curve Address](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/address-on-curve.svg)
 
 而 PDA 账户是表示在 Ed25519 曲线之外的点，它只有公钥，没有私钥。需要借助一些预定义的种子集来推导生成。
 
-![Off Curve Address](https://solana.com/assets/docs/core/pda/address-off-curve.svg)
+![Off Curve Address](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/address-off-curve.svg)
 
 PDA 地址生成公式
 
@@ -113,7 +113,7 @@ console.log(`Bump: ${bump}`);
 
 PDA 地址的计算过程为
 
-![PDA Derivation](https://solana.com/assets/docs/core/pda/pda-derivation.svg)
+![PDA Derivation](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/pda-derivation.svg)
 
 
 
@@ -123,7 +123,7 @@ ATA（Associated Token Account） 账户是一个特殊的 PDA 账户，同样�
 
 其地址生成是使用 Owner 地址和 Mint Account 地址确定性通过 PDA 派生的，它是一个 spl-token 代币地址。可以将关联代币账户视为特定**铸币**和**所有者**的“默认”代币账户。
 
-![Associated Token Account](https://solana.com/assets/docs/core/tokens/associated-token-account.svg)
+![Associated Token Account](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/associated-token-account.svg)
 
 示例
 
