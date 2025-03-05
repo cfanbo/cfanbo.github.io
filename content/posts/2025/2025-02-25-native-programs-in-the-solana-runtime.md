@@ -20,11 +20,11 @@ tags:
 
 # System Program
 
-- 使用：
- - 创建新帐户
- - 分配帐户数据
- - 将帐户分配给所属的程序，即指定账户与程序的对应关系
- - 转账最小 lamports 给账户(租金)，防止账户被系统回收
+- 作用：
+   - 创建新帐户
+   - 分配帐户数据
+   - 将帐户分配给所属的程序，即指定账户与程序的对应关系
+   - 转账最小 lamports 给账户(租金)，防止账户被系统回收
 
 - Program id: `11111111111111111111111111111111`
 - Instructions: [SystemInstruction](https://docs.rs/solana-program/2.2.0/solana_program/system_instruction/enum.SystemInstruction.html)
