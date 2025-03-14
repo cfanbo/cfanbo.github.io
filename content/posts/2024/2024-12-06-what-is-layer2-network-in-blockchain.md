@@ -38,11 +38,11 @@ Layer 2 也是一个独立的区块链，它扩展了以太坊。这在很大程
 
 Rollups 的核心思想是将大量交易打包成一个**批次（Rollup）**在**链下**处理，仅在 Layer 1 上存储**交易数据**和**验证证明**，从而降低交易手续费。
 
-> 在区块链的中，**链下** 是指不在 Layer 1（主链）上直接处理交易或计算，而是将这些任务转移到 Layer 2 网络或其他链下环境中执行
+> 在区块链中，**链下** 是指不在 Layer 1（主链）上直接处理交易或计算，而是将这些任务转移到 Layer 2 网络或其他链下环境中执行。
 
 ![img](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/layer2-network.webp)
 
-针对 Rollups 分两种类型，`乐观汇总 `和 `零知识证明`， ——它们的主要区别在于如何将此交易数据提交到 Layer 1网络。
+针对 Rollups 分两种类型，`Optimistic rollups(乐观汇总) `和 `Zero knowledge rollups(零知识证明)`， 它们两者的主要区别在于如何将此交易数据提交到 Layer 1网络。
 
 ## [Optimistic rollups](https://ethereum.org/developers/docs/scaling/optimistic-rollups/)
 
