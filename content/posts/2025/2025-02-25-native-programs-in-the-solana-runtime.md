@@ -55,5 +55,5 @@ BPF可升级加载器将自己标记为它为存储程序而创建的可执行�
 
 # 参考资料
 
-- https://docs.anza.xyz/runtime/program
+- https://docs.anza.xyz/runtime/programs
 - https://solana.com/zh/docs/core/accounts#native-programs
