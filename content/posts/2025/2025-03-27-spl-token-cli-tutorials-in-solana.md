@@ -675,6 +675,24 @@ Error: "Mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR does not support close
 
 提示不支持 close authority 功能，这是由于我们在 create-token 时并没有使用 Token 2022 扩展程序，同时启用 `--enable-close` 参数。
 
+# 总结
+
+不要试图认为学会了命令行工具如何使用等于学会了Solana中的 Program 开发，它只不过是官方为了方便大家更好的理解一些solana中的概念而推出的一个命令行工具而已。
+
+通过本文介绍的一些方法，至少明白 Mint Account 和 Token Account 之间的区别与关系。
+
+通过本文章的介绍应该知道以下几点：
+
+1. 在solana中，一切皆账户（类似Linux中一切皆文件的概念）
+2. 创建一种代币就是创建一个 mint account账户
+3. 一个 mint account 可以创建从个 Token Account ，这些 Token Account 是通过PDA生成的，简称为 ATA，它是没有私钥的
+4. 每个账户在区块链上要想存在，必须支付一定的租金（有两年免租的概念）
+5. 账户不用的话，需要close掉，以回收SOL租金
+6. close账户前要保证账户没有代码，如果有代币的话，可以burn掉或者transfer给其它Token Account
+7. 官方提供了两个程序，分别为 Token Program 和 Token Extensions Program，后者简称为 Token 2022，它是官方新推荐的程序，因为官方为其提供了一系列的扩展，这在使用 Anchor 框架开发时，尤其的方便，强烈推荐使用。
+8. 对于ATA 账户它是不可变账户，这里的不可变是指 owner 无法修改，这是出于安全问题考虑
+9. 对于NFT开发方法与上面类似，只不过指定了 Mint Account的 decimlas 为0, 同时supply 为1，并禁止 mint Account铸造token, 同时还会有一个关联的额外元数据账户（[nft](https://solana.com/zh/developers/courses/tokens-and-nfts/nfts-with-metaplex#nfts-on-solana)）
+
 
 
 # 参考资料
