@@ -176,13 +176,12 @@ Error: "Account 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa not found"
 > 如果要实现设置token的 metadata，则需要使用命令
 >
 > ```shell
-> spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
-> --enable-metadata --enable-close
+> spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata --enable-close
 > ```
->
-> 这里 TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 是官方提供的 Token 2022 扩展程序，而后面的参数 `--enable-metadata` 则表示启用 metadata 扩展，--enable-close 是否启用关闭mint Account权限.
->
-> 如果不通过 --program-id 参数指定token2022 的话，则默认使用官方提供的另一个程序 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` ，它不支持扩展功能，因此现在新功能将无法提到支持。
+> 
+>这里 TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 是官方提供的 Token 2022 扩展程序，而后面的参数 `--enable-metadata` 则表示启用 metadata 扩展，--enable-close 是否启用关闭mint Account权限.
+> 
+>如果不通过 --program-id 参数指定token2022 的话，则默认使用官方提供的另一个程序 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` ，它不支持扩展功能，因此现在新功能将无法提到支持。
 
 # 创建 token Account
 
@@ -372,17 +371,17 @@ SPL Token Account
 
 # 铸币 Mint Token
 
-经过上面两步，我们有了 Mint Account 账户和 Token Account 账户，现在我们为每个 Token Account 铸造一些代币。每一个账户铸造 100 个代币，第二个账户铸造20 个代币，并查看 Mint Account 账户的供应量 Supply 变化。
+经过上面两步，我们有了 Mint Account 账户和 Token Account 账户，现在我们为每个 Token Account 铸造一些代币。第一个账户铸造 100 个代币，第二个账户铸造20 个代币，并查看 Mint Account 账户的供应量 Supply 变化。
 
 命令格式：
 
 ```shell
-2 [OPTIONS] <TOKEN_ADDRESS> <TOKEN_AMOUNT> [--] [RECIPIENT_TOKEN_ACCOUNT_ADDRESS]
+spl-token mint [OPTIONS] <TOKEN_ADDRESS> <TOKEN_AMOUNT> [--] [RECIPIENT_TOKEN_ACCOUNT_ADDRESS]
 ```
 
-这里 <TOKEN_ADDRESS> 表示Mint Account Address，而 [RECIPIENT_TOKEN_ACCOUNT_ADDRESS] 表示 Token Account Address。
+这里 `<TOKEN_ADDRESS>` 表示Mint Account Address，而 `[RECIPIENT_TOKEN_ACCOUNT_ADDRESS]` 表示 Token Account Address。
 
-第一个账户，使用不指定 RECIPIENT_TOKEN_ACCOUNT_ADDRESS，由于其有默认的对应 ATA 地址，即第一个账户地址
+第一个账户，省略接收账户地址 `RECIPIENT_TOKEN_ACCOUNT_ADDRESS`，则会使用本地的默认账户（`/Users/sxf/.config/solana/id.json`）作为目标地址。
 
 ```shell
 (base) ➜  ~ spl-token mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR 100
@@ -394,7 +393,7 @@ Minting 100 tokens
 Signature: 5nDdtJXi7S5FXkEKtS7w37JnrEXRYB4KxKGBLCVVbaczByCi1KMxoXTefYzDmacyd7WSGA9H6S8EfJv69QdMZMjw
 ```
 
-通过账户详情，查看供应量
+查看 Mint Account 供应量
 
 ```shell
 (base) ➜  ~ spl-token display DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR
@@ -408,11 +407,11 @@ SPL Token Mint
   Freeze authority: (not set)
 ```
 
-看到 Supply 值变为 100 * 10**9， 这里的 9 就是 Decimals 的值。
+看到 Supply 值变为 `100 * 10**9`， 这里的 `9` 就是 `Decimals` 的值。
 
 
 
-第二个账户，使用完整的指定接收账户地址
+第二个账户，指定接收账户地址 `RECIPIENT_TOKEN_ACCOUNT_ADDRESS`
 
 ```shell
 (base) ➜  ~ spl-token mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR 20 -- 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv
@@ -431,7 +430,7 @@ Signature: 27skMNxq1VW5Wasu9cSMsPqJHe2auYyaUM7LJvyLoNjvczDYaMTw3gCk8odqYQhifi6Lr
 120
 ```
 
-仔细观察的话，会发现通过 spl-token supply 命令查看的结果是120，这与 spl-token display 命令显示的不一样。
+仔细观察的话，会发现通过 `spl-token supply` 命令查看的结果是 `120`，这与 `spl-token display` 命令显示的不一样。
 
 
 
@@ -470,7 +469,7 @@ Transfer 10 tokens
 Signature: xJroywwG1cmc6R86VmxKXjSj8daDLb4rQyi2iczsFdnAguC6VfGFkbVuFhptAWbq4hLpyJ1WJGJxnhKSxPvibGU
 ```
 
-注意，这里并没有指定 --owner 参数，默认会读取本地配置的文件，这里将读取 `/Users/sxf/.config/solana/id.json` 文件 。
+注意，这里省略了 `--owner` 参数，则默认使用本地配置的文件 `/Users/sxf/.config/solana/id.json` 账户生成的ATA作为支付账户 。
 
 确认两个账户余额
 
@@ -505,12 +504,13 @@ Signature: 2xKDhD6WZyR8EeNLSwZgNgMDHUEGZnPmqMYV5k96Dm49V9LAp8BzXchamSLdppWMPd4fK
 
 第二个账户 -> 10 -> 第一个账户
 
-这里需要--owner 参数指定 sender 账户的密钥文件。
+通过 `--owner` 参数指定 sender 账户的密钥文件。
 
 转账命令
 
 ```
 (base) ➜  ~ spl-token transfer DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR 10 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa --owner ./player1.json
+
 Transfer 10 tokens
   Sender: 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv
   Recipient: 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa
@@ -518,7 +518,7 @@ Transfer 10 tokens
 Signature: 4UyouAJEHJtBLSFE6CeP1jfFVuVFdBqyj3PriHjTQ8qYWMDnfDg1oeAvsq2myniV3hoXUB7RqwWwT5a5jNwWAqzh
 ```
 
-这时发现 sender 是第二个用户了，它是通过 `--owner ./player1.json` 来实现的。
+这时发现 sender 是第二个用户了，这里它是通过 `--owner ./player1.json` 来实现的。
 
 现在我们再看一下两个账户的余额
 
@@ -533,7 +533,7 @@ Signature: 4UyouAJEHJtBLSFE6CeP1jfFVuVFdBqyj3PriHjTQ8qYWMDnfDg1oeAvsq2myniV3hoXU
 
 
 注意：
-对于账户之间的转账，并不会影响 Mint Account 的总供应量大小。
+对于账户之间的转账，并不会影响 `Mint Account` 的总供应量大小。
 
 
 
@@ -612,22 +612,24 @@ Signature: 3a9VUhkYqaFVq41XhATe3zhLcZzAL7DMnveMwTkpsD8YSiRbE8NfxM885ufBJvnpDyFa6
 
 ![image-20250327134722368](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327134722368.png)
 
-可以看到关闭账户后，赎回 0.00203928 SOL 给原来支付账户。
+可以看到关闭账户后，赎回 `0.00203928 SOL` 给原来支付账户。
 
-现在账户已被关闭，再次使用这个账户时，将提示账户不存在错误，如
+如果后续再次使用这个账户的话，将提示账户不存在错误，如
 
 ```shell
 (base) ➜  ~ spl-token display 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa
 Error: "Account 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa not found"
 ```
 
-这里查看一下 mint Account 供应量将发现由 80 变为了  20。
+这里查看一下 Mint Account 供应量将发现由 80 变为了  20。
 
-接着我们burn并close第二个账户，在此之前我们先看一下这个账户的租金情况
+接着我们关闭第二个账户，在此之前我们先看一下这个账户的租金情况
 
 ![image-20250327140341478](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327140341478.png)
 
-租金为 0.002039 SOL，后面将返回支付人这个金额。
+租金金额为 `0.002039 SOL`，后面将全部返回支付人。
+
+同样先 burn 掉这个账户的代币。
 
 ```shell
 (base) ➜  ~ spl-token burn 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv 20
@@ -636,7 +638,7 @@ Burn 20 tokens
 Error: Client(Error { request: Some(SendTransaction), kind: RpcError(RpcResponseError { code: -32002, message: "Transaction simulation failed: Error processing Instruction 0: custom program error: 0x4", data: SendTransactionPreflightFailure(RpcSimulateTransactionResult { err: Some(InstructionError(0, Custom(4))), logs: Some(["Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]", "Program log: Instruction: BurnChecked", "Program log: Error: owner does not match", "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4394 of 4394 compute units", "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA failed: custom program error: 0x4"]), accounts: None, units_consumed: Some(4394), return_data: None, inner_instructions: None, replacement_blockhash: None }) }) })
 ```
 
-出现错误“**owner does not match**”，这是因为这个账户是使用 `player1.json` 用户生成的，而非本地默认账户，因此需要通过 --owner 指定私钥。
+出现错误“**owner does not match**”，这是因为这个账户是使用 `player1.json` 用户生成的，而非本地默认账户(`/Users/sxf/.config/solana/id.json`)，因此需要通过 `--owner` 指定账户私钥。
 
 ```shel
 (base) ➜  ~ spl-token burn 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv 20 --owner ./player1.json
@@ -650,7 +652,7 @@ Signature: 5FEYNn5Uf2XnZckg5SJkDVJDPtHgMf3BjrD4H6b9wwtwrJimvGo6mRz11ynmqBRxJ8Q4t
 
 ![image-20250327140030227](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327140030227.png)
 
-同样对于关闭账户，也需要指定 owner
+同样，对于关闭账户也需要指定 owner
 
 ```shell
 (base) ➜  ~ spl-token close --address 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv --owner ./player1.json
@@ -662,18 +664,26 @@ Signature: 3nJCba7LPCPuY8QgoRZ4NVa55UtSzLiRNbnMyvdZ7HXYoogFfFXCAj6cpsb9L1pLFJGVN
 
 ![image-20250327140255445](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327140255445.png)
 
-返回的金额正是这个账户的租金大小。
+可以看到，第二个账户的租金全部返还给原来支付账户。
 
 ## 关闭 Mint Account
 
-关闭 mint account 
+已经关闭了两个 `Token Account` 账户，现在我们不需要关闭 `Mint Account` 账户。
 
 ```shell
 (base) ➜  ~ spl-token close-mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR
 Error: "Mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR does not support close authority"
 ```
 
-提示不支持 close authority 功能，这是由于我们在 create-token 时并没有使用 Token 2022 扩展程序，同时启用 `--enable-close` 参数。
+提示不支持 `close authority` 功能，表示当前 `Mint Account` 账户并不支持关闭账户操作。
+
+如果想实现关闭 Mint  Account 功能，需要在 create-token 时指定使用 Token 2022 扩展程序，同时启用 `--enable-close` 参数，如
+
+```shell
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-close
+```
+
+
 
 # 总结
 
