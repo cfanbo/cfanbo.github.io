@@ -141,7 +141,7 @@ Decimals： 小数位数
 
 Mint authority：铸造权限，只有这个地址可以铸造更多的该 Token，这里使用的是本地账户
 
-Freeze authority： 表示哪个账户有冻结账户的权限，这里表示为空
+Freeze authority： 表示哪个账户有冻结当前 Token Account 的权限，这里为空表示Token Account 无法被冻结
 
 > 如果使用的是 Token 2022 程序，则可能输出
 >
