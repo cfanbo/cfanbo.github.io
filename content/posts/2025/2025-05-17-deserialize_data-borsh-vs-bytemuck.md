@@ -133,6 +133,13 @@ Bytemuck struct首地址 = 0x134008800
    let reference: &T = &*ptr;
    ```
 
+   或 mut 类型引用
+
+   ```rust
+   let ptr: *mut T = bytes.as_mut_ptr() as *mut T; // 获取可变指针
+   let reference: &mut T = &mut *ptr;             // 强制转换为可变引用
+   ```
+
    注意，这里并没有进行任何数据的复制！没有复制！没有复制！
 
 3. 返回类型引用 `&T` 或 `&mut T`
@@ -161,5 +168,45 @@ Bytemuck struct首地址 = 0x134008800
 
 1. 要实现 Pod 和 Zeroable 这两个trait
 2. 要保证内存对齐要求 `repc(c)`，而对于` repc(packed)` 则表示告诉编译器**取消字段的默认对齐填充（padding）**，结构体紧凑排列，它是一个可选项。一般推荐两者一起使用。
+
+通过使用 bytemuck ，我们即可以读取原来的数据，还可以对原来的数据进行修改，如
+
+```rust
+use bytemuck::{Pod, Zeroable};
+
+#[repr(C, packed)]
+#[derive(Clone, Copy, Pod, Zeroable, Debug)]
+struct MyStruct {
+    x: u32,
+    y: u32,
+}
+
+fn main() {
+    let mut raw_bytes = [1u8, 0, 0, 0, 2, 0, 0, 0]; // 对应 MyStruct { x: 1, y: 2 }
+		println!("底层字节: {:?}", raw_bytes);
+  
+    // ---------- 可变零拷贝 ----------
+    let acc: &mut MyStruct = bytemuck::from_bytes_mut(&mut raw_bytes);
+    println!("修改前: {:?}", acc);
+
+    // 修改字段
+    acc.x = 100;
+    acc.y = 200;
+
+    println!("修改后: {:?}", acc);
+    println!("底层字节: {:?}", raw_bytes);
+}
+```
+
+输出
+
+```shell
+底层字节: [1, 0, 0, 0, 2, 0, 0, 0]
+修改前: MyStruct { x: 1, y: 2 }
+修改后: MyStruct { x: 100, y: 200 }
+底层字节: [100, 0, 0, 0, 200, 0, 0, 0]
+```
+
+这里修改了字段值 x=100, y=200。
 
 希望通过这一篇博文，方便大家更好的理解 bytemuck 的原理及它的使用场景。
