@@ -1,0 +1,25 @@
+{{ define "main" }}
+  <article class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | default "mid-gray" }}">
+    {{ .Content }}
+  </article>
+
+  {{/* Define a section to pull recent posts from. For Hugo 0.20 this will default to the section with the most number of pages. */}}
+  {{ $mainSections := .Site.Params.mainSections | default (slice "posts") }}
+  {{ $section := where .Site.RegularPages "Section" "in" $mainSections }}
+  
+  {{ $paginator := .Paginate $section }}
+  
+  <div class="pa3 pa4-ns w-100 w-70-ns center">
+    <section class="w-100 mw8">
+      {{/* Range through the paginator pages */}}
+      {{ range $paginator.Pages }}
+        <div class="w-100 mb4 relative">
+          {{ .Render "summary-with-image" }}
+        </div>
+      {{ end }}
+    </section>
+
+    {{/* Pagination */}}
+    {{ template "_internal/pagination.html" . }}
+  </div>
+{{ end }}
