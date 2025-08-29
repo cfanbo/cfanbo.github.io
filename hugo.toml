@@ -11,6 +11,11 @@ pagination.pagerSize = 15
 show_reading_time = true
 googleAnalytics = "G-544832BXMX"
 
+ignoreLogs = ['warning-goldmark-raw-html']
+
+[markup.goldmark.renderer]
+unsafe = true
+
 [[menu.main]]
 identifier = "linux"
 name = "Linux"
