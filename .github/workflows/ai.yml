@@ -1,0 +1,45 @@
+name: Issue Completeness Check
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  models: read
+
+jobs:
+  check-completeness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check issue completeness
+        uses: actions/ai-inference@v1
+        id: ai
+        with:
+          prompt: |
+        Please analyze the article link provided in the GitHub Issue and perform the following tasks:
+
+1. Check the article content for spelling errors, grammatical mistakes, and inappropriate word usage
+2. Identify factual errors, logical contradictions, or outdated information
+3. Evaluate technical accuracy (if technical content is involved)
+4. Classify issues by severity level and provide specific correction suggestions
+
+Please respond in a structured format including error location, error type, correction suggestions, and confidence assessment.
+
+            Title: ${{ github.event.issue.title }}
+            Body: ${{ github.event.issue.body }}
+          system-prompt: You are a helpful assistant that helps analyze GitHub issues for completeness.
+          model: openai/gpt-4o-mini
+          temperature: 0.2
+
+      - name: Comment on issue
+        if: steps.ai.outputs.response != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ github.event.issue.number }},
+              body: `${{ steps.ai.outputs.response }}`
+            })
