@@ -17,15 +17,13 @@ jobs:
         id: ai
         with:
           prompt: |
-        Please analyze the article link provided in the GitHub Issue and perform the following tasks:
-
-1. Check the article content for spelling errors, grammatical mistakes, and inappropriate word usage
-2. Identify factual errors, logical contradictions, or outdated information
-3. Evaluate technical accuracy (if technical content is involved)
-4. Classify issues by severity level and provide specific correction suggestions
-
-Please respond in a structured format including error location, error type, correction suggestions, and confidence assessment.
-
+              Please analyze the article link provided in the GitHub Issue and perform the following tasks:
+              1. Check the article content for spelling errors, grammatical mistakes, and inappropriate word usage
+              2. Identify factual errors, logical contradictions, or outdated information
+              3. Evaluate technical accuracy (if technical content is involved)
+              4. Classify issues by severity level and provide specific correction suggestions
+              Please respond in a structured format including error location, error type, correction suggestions, and confidence assessment.
+            Title: ${{ github.event.issue.title }}
             Title: ${{ github.event.issue.title }}
             Body: ${{ github.event.issue.body }}
           system-prompt: You are a helpful assistant that helps analyze GitHub issues for completeness.
