@@ -1,8 +1,10 @@
-name: Issue Completeness Check
+name: Issue Article Accuracy Check
 
 on:
   issues:
-    types: [opened]
+    types: 
+      - opened
+      - edited
 
 permissions:
   issues: write
@@ -16,17 +18,26 @@ jobs:
         uses: actions/ai-inference@v1
         id: ai
         with:
+          # 系统提示：定义 AI 的角色和行为准则
+          system-prompt: >
+            You are an expert reviewer. Your goal is to thoroughly analyze the article linked in the GitHub Issue.
+            You should:
+            1. Verify spelling, grammar, and word usage.
+            2. Detect factual errors, outdated information, and technical inaccuracies.
+            3. Identify logical contradictions or inconsistencies.
+            4. Provide structured feedback including error location, type, suggested correction, and confidence level.
+
+          # 具体任务和输入数据
           prompt: |
-              Please analyze the article link provided in the GitHub Issue and perform the following tasks:
-              1. Check the article content for spelling errors, grammatical mistakes, and inappropriate word usage
-              2. Identify factual errors, logical contradictions, or outdated information
-              3. Evaluate technical accuracy (if technical content is involved)
-              4. Classify issues by severity level and provide specific correction suggestions
-              Please respond in a structured format including error location, error type, correction suggestions, and confidence assessment.
-            Title: ${{ github.event.issue.title }}
-            Title: ${{ github.event.issue.title }}
-            Body: ${{ github.event.issue.body }}
-          system-prompt: You are a helpful assistant that helps analyze GitHub issues for completeness.
+            Please analyze the article linked in the GitHub Issue and perform the following tasks:
+            1. Check the article content for spelling errors, grammatical mistakes, and inappropriate word usage
+            2. Identify factual errors, logical contradictions, or outdated information
+            3. Evaluate technical accuracy (if technical content is involved)
+            4. Classify issues by severity level and provide specific correction suggestions
+            Please respond in a structured format including error location, error type, correction suggestions, and confidence assessment.
+
+          Title: ${{ github.event.issue.title }}
+          Body: ${{ github.event.issue.body }}
           model: openai/gpt-4o-mini
           temperature: 0.2
 
@@ -35,9 +46,32 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
+            const commentBody = `**[AI Article Review]**\n\n${{ steps.ai.outputs.response }}`;
+
+            // 获取该 Issue 的所有评论
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ github.event.issue.number }},
-              body: `${{ steps.ai.outputs.response }}`
-            })
+            });
+
+            // 查找之前是否已经有 AI 评论
+            const existingComment = comments.find(c => c.body.startsWith('**[AI Article Review]**'));
+
+            if (existingComment) {
+              // 更新已有评论
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody,
+              });
+            } else {
+              // 新建评论
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: ${{ github.event.issue.number }},
+                body: commentBody,
+              });
+            }
