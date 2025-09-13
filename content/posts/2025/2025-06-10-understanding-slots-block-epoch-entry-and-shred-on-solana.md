@@ -1,5 +1,5 @@
 ---
-title: Understanding Slots Block Epoch Entry and Shred on Solana
+title: 理解Solana中的 Slots、 Block、 Epoch、 Entry、Shred 和 PoH
 date: 2025-06-10T09:32:00+08:00
 type: post
 url: /posts/understanding-slots-block-epoch-entry-and-shred-on-solana
