@@ -1,5 +1,5 @@
 ---
-title: 理解Solana中的 Slots、 Block、 Epoch、 Entry、Shred 和 PoH
+title: 理解 Solana 中的 Slot、Block、Epoch、Entry、Shred 和 PoH
 date: 2025-06-10T09:32:00+08:00
 type: post
 url: /posts/understanding-slots-block-epoch-entry-and-shred-on-solana
@@ -63,7 +63,7 @@ tags:
 
 
 
-### Slots 
+### Slot
 
 Slot 是验证者生成区块的最小时间单位，每个 Slot 持续约 400 毫秒。Slot 根据 Leader 调度表选择 Leader 节点来生成区块。
 
@@ -164,7 +164,7 @@ Entry {
 
 
 
-### Blocks
+### Block
 
 而blocks可以简单的理解成一个slot，每一个block 对应一个slot ,但每一个slot并不一定对应block。主要是因为只有当slot包含交易的时候才会生成一个block，如果没有交易，而不生成block。
 
