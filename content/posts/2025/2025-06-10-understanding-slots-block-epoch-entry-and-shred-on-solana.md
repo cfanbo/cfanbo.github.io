@@ -224,7 +224,7 @@ Entry 的数据数据定义如下
 
 ###  Shred
 
-上面介绍 Entry 的时候，讲过交易广播是通过 turbine 协议，以 shred 的形式将 entry 广播到其它节点。
+上面介绍 Entry 的时候，讲过交易广播是通过 Turbine 协议，以 shred 的形式将 entry 广播到其它节点。
 
 什么意思呢？一个 Entry 可能包含许多交易，数据量比较大，可能几十KB，如果直接原封不动的在网络上直接传播的话，可能存以下问题
 
@@ -239,7 +239,9 @@ Entry 的数据数据定义如下
 - Data Shred：包含实际的交易数据（entry 的内容）
 - Coding Shred: 冗余wvth，基于 纠删码（Erasure Coding）生成，用于容错
 
-而在 Solana 里使用的是  **Reed–Solomon 纠删码**。对每一批 Data Shred ，Leader 节点会额外计算一些 Coding shred，这样可以实现即时部分 Data Shred 丢失，只要收到足够数量的 Data shred + Coding Shred，就可以恢复完整的数据Entry。这个很类似于 RAID 技术，即时部分数据丢失也不影响数据的完整性。
+而在 Solana 里使用的是  **Reed–Solomon 纠删码**。对每一批 Data Shred ，Leader 节点会额外计算一些 Coding shred（或称为 Recovery Shred），这样可以实现即时部分 Data Shred 丢失，只要收到足够数量的 Data shred + Coding Shred，就可以恢复完整的数据Entry。这个很类似于 RAID 技术，即时部分数据丢失也不影响数据的完整性。
+
+![](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/turbine-tree.webp)
 
 例如：
 
@@ -248,7 +250,7 @@ Entry 的数据数据定义如下
 - 通过 **Turbine 协议分层广播**，在网络上传播这 **14** 个 shred
 - 验证节点收到任意 **10** 个Shred，再就能恢复完整 Entry（在其之前会先校验 poH 哈希链，确认顺序和完整性）
 
-以上就是使用shred 传播交易的基本实现原理。
+以上就是使用shred 传播交易的基本实现原理，推荐参考： https://www.helius.dev/blog/solana-executive-overview#turbine。
 
 **总结**
 
