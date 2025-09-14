@@ -168,6 +168,8 @@ Entry {
 
 而 block 可以简单的理解成一个slot，每一个block 对应一个slot 。但反过来，并不保证每一个slot都对应一个block，因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块。
 
+![solana slots and blocks](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/935a00_fe2b8cf87b1849959603a835b8bcecc1~mv2.jpg)
+
 假设当前 slot = 1,000：
 
 - 下一个一定是 1,001，再下一个是 1,002 …
