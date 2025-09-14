@@ -250,7 +250,10 @@ Entry 的数据数据定义如下
 - 通过 **Turbine 协议分层广播**，在网络上传播这 **14** 个 shred
 - 验证节点收到任意 **10** 个Shred，再就能恢复完整 Entry（在其之前会先校验 poH 哈希链，确认顺序和完整性）
 
-以上就是使用shred 传播交易的基本实现原理，推荐参考： https://www.helius.dev/blog/solana-executive-overview#turbine。
+以上就是使用shred 传播交易的基本实现原理，推荐参考
+
+- https://www.helius.dev/blog/solana-executive-overview#turbine。
+- https://www.helius.dev/blog/turbine-block-propagation-on-solana
 
 **总结**
 
