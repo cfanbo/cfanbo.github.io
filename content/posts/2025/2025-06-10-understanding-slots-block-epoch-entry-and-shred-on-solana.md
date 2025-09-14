@@ -166,16 +166,18 @@ Entry {
 
 ### Block
 
-而 block 可以简单的理解成一个slot，每一个block 对应一个slot ,  但反过来，并不保证每一个slot都对应一个block。主要是因为一些leader 节点可能由于网络或者宕机无法正常出块。
+而 block 可以简单的理解成一个slot，每一个block 对应一个slot 。但反过来，并不保证每一个slot都对应一个block，因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块。
 
 假设当前 slot = 1,000：
 
 - 下一个一定是 1,001，再下一个是 1,002 …
-- 就算 Leader 离线、没出块、fork 被丢弃，这些 slot 号仍然存在，只是没有对应的 block。
+- 如果这时 Leader 离线、没出块、fork 被丢弃。由于 每个节点都会每隔 400ms 产生一个slot，所以这些 slot 仍然存在且在不停的推进，只是当前slot没有对应的 block。
 
 **总结**：
 
 - block number 是全局递增且连续，它比slot 编号要小，因为slot 有可能并不生成block。
+- slot在区块链所有节点都是以每400ms间隔时间推进slot，因此slot是是连续不断的递增
+- block 可能由于leader节点异常问题，导致无法正常出块，即只有slot，但没有对应的block
 
 另外还有一个 block height ，它表示当前链上确认过的block，它只有在某个block 被股票确认后才会递增，它也是全局递增，但并不是连续的。它会比slot小很多，原因仍是slot有可能并不出块。
 
