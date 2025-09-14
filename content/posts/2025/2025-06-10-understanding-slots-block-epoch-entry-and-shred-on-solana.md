@@ -166,13 +166,20 @@ Entry {
 
 ### Block
 
-而blocks可以简单的理解成一个slot，每一个block 对应一个slot ,但每一个slot并不一定对应block。主要是因为只有当slot包含交易的时候才会生成一个block，如果没有交易，而不生成block。
+而 block 可以简单的理解成一个slot，每一个block 对应一个slot ,  但反过来，并不保证每一个slot都对应一个block。主要是因为一些leader 节点可能由于网络或者宕机无法正常出块。
 
-block number 是全局递增且连续，它会比slot 编号要小，因为slot 有可能并不生成block。
+假设当前 slot = 1,000：
+
+- 下一个一定是 1,001，再下一个是 1,002 …
+- 就算 Leader 离线、没出块、fork 被丢弃，这些 slot 号仍然存在，只是没有对应的 block。
+
+**总结**：
+
+- block number 是全局递增且连续，它比slot 编号要小，因为slot 有可能并不生成block。
 
 另外还有一个 block height ，它表示当前链上确认过的block，它只有在某个block 被股票确认后才会递增，它也是全局递增，但并不是连续的。它会比slot小很多，原因仍是slot有可能并不出块。
 
-
+> 不要错误的理解成，没有交易就不会产生block。在没有交易的时候，Leader 只写 tick entries（相当于空心跳），仍然会形成一个 **空块**，它仍会在区块上留下block痕迹。只有在 leader 完全离线 / 崩溃 / fork 被丢弃时，才不会产生block。
 
 ### Entry 
 
@@ -252,6 +259,7 @@ Entry 的数据数据定义如下
 ## 常见问题
 
 **在solana里为什么说至少要 2 个 Slot 才能达到确认？**
+
 （1）Leader Slot 负责交易执行（第 1 个 Slot）
 在第一个 Slot（400ms）里，Leader 收集交易，执行，并通过广播 Entry的形式广播交易。
 
