@@ -260,7 +260,7 @@ Entry 的数据数据定义如下
 - 验证节点收到大部分 Shred 数据，就可以保证在丢包环境下也能恢复 Entry。
 - Shred + Turbine（分层广播）是  Solana 高吞吐的关键。
 
-
+对于区块共识参考 https://www.helius.dev/blog/solana-executive-overview#consensus
 
 ## 常见问题
 
