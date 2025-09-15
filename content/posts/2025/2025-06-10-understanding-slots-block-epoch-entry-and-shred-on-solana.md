@@ -267,7 +267,7 @@ Entry 的数据数据定义如下
 
 ## 常见问题
 
-**在solana里为什么说至少要 2 个 Slot 才能达到确认？**
+### 在solana里为什么说至少要 2 个 Slot 才能达到确认？
 
 （1）Leader Slot 负责交易执行（第 1 个 Slot）
 在第一个 Slot（400ms）里，Leader 收集交易，执行，并通过广播 Entry的形式广播交易。
@@ -283,6 +283,10 @@ Solana 采用 Tower BFT 共识，需要 至少 2/3 的验证者质押投票，�
 网络需要时间传播 Slot 数据（Entry），验证者收到数据后会进行投票。
 
 这个过程通常需要 1~2 个 Slot，所以一般800ms 内可以得到乐观确认。
+
+### 交易的三种状态关系
+
+![cf1bca5eeb5d0b2c66dced250e93e21f](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/cf1bca5eeb5d0b2c66dced250e93e21f.png)
 
 
 
