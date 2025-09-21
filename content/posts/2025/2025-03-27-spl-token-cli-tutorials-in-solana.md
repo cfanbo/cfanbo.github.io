@@ -310,7 +310,7 @@ spl-token create-account --owner <OWNER_ADDRESS> <TOKEN_ADDRESS>
 
 
 
-现在我们一共有三个账户，一个 Mint Account 账户，两个 Token Account  账户。对于 Token Account账户的创建分别介绍了两种用法。
+到目前为止，我们一共有三个账户，一个 Mint Account 账户，两个 Token Account  账户，对于 Token Account账户的创建又分别介绍了两种方法。
 
 这里使用了两种方法创建现在用另一个命令 `spl-token display` 查看这些账户信息详细信息。
 
@@ -371,7 +371,7 @@ SPL Token Account
 
 # 铸币 Mint Token
 
-经过上面两步，我们有了 Mint Account 账户和 Token Account 账户，现在我们为每个 Token Account 铸造一些代币。第一个账户铸造 100 个代币，第二个账户铸造20 个代币，并查看 Mint Account 账户的供应量 Supply 变化。
+经过上面两步，我们有了 `Mint Account` 账户和 `Token Account` 账户，现在我们为每个 Token Account 铸造一些代币。第一个账户铸造 100 个代币，第二个账户铸造 20 个代币，并查看 Mint Account 账户的供应量 Supply 变化。
 
 命令格式：
 
@@ -423,14 +423,14 @@ Minting 20 tokens
 Signature: 27skMNxq1VW5Wasu9cSMsPqJHe2auYyaUM7LJvyLoNjvczDYaMTw3gCk8odqYQhifi6LrPTxGsrSEXyYgqsKMdm5
 ```
 
-查看供应量
+查看供应量，这次我们使用 spl-token supply 代替 spl-token display 命令，注意它们的区别
 
 ```shell
 (base) ➜  ~ spl-token supply DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR
 120
 ```
 
-仔细观察的话，会发现通过 `spl-token supply` 命令查看的结果是 `120`，这与 `spl-token display` 命令显示的不一样。
+这时会发现通过 `spl-token supply` 命令查看的结果是只有一个总供应量 `120`，这比 `spl-token display` 命令显示信息的少很多。
 
 
 
