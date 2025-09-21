@@ -72,15 +72,15 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
 
 # 创建Token(Mint  Account)
 
-在 Solana里，创建一种代币，其实就是创建一个 Mint Account 账户，因为在 Solana 有一个一切皆账户的概念，这很像 Linux 里一切皆文件一样。
+在 Solana里创建一种代币，其实就是创建一个 Mint Account 账户，因为在 Solana 有一个 `一切皆账户`的概念，这很像 Linux 里一切皆文件一样。
 
-创建命令为
+创建命令
 
 ```shell
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata --enable-close
 ```
 
-重点：在Solana中分 [Token Program](https://spl.solana.com/token)  和 [Token Extensions program](https://spl.solana.com/token-2022) 两类程序，其中后者为最新的程序，简称 Token 2022，它支持一些官方提供的[扩展](https://solana.com/zh/solutions/token-extensions)功能。本文为了方便理解，直接使用了前者。
+重点：在Solana中分 [Token Program](https://spl.solana.com/token)  和 [Token Extensions program](https://spl.solana.com/token-2022) 两类程序，其中后者为最新的程序，简称 `Token 2022`，它支持一些官方提供的[扩展](https://solana.com/zh/solutions/token-extensions)功能。本文为了方便理解，直接使用了 [Token Program](https://spl.solana.com/token)  。
 
 这里执行结果
 
@@ -94,15 +94,15 @@ Decimals:  9
 Signature: 3KKBcqy3EKHv1NFBTUqQ7e92pun2ypg33tXYxwPKqc5xDyusyzXTw5JcwEbMa1xTszGBmu1se6pKs4xbw96XFcNk
 ```
 
-表示通过 官方Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` )创建了一个 token (`DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR`)，这个token 其实就是一个 Mint Account 地址。
+表示通过官方Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` )创建了一个 token (`DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR`)，这个token 其实就是一个 `Mint Account` 地址，其中
 
-其中 `Address` 字段表示生成的 Mint  Account 地址。
+ `Address` 字段表示生成的 `Mint Account` 地址，也就是 Token 地址。
 
-`Decimals` 表示默认小数位数为 `9` 位，也可以手动指定小数位置，如 `--decimals 6`。
+`Decimals` 字段表示当前 Token 默认小数位数，这里表示 `9` 位，也可以手动指定小数位置，如 `--decimals 6`。
 
 `Signature` 表示本次交易签名，表示可以通过访问 https://solscan.io/tx/3KKBcqy3EKHv1NFBTUqQ7e92pun2ypg33tXYxwPKqc5xDyusyzXTw5JcwEbMa1xTszGBmu1se6pKs4xbw96XFcNk?cluster=custom&customUrl=http://127.0.0.1:8899/ 查看本次交易详情。
 
-记得由于我们使用的是本地环境，因此在区块链浏览器查看时，需要切换为本地环境，一般为 `127.0.0.1:8899`.
+由于我们使用的是本地环境，因此在区块链浏览器查看时，需要切换为本地环境，一般为 `127.0.0.1:8899`.
 
 ![image-20250327110519330](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327110519330.png)
 
@@ -171,7 +171,7 @@ Freeze authority： 表示哪个账户有冻结当前 Token Account 的权限，
 Error: "Account 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa not found"
 ```
 
-会遇到这个错误，这是由于每个Mint Account 必须关联一个默认的 Token Account 账户，而当前缺少一个对应的 ATA 账户。后面如果有对应的 ATA 账户的话，则可以正常显示。
+会遇到这个错误，这是由于每个Mint Account 必须关联一个默认的 Token Account 账户，而当前缺少一个对应的 ATA 账户。后面如果有对应 ATA 账户的话，则可以正常显示。
 
 > 如果要实现设置token的 metadata，则需要使用命令
 >
@@ -185,7 +185,7 @@ Error: "Account 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa not found"
 
 # 创建 token Account
 
-我们已经创建了一种代币，现在此代币创建一个代币账户，在 Solana 里一般称为 关联代币账户，简称ATA。
+我们已经创建了一种 Token，现在为此代币创建一个代币账户（Token Account），在 Solana 里一般称为 `关联代币账户`，简称ATA。
 
 命令格式为：
 
@@ -287,7 +287,7 @@ spl-token create-account --owner <OWNER_ADDRESS> <TOKEN_ADDRESS>
    Error: Client(Error { request: Some(SendTransaction), kind: RpcError(RpcResponseError { code: -32002, message: "Transaction simulation failed: Attempt to debit an account but found no record of a prior credit.", data: SendTransactionPreflightFailure(RpcSimulateTransactionResult { err: Some(AccountNotFound), logs: Some([]), accounts: None, units_consumed: Some(0), return_data: None, inner_instructions: None, replacement_blockhash: None }) }) })
    ```
 
-   这里提示账户不存在，这是由于账户刚刚账户，账户并没有代币，无法支付手续费。由于我们使用的本地环境，可以空缺一些代币给这个账户。
+   这里提示账户不存在，这是由于账户刚刚账户，账户并没有代币，无法支付手续费。由于我们使用的本地环境，因此可以空投一些代币给这个账户。
 
    ```shell
    (base) ➜  ~  solana airdrop 100 GeL7fSEwd2PCp2NYCB1vpvz7VB3eJk8nr2qvoci4xjRL
