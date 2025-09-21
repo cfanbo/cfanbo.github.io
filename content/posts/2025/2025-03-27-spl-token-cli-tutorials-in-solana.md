@@ -16,13 +16,13 @@ tags:
 
 本篇文章使用 `spl-token` 命令行进行演示操作，分别介绍 Mint Account 和 token Account 的创建、转账、关闭账户并回收租金SOL等操作。
 
-这里假如用户本机已经安装好solana命令行，这里使用本地集群环境，通过 `solana-test-validator` 命令在本地启动开发集群。
+这里假如用户本机已经安装好solana命令行，并通过 `solana-test-validator` 命令在本地启动开发集群。
 
 
 
 # 环境准备
 
-1. 开启一个新终端，在本地创建一个集群
+1. 打开一个终端，在本地创建一个新集群
 
 ```shell
 (base) ➜  ~ solana-test-validator --ledger test-ledger -r
@@ -40,9 +40,9 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
 ⠚ 00:00:10 | Processed Slot: 22 | Confirmed Slot: 22 | Finalized Slot: 0 | Full Snapshot Slot: - | Incremental Snapshot Slot: - | Transactions: 21 | ◎499.999895000
 ```
 
-这将在本地启动一个solana集群环境。
+这进成功在本地启动了一个solana集群环境。
 
-参数介绍：
+**参数介绍：**
 
 `--ledger` 表示账本数据存储目录
 
@@ -59,7 +59,7 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
    Commitment: confirmed
    ```
 
-   后面的 `-ul` 表示使用 locallocalhost 本地集群，除此之外还有 `-ud` 表示 devnet 在线开发集群， `-um` 表示主网mainnet-beta， `-ut` 表示测试集群 testnet。
+   后面的 `-ul` 表示使用 localhost 本地集群，除此之外还有 `-ud` 表示 devnet 在线开发集群， `-um` 表示主网 mainnet-beta， `-ut` 表示测试集群 testnet。
 
 3. 确认本地账户
 

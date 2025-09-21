@@ -45,7 +45,7 @@ tags:
 
 ## 术语
 
-在学习solana底层实现原理的时候，经常会遇到Epoch/slot/block/tick/entry等概念术语，它们可能出现在上述流程中的不同步骤，下面我们介绍一下它们。
+在学习solana底层实现原理的时候，经常会遇到Epoch/slot/block/tick/entry等概念，它们出现在上述流程中的不同步骤，下面我们介绍一下它们。
 
 
 
@@ -160,30 +160,32 @@ Entry {
 
 - Tick 每隔 6.25ms 就心跳一次
 - 每次都会生成一个entry。如果这个entry不包含交易，则为 tick Entry；否则为普通的Entry
-- tick 与 tick entry 是两个完全不同的概念，但以存在一定的关系。在技术实现层面上，它是指 空 entry，而我们描述层上，可以理解为心跳
+- tick 与 tick entry 是两个完全不同的概念，但是两者存在一定的联系。在技术实现层面上，它是指 空 entry，而在我们平时描述层面上，可以将其理解为心跳
 
 
 
 ### Block
 
-而 block 可以简单的理解成一个slot，每一个block 对应一个slot 。但反过来，并不保证每一个slot都对应一个block，因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块。
+每一个block 都对应一个slot ，但反过来，并不保证每一个slot都对应一个block，因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块，即丢失block。
 
 ![solana slots and blocks](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/935a00_fe2b8cf87b1849959603a835b8bcecc1~mv2.jpg)
 
 假设当前 slot = 1,000：
 
 - 下一个一定是 1,001，再下一个是 1,002 …
-- 如果这时 Leader 离线、没出块、fork 被丢弃。由于 每个节点都会每隔 400ms 产生一个slot，所以这些 slot 仍然存在且在不停的推进，只是当前slot没有对应的 block。
+- 如果这时 Leader 离线、没出块、fork 被丢弃。由于 每个节点都会每隔 400ms 产生一个slot，所以这些 slot 仍然存在且在不停的向前推进，只是当前slot没有对应的 block。
 
 **总结**：
 
-- block number 是全局递增且连续，它比slot 编号要小，因为slot 有可能并不生成block。
-- slot在区块链所有节点都是以每400ms间隔时间推进slot，因此slot是是连续不断的递增
+- block number 是全局递增且连续，它比slot 编号要小，因为slot 在一些特殊情况下有可能并不生成对应的 block
+- slot在区块链所有节点都是以每400ms间隔时间推进slot，因此slot是连续不断递增的
 - block 可能由于leader节点异常问题，导致无法正常出块，即只有slot，但没有对应的block
 
-另外还有一个 block height ，它表示当前链上确认过的block，它只有在某个block 被股票确认后才会递增，它也是全局递增，但并不是连续的。它会比slot小很多，原因仍是slot有可能并不出块。
+另外还有一个 `block height`，它表示当前链上确认过的block，它只有在某个block 被投票确认后才会递增，它也是全局递增，但并不是连续的。它会比slot小很多，原因仍是slot有可能并不出块。
 
-> 不要错误的理解成，没有交易就不会产生block。在没有交易的时候，Leader 只写 tick entries（相当于空心跳），仍然会形成一个 **空块**，它仍会在区块上留下block痕迹。只有在 leader 完全离线 / 崩溃 / fork 被丢弃时，才不会产生block。
+> 另外，不要错误的理解成，没有交易就不会产生block。
+>
+> 在没有交易的时候，Leader 只写 tick entries（相当于空心跳），仍然会形成一个 **空块**，它仍会在区块上留下block痕迹。只有在 leader 完全离线 / 崩溃 / fork 被丢弃时，才不会产生block。
 
 ### Entry 
 
@@ -226,20 +228,20 @@ Entry 的数据数据定义如下
 
 上面介绍 Entry 的时候，讲过交易广播是通过 Turbine 协议，以 shred 的形式将 entry 广播到其它节点。
 
-什么意思呢？一个 Entry 可能包含许多交易，数据量比较大，可能几十KB，如果直接原封不动的在网络上直接传播的话，可能存以下问题
+如何理解呢？一个 Entry 可能包含许多交易，数据量比较大，可能几十KB，如果直接原封不动的在网络上直接传播的话，可能存以下问题
 
 - 包丢失率高
 - 传输延时大
 - 带宽问题
 
-因此，采用了分片技术传播。简单的理解就是将 entry 数据分成多份传播到其它节点，如将一个 entry 切分成10小份再传播，但仅仅这样的话，又无法保证接收节点收到的数据一定是完整的。所以双采用了一种叫“**纠删码**”的技术（熟悉分布式存储的开发人员对这个应该不陌生）。
+因此，采用了shred分片技术传播。简单的理解就是将 entry 数据分成多份传播到其它节点，如将一个 entry 切分成10小份再传播。但仅仅这样的话，又无法保证接收节点收到的数据一定是完整的。所以又采用了一种叫“**纠删码**”的技术（熟悉分布式存储的开发人员对这个应该不陌生）。
 
 在介绍这个技术之前，我们必须知道一个前提，在 solana 里其实定义了两类shred：
 
 - Data Shred：包含实际的交易数据（entry 的内容）
-- Coding Shred: 冗余wvth，基于 纠删码（Erasure Coding）生成，用于容错
+- Coding Shred: 冗余，基于 纠删码（Erasure Coding）生成，用于容错
 
-而在 Solana 里使用的是  **Reed–Solomon 纠删码**。对每一批 Data Shred ，Leader 节点会额外计算一些 Coding shred（或称为 Recovery Shred），这样可以实现即时部分 Data Shred 丢失，只要收到足够数量的 Data shred + Coding Shred，就可以恢复完整的数据Entry。这个很类似于 RAID 技术，即时部分数据丢失也不影响数据的完整性。
+而在 Solana 里传播交易数据时，Leader 节点会对entry 的每一批 Data Shred 额外计算一些 Coding shred（或称为 Recovery Shred）。这样可以实现即使部分 Data Shred 丢失，只要收到足够数量的 Data shred + Coding Shred，就可以恢复完整的数据Entry。这个很类似于 RAID 技术，即时部分数据丢失也不影响数据的完整性。
 
 ![](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/turbine-tree.webp)
 
@@ -249,6 +251,14 @@ Entry 的数据数据定义如下
 - Leader 再用 **Reed-Solomon** 算法生成 **4 个 Coding Shred**
 - 通过 **Turbine 协议分层广播**，在网络上传播这 **14** 个 shred
 - 验证节点收到任意 **10** 个Shred，再就能恢复完整 Entry（在其之前会先校验 poH 哈希链，确认顺序和完整性）
+
+这里给出一个一笔交易完整的示意图
+
+![image-20250915113325649](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250915113325649.png)
+
+
+
+> 注意：上图并没有体现出来 Entry 概念
 
 以上就是使用shred 传播交易的基本实现原理，推荐参考
 
@@ -288,7 +298,13 @@ Solana 采用 Tower BFT 共识，需要 至少 2/3 的验证者质押投票，�
 
 ![cf1bca5eeb5d0b2c66dced250e93e21f](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/cf1bca5eeb5d0b2c66dced250e93e21f.png)
 
+当验证者将区块提交到链上时，该区块将处于 `processed` 状态。
 
+一旦所需数量的验证者（[66% 的验证者 ](https://docs.solanalabs.com/consensus/commitments)） 投票支持包含该区块，该区块就会被添加到链中，并且承诺级别将更改为 `confirmed`。
+
+在此块之上再构建 31 个块后（12.8s左右），承诺级别将更改为 `finalized`。这里的 31 来源于 **Tower BFT 的 32 Slot 投票锁定期**（32 = 原始 Slot + 31 个新 Slot）, 用来保证分叉时旧区块不可被回滚。
+
+> 投票锁定期 就是 Validator 在一段时间内被“锁定”在这个 Slot 上，不能支持分叉回滚。
 
 ## 参考文章
 
