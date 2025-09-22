@@ -623,18 +623,17 @@ Error: "Account 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa not found"
 
 这里查看一下 Mint Account 供应量将发现由 80 变为了  20。
 
-接着我们关闭第二个账户，在此之前我们先看一下这个账户的租金情况
+接着我们要关闭第二个账户，在此之前我们先看一下这个账户的租金情况
 
 ![image-20250327140341478](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327140341478.png)
 
-租金金额为 `0.002039 SOL`，后面将全部返回支付人。
-
-同样先 burn 掉这个账户的代币。
+账户租金金额为 `0.002039 SOL`，这里 burn 掉这个账户的代币。
 
 ```shell
 (base) ➜  ~ spl-token burn 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv 20
 Burn 20 tokens
   Source: 3x73dZu54AGwe6NmUyASSw3DwrDKFmShoxoZjVV79rxv
+  
 Error: Client(Error { request: Some(SendTransaction), kind: RpcError(RpcResponseError { code: -32002, message: "Transaction simulation failed: Error processing Instruction 0: custom program error: 0x4", data: SendTransactionPreflightFailure(RpcSimulateTransactionResult { err: Some(InstructionError(0, Custom(4))), logs: Some(["Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]", "Program log: Instruction: BurnChecked", "Program log: Error: owner does not match", "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4394 of 4394 compute units", "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA failed: custom program error: 0x4"]), accounts: None, units_consumed: Some(4394), return_data: None, inner_instructions: None, replacement_blockhash: None }) }) })
 ```
 
@@ -660,11 +659,11 @@ Signature: 5FEYNn5Uf2XnZckg5SJkDVJDPtHgMf3BjrD4H6b9wwtwrJimvGo6mRz11ynmqBRxJ8Q4t
 Signature: 3nJCba7LPCPuY8QgoRZ4NVa55UtSzLiRNbnMyvdZ7HXYoogFfFXCAj6cpsb9L1pLFJGVNK342QjbMyJcJ3wsHNfK
 ```
 
-浏览品格交易详情
+交易详情
 
 ![image-20250327140255445](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327140255445.png)
 
-可以看到，第二个账户的租金全部返还给原来支付账户。
+可以看到，账户租金全部返还给原来支付手续费的账户。
 
 ## 关闭 Mint Account
 
@@ -677,7 +676,7 @@ Error: "Mint DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR does not support close
 
 提示不支持 `close authority` 功能，表示当前 `Mint Account` 账户并不支持关闭账户操作。
 
-如果想实现关闭 Mint  Account 功能，需要在 create-token 时指定使用 Token 2022 扩展程序，同时启用 `--enable-close` 参数，如
+如果想实现关闭 Mint  Account 功能，需要在 create-token 时指定使用 **Token 2022 扩展程序**，同时启用 `--enable-close` 参数，如
 
 ```shell
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-close
@@ -687,20 +686,20 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 
 
 # 总结
 
-不要试图认为学会了命令行工具如何使用等于学会了Solana中的 Program 开发，它只不过是官方为了方便大家更好的理解solana中的一些概念而推出的一个命令行工具而已，在实际场景中使用的次数很有限。
+不要试图认为学会了命令行工具如何使用，就等于学会了Solana中的 Program 开发，命令行工具只不过是官方为了方便大家更好的理解solana中的一些概念而推出的一个工具而已，要想真正了解内部实现原理，还得动手写实现代码才可以。
 
-通过本文介绍的一些使用方法，你需要至少明白 Mint Account 和 Token Account 之间的区别与关系。
+通过本文介绍的一些使用方法，你需要明白 Mint Account 和 Token Account 之间的区别与关系。
 
 知识点：
 
 1. 在solana中，一切皆账户（类似Linux中一切皆文件的概念）
-2. 创建一种代币就是创建一个 Mint Account账户
+2. 创建一种Token代币就是创建一个 Mint Account账户
 3. 一个 mint account 可以创建多个 Token Account ，这些 Token Account 是通过PDA生成的，简称为 ATA，它是没有私钥的
-4. 每个账户在区块链上要想存在，必须支付一定的租金（有两年免租的概念）
-5. 账户不用的话，需要close掉，以回收SOL租金
+4. 每个账户在区块链上要想存在，必须支付一定的租金（存在两年免租的概念）
+5. 账户不用的话，需要close掉，以回收SOL租金，同时减少区块维护负担
 6. close账户前要保证账户没有代币，如果有代币的话，可以burn掉或者transfer给其它Token Account
-7. 官方提供了两个程序，分别为 Token Program 和 Token Extensions Program，后者简称为 Token 2022，它是官方新推荐的程序，因为官方为其提供了一系列的扩展，这在使用 Anchor 框架开发时，尤其的方便，强烈推荐使用。
-8. 对于ATA 账户它是不可变账户，这里的不可变是指 owner 无法修改，这是出于安全问题考虑
+7. 官方提供了两个程序，分别为 **Token Program** 和 **Token Extensions Program**，后者简称为 Token 2022，它是官方新推荐的程序，官方为其提供了一系列的扩展，这在使用 Anchor 框架开发时，尤其的方便，强烈推荐使用。
+8. 对于ATA 账户它是不可变账户，这里的不可变是指 owner 无法修改，主要出于安全考虑
 9. 对于NFT开发方法与上面类似，只不过指定了 Mint Account的 decimlas 为0, 同时supply 为1，并禁止 mint Account铸造token, 同时还会有一个关联的额外元数据账户（[nft](https://solana.com/zh/developers/courses/tokens-and-nfts/nfts-with-metaplex#nfts-on-solana)）
 
 
