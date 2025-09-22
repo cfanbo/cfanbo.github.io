@@ -481,7 +481,7 @@ Signature: xJroywwG1cmc6R86VmxKXjSj8daDLb4rQyi2iczsFdnAguC6VfGFkbVuFhptAWbq4hLpy
 30
 ```
 
-那么有个问题，如果接收地址是它自己的地址又会怎样？交易直接拒绝执行还是正常执行呢？
+那么有个问题，如果接收地址是它自己的地址又会怎样？交易能否正常执行呢？
 
 ```shell
 (base) ➜  ~ spl-token transfer DpEUS1j36nekBw7Sm11MabEXTXPHE1zrhv9xwe8itMLR 10 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa
@@ -539,9 +539,9 @@ Signature: 4UyouAJEHJtBLSFE6CeP1jfFVuVFdBqyj3PriHjTQ8qYWMDnfDg1oeAvsq2myniV3hoXU
 
 # 关闭账户
 
-由于在 Solana生态里，每个账户都需要支付一定的租金，以保证在区块链上只存在有效的用户，减少维护成本。如果有不需要使用的账户的话，则可以通过将其关闭并回收账户租金。
+由于在 Solana 生态里，每个账户都需要支付一定的租金，以保证在区块链上只存在有效的用户，减少维护成本。如果有不需要使用的账户的话，则可以通过将其关闭并回收账户租金。
 
-要Solana里要关闭账户有一个前提，就是不允许  Account 账户里存在代币。如果账户为 Token Account的话，必须将其 burn 掉,此操作将影响 Mint Account 的供应量。
+在Solana里要关闭账户有一个前提，就是不允许  Account 账户里存在代币。如果账户为 Token Account 的话，必须将持有的甩有代币 burn 掉,此操作将影响 Mint Account 的供应量。
 
 ## 关闭 Token Account
 
@@ -579,7 +579,7 @@ SPL Token Account
   Close authority: (not set)
 ```
 
-代币由 100 变成了 60 个。
+代币由 100 变成了 60 个，验证了我们上面提到的 burn 代币将影响总供应量。
 
 我们再看一下 Mint Account 的供应量
 
@@ -612,9 +612,9 @@ Signature: 3a9VUhkYqaFVq41XhATe3zhLcZzAL7DMnveMwTkpsD8YSiRbE8NfxM885ufBJvnpDyFa6
 
 ![image-20250327134722368](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250327134722368.png)
 
-可以看到关闭账户后，赎回 `0.00203928 SOL` 给原来支付账户。
+可以看到关闭账户后，赎回 `0.00203928 SOL` ，将其返还给原来创建账户时支付手续费的账户。
 
-如果后续再次使用这个账户的话，将提示账户不存在错误，如
+如果后续再次使用这个已关闭账户的话，将提示账户不存在错误，如
 
 ```shell
 (base) ➜  ~ spl-token display 2Vwv3ngvh8srRvSvd2VhTiYcHU6dyh9EkMAXMkTaSTaa
