@@ -189,7 +189,17 @@ Entry {
 
 ### Entry 
 
-每一次 tick, 它就会生成一个entry， 且在tick 期间还可能会产生交易。如果 tick 时没有发现任何交易产生，则为 `空entry`。否则为 `transaction entry`，并将这些交易按顺序放在entry里。
+每一次 tick, 它就会生成一个entry， 且在tick 期间还**可能**会产生交易。如果 tick 时没有发现任何交易产生，则为 `空entry`。否则为 `transaction entry`，并将这些交易按顺序放在entry里，对其定义参考 https://github.com/anza-xyz/agave/blob/master/entry/src/entry.rs#L150-L154
+
+```rust
+/// Typed entry to distinguish between transaction and tick entries
+pub enum EntryType<Tx: TransactionWithMeta> {
+    Transactions(Vec<Tx>),
+    Tick(Hash),
+}
+```
+
+
 
 我们看一下 Leader 出块步骤：
 
@@ -208,11 +218,11 @@ Entry 5: Transaction {tx4}
 Entry 6: Tick
 ```
 
-Entry 的数据数据定义如下
+Entry 的数据 [数据定义](https://github.com/anza-xyz/agave/blob/master/entry/src/entry.rs#L93-L132) 如下
 
 ![image-20250911120150707](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/image-20250911120150707.png)
 
-这三者之间的关系大概就是上面介绍的这个样子了，那么大家可能会好奇，这个 Entry 有什么作用呢？答案就是在多个节点之间广播交易时，其实广播的就是这个 Entry，这样一次广播就可以包含多笔交易，比起单笔广播效率要高很多。
+这三者之间的关系大概就是上面介绍的这个样子了，那么大家可能会好奇，这个 Entry 有什么作用呢？答案就是在多个节点之间广播交易时，其实广播的就是这个 Entry，通过这种方式广播就可以一次广播多笔交易，想相每次只广播一笔交易效率要高很多。
 
 这里提醒一下，广播时是通过 **Turbine** 协议进行的，它是以 **shred 分片** 的形式将这个 Entry 广播出去的，参考 [Turbine: Block Propagation on Solana](https://www.helius.dev/blog/turbine-block-propagation-on-solana)。
 
