@@ -323,3 +323,4 @@ Solana 采用 Tower BFT 共识，需要 至少 2/3 的验证者质押投票，�
 - https://www.helius.dev/blog/turbine-block-propagation-on-solana
 - https://github.com/cfanbo/solana-reading-list/
 - [solana-whitepaper](https://solana.com/solana-whitepaper.pdf)
+- [Solana Virtual Machine specification](https://github.com/anza-xyz/agave/blob/master/svm/doc/spec.md)
