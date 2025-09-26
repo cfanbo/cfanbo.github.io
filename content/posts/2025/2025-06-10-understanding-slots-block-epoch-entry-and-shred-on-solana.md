@@ -32,8 +32,8 @@ tags:
 4. Leader节点收到交易后，会放入自己的交易队列（Transaction Queue），按账户读写锁进行是否允许并发执行（solana交易快的原因之一就是并发执行），同时进行预检查(Pre-Check)，防止账户余额不足支付交易手续费。同时还会做更多的工作，这些工作与PoH有关，设计到slot/blocks/Epochs/Entry 和 shred，这也正是本文的重点。
 5. 在区块链里一笔交易是否合法需要得到大多数节点（在solana里实际是质押量）的认可才行。因此这时 Leader 节点将交易状态设置为 **processed**。需要将这笔交易发送到一些验证节点（Validator）。如果每一次发送一笔交易的话，网络性能太差了，因此需要将多笔一起打包发送到验证节点，在Solana里一般是通过 Turbine（分层树状网络） 广播的方式将交易信息发送到 validator节点。
 6. 验证节点收到交易信息后，会重放执行交易，再次对交易进行验证，如果与leader节点验证的结果一致，则表示交易是合法的，就会对LEADER节点发送一个投票交易（ **Tower BFT** ）到 leader节点。这一阶段称为投票。同时这些验证节点还需要发送到下一层的邻近 validator 节点，这些节点组织成一个类似树状网络。
-7. 当Leader节点不断的收到多个验证节点的投票，并不断的计算stake数量，如果发现达到了 2/3 的，则表示交易得到了多数节点的认可，也就是表示交易是合法的，这时再将交易状态修改为 **confirmed**。
-8. 后续随着新交易的不断增加，交易越来越不可能被修改，最终再将交易状态修改为 **finalized**，表示交易不可回滚动。
+7. 当Leader节点不断的收到多个验证节点的投票，并不断的计算总stake数量，如果发现达到了 2/3 ，则表示交易得到了多数节点的认可，则表示交易是合法的，这时再将交易状态修改为 **confirmed**。
+8. 后续随着新交易的不断增加，交易越来越不可能被修改，最终将交易状态修改为 **finalized**，表示交易永远不可回滚。
 
 以上就是一笔交易的大概流程，这里涉及交易的三种状态：
 
@@ -159,14 +159,14 @@ Entry {
 **总结**
 
 - Tick 每隔 6.25ms 就心跳一次
-- 每次都会生成一个entry。如果这个entry不包含交易，则为 tick Entry；否则为普通的Entry
+- 每心跳一次，就会生成一个entry。如果这个entry不包含交易，则为 `tick Entry`；否则为普通的 `Transactions Entry`
 - tick 与 tick entry 是两个完全不同的概念，但是两者存在一定的联系。在技术实现层面上，它是指 空 entry，而在我们平时描述层面上，可以将其理解为心跳
 
 
 
 ### Block
 
-每一个block 都对应一个slot ，但反过来，并不保证每一个slot都对应一个block，因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块，即丢失block。
+每一个block 都对应一个slot ，但反过来，并不保证每一个slot都对应一个block。因为在slot 一直推进的过程中， leader 节点可能由于网络或者宕机无法正常出块，即丢失block。
 
 ![solana slots and blocks](https://blog--static.oss-cn-shanghai.aliyuncs.com/uploads/2025/935a00_fe2b8cf87b1849959603a835b8bcecc1~mv2.jpg)
 
@@ -185,11 +185,11 @@ Entry {
 
 > 另外，不要错误的理解成，没有交易就不会产生block。
 >
-> 在没有交易的时候，Leader 只写 tick entries（相当于空心跳），仍然会形成一个 **空块**，它仍会在区块上留下block痕迹。只有在 leader 完全离线 / 崩溃 / fork 被丢弃时，才不会产生block。
+> 在没有交易的时候，Leader 只写 tick entrie（相当于空心跳），仍然会形成一个 **空块**，它仍会在区块上留下block痕迹。只有在 leader 完全离线 / 崩溃 / fork 被丢弃时，才不会产生block。
 
 ### Entry 
 
-每一次 tick, 它就会生成一个entry， 且在tick 期间还**可能**会产生交易。如果 tick 时没有发现任何交易产生，则为 `空entry`。否则为 `transaction entry`，并将这些交易按顺序放在entry里，对其定义参考 https://github.com/anza-xyz/agave/blob/master/entry/src/entry.rs#L150-L154
+每一次 tick, 它就会生成一个entry， 且在tick 期间还**可能**产生交易。如果 tick 期间没有产生任何交易产生，则为 `空entry`（Tick Entry）。否则为 `transaction entry`，并将这些交易按顺序放在entry里，对其定义参考 https://github.com/anza-xyz/agave/blob/master/entry/src/entry.rs#L150-L154
 
 ```rust
 /// Typed entry to distinguish between transaction and tick entries
