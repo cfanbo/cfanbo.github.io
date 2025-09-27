@@ -324,3 +324,4 @@ Solana 采用 Tower BFT 共识，需要 至少 2/3 的验证者质押投票，�
 - https://github.com/cfanbo/solana-reading-list/
 - [solana-whitepaper](https://solana.com/solana-whitepaper.pdf)
 - [Solana Virtual Machine specification](https://github.com/anza-xyz/agave/blob/master/svm/doc/spec.md)
+- [Alpenglow: A New Consensus for Solana](https://www.anza.xyz/blog/alpenglow-a-new-consensus-for-solana)
