@@ -11,7 +11,7 @@ tags:
 - rust
 ---
 
-今天在看 tokio 源码时，发现一个 [unpark_worker_by_id](https://github.com/tokio-rs/tokio/blob/master/tokio/src/runtime/scheduler/multi_thread/idle.rs#L129-L145) 函数里调用了标准库Vec 的 [swap_remove](https://github.com/rust-lang/rust/blob/master/library/alloc/src/vec/mod.rs#L2014-L2036)方法，它的实现大概如下
+今天在看 tokio 源码时，发现一个 [unpark_worker_by_id](https://github.com/tokio-rs/tokio/blob/master/tokio/src/runtime/scheduler/multi_thread/idle.rs#L129-L145) 函数里调用了标准库Vec 的 [swap_remove](https://github.com/rust-lang/rust/blob/master/library/alloc/src/vec/mod.rs#L2014-L2036)方法，`swap_remove` 实现如下
 
 ```rust
     pub fn swap_remove(&mut self, index: usize) -> T {
@@ -39,7 +39,7 @@ tags:
     }
 ```
 
-它的作用主要是将 vec 里指定 `index` 元素从vec中移除并返回，同时将 vec 最后一个位置的元素移动到指定 `index` 位置，同时减小vec的长度，并保证元素内容与长度一致，从而达到删除元素的效果。
+它的作用是将 vec 里指定 `index` 元素从vec中移除并返回，同时将 vec 最后一个位置的元素移动到指定 `index` 位置，同时减小vec的长度，保证元素内容与长度一致，从而达到删除元素的效果。
 
 ```rust
 fn main() {
@@ -52,7 +52,7 @@ fn main() {
 }
 ```
 
-这个方法与 `remove` 不同，它并不保证原来元素的顺序的，这点从上面打印结果可以看出来。但有一个优势就是执行高效，它的时间复杂度为 `O(1)`，而 `remove` 的时间复杂度则为 `O(n)`，这里对vec 的顺序并不关心，所有使用了 swap_remove。
+这个方法与 `remove` 不同，它并不保证原来元素的顺序的，这点从上面打印结果可以看出来。但它有一个优势就是执行高效，它的时间复杂度为 `O(1)`，而 `remove` 的时间复杂度则为 `O(n)`，这里对 vec 元素顺序并不关心，因此调用了 swap_remove 删除元素。
 
 为了方便大家理解，这里给出 Vec 的定义
 
@@ -63,18 +63,20 @@ pub struct Vec<T, A: Allocator = Global> {
 }
 ```
 
-但有个疑问，就是如果移除的元素是最后一位，那这行代码是不是没有必要呢？
+但有一个疑问，就是如果移除的元素是最后一位，那这行代码是不是没有必要呢？
 ```rust
 ptr::copy(base_ptr.add(len - 1), base_ptr.add(index), 1);
 ```
 
-这种情况下，我们一般会使用 `if` 语句做个判断，如果移除的元素 `非` 最后一位元素才执行这行代码，但这里为什么没有添加呢？要知道它可是标准库里的代码，对性能要求极其高的。
+正常情况下，我们一般会使用 `if` 语句做个判断，如果移除的元素 `非` 最后一位元素才执行这行代码，但这里为什么没有判断逻辑呢？要知道它可是标准库里的代码，对性能和质量都要求极其高的。
 
-而是这背后正是一个非常典型的「**性能与 CPU 分支预测优化**」考虑。
+查阅一些资料后，发现这背后正是一个非常典型的「**性能与 CPU 分支预测优化**」考虑。
 
-我们知道源码都需要经过一个编译阶段，从而生成目标文件。而在编译时如果发现了 `if` 语句将产生一些分支预测指令，从而增加一些CPU 开销。而现代 CPU 的**分支预测**失败会导致流水线停顿，代价可能是 `10-20` 个时钟周期，但将一个元素复制到自己的位置，只是几个时钟周期的内存操作。
+> 这里不得不说，claude 要比 chatgpt 要聪明一些，chatgpt 问了半天讲沾不到边
 
-**那什么又是分支预测呢？**
+我们知道源码都需要经过一个编译阶段，从而生成目标文件。而在编译时如果发现了 `if` 语句将产生一些**分支预测**指令，但这将增加一些CPU 开销。而现代 CPU 的**分支预测**失败会导致流水线停顿，代价可能是 `10-20` 个时钟周期，但将一个元素复制到自己的位置，只是几个时钟周期的内存操作。相比来讲，直接复制要比分支预测从性能上要好许多。
+
+这里又引出另一个问题，**那什么又是分支预测呢？**
 
 现代 CPU 采用**流水线**执行指令。当遇到条件分支（如 `if`）时，CPU 需要提前决定执行哪个分支，否则流水线会停顿。
 
