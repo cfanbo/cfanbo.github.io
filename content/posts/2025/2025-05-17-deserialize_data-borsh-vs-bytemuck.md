@@ -210,3 +210,5 @@ fn main() {
 这里修改了字段值 x=100, y=200。
 
 希望通过这一篇博文，方便大家更好的理解 bytemuck 的原理及它的使用场景。
+
+ 这里是 Anchor 官方对 zerocopy 的相关介绍 https://www.anchor-lang.com/docs/features/zero-copy，可以参考一下。
