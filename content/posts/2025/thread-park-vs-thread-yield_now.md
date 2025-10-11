@@ -7,6 +7,7 @@ url: /posts/thread-park-vs-thread-yield_now
 categories:
 - 程序开发
 - rust
+- tokio
 tags:
 - rust
 ---
