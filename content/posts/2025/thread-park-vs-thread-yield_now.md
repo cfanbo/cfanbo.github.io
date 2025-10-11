@@ -35,7 +35,7 @@ blocked ---> [thread::unpark()]---> runnable ---> running (被unpark唤醒后)
 - 需要外部干预（unpark）才可以恢复执行状态
 - 期间不会获得CPU的机会
 
-这里贴官方文档的一个用法示例
+这是官方文档的一个示例
 
 ```rust
 use std::thread;
@@ -83,6 +83,50 @@ running ---> runnable (短暂) ---> running
 - 它只是短暂让出 CPU 给其他线程
 - 线程并不会阻塞，只是状态由 running 变为了 runnable，一旦有机会将继续执行
 - 当前线程随时都可能被操作系统重新调度回 CPU
+
+示例
+
+```rust
+use std::thread;
+
+fn main() {
+    let handle1 = thread::spawn(|| {
+        for i in 0..5 {
+            println!("线程1: {}", i);
+            thread::yield_now(); // 主动让出CPU
+        }
+    });
+
+    let handle2 = thread::spawn(|| {
+        for i in 0..5 {
+            println!("线程2: {}", i);
+            thread::yield_now(); // 主动让出CPU
+        }
+    });
+
+    handle1.join().unwrap();
+    handle2.join().unwrap();
+}
+```
+
+执行结果大概率是 线程1 与 线程2 **随机交叉**输出的，并不是先输出线程1，再输出线程2 ，打印顺序完全视操作系统的调度机制决定，每次输出的顺序都可能不一样。
+
+ 这是本电脑的输出
+
+```shell
+线程1: 0
+线程1: 1
+线程2: 0
+线程1: 2
+线程1: 3
+线程1: 4
+线程2: 1
+线程2: 2
+线程2: 3
+线程2: 4
+```
+
+
 
 
 
