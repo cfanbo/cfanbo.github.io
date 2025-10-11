@@ -11,7 +11,7 @@ tags:
 - rust
 ---
 
-在看 tokio 测试源码时，会有一些操作线程park的函数，而在rust标准库里也同样有类似的方法，那就是 [thread::park()](https://doc.rust-lang.org/std/thread/fn.park.html) ，同时还有一个咋一看效果类似的函数 [thread::yield_new()](https://doc.rust-lang.org/std/thread/fn.yield_now.html)， 两个函数都有实现 **`类似`**暂停执行代码的效果，那它们到底又何区别呢？
+在看 tokio 调度源码时，会有一些操作线程park的函数，而在rust标准库里也同样有类似的方法，那就是 [thread::park()](https://doc.rust-lang.org/std/thread/fn.park.html) ，同时还有一个咋一看效果类似的函数 [thread::yield_new()](https://doc.rust-lang.org/std/thread/fn.yield_now.html)， 两个函数都有实现 **`类似`**暂停执行代码的效果，那它们到底又何区别呢？
 
 希望通过这篇文章可以让大家搞明白它们两者的区别和使用场景。
 
