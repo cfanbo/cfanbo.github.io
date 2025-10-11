@@ -162,11 +162,11 @@ Bytemuck struct首地址 = 0x134008800
 
 答案是 **不行的**。
 
-主要原因是  bytemuck 只能用在数据类型长度固定的场景，而对于长度非固定的数据类型，如 String 、Vec 之类的则不行的。像上面 data 字段，它的长度是已知为 8 的，所以可以直接使用 bytemuck的。
+主要原因是  `zerocopy` 只能用在 **数据类型长度固定** 的场景，而对于非固定长度的数据类型，如 String 、Vec 之类的则不行的。像上面 data 字段，它的长度是已知为 `8` ，所以可以直接使用 `bytemuck ` crate。
 
 另外对于要使用bytemuck 的struct ，需要满足几个条件：
 
-1. 要实现 Pod 和 Zeroable 这两个trait
+1. 要实现 `Pod` 和 `Zeroable` 这两个trait
 2. 要保证内存对齐要求 `repc(c)`，而对于` repc(packed)` 则表示告诉编译器**取消字段的默认对齐填充（padding）**，结构体紧凑排列，它是一个可选项。一般推荐两者一起使用。
 
 通过使用 bytemuck ，我们即可以读取原来的数据，还可以对原来的数据进行修改，如
