@@ -156,3 +156,4 @@ fn main() {
 - https://doc.rust-lang.org/std/thread/fn.park.html
 - https://doc.rust-lang.org/std/thread/struct.Thread.html#method.unpark
 - https://doc.rust-lang.org/std/thread/fn.yield_now.html
+- [异步初响：从 #[tokio::main] 感知调度脉搏](https://www.bilibili.com/video/BV197njzqEs6/)
