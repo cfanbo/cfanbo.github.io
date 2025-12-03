@@ -31,9 +31,9 @@ blocked ---> [thread::unpark()]---> runnable ---> running (被unpark唤醒后)
 
 总结
 
-- 一经调用 thread::park() 函数后，线程将一直处于阻塞状态，直到手动解除此状态
-- 需要外部干预（unpark）才可以恢复执行状态
-- 期间不会获得CPU的机会
+- 一经调用 `thread::park()` 函数后，线程将一直处于阻塞状态
+- 期间没有机会获得CPU
+- 需要外部干预（调用unpark）才可以恢复执行状态
 
 这是官方文档的一个示例
 
