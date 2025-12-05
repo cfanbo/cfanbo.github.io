@@ -1,5 +1,5 @@
 ---
-title: 理解 tokio 中的任务
+title: 理解 tokio 中的 Task
 date: 2025-11-17T16:36:48+08:00
 type: post
 url: /posts/understanding-tasks-in-tokio
