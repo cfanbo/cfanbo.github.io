@@ -1,5 +1,5 @@
 ---
-title: Rust中的迭代器iter
+title: ust 中的迭代器：iter、iter_mut 与 into_iter
 type: post
 toc: true
 date: 2023-11-16T07:31:19+00:00
@@ -10,39 +10,248 @@ tags:
 - rust
 ---
 
-迭代器模式允许你对一个序列的项进行某些处理。**迭代器**（*iterator*）负责遍历序列中的每一项和决定序列何时结束的逻辑。当使用迭代器时，我们无需重新实现这些逻辑。
 
-在 Rust 中，迭代器是 **惰性的**（*lazy*），这意味着在调用方法使用迭代器之前它都不会有效果。例如，示例中的代码通过调用定义于 `Vec` 上的 `iter` 方法在一个 vector `v1` 上创建了一个迭代器。这段代码本身没有任何用处：
+# Rust 中的迭代器：`iter`、`iter_mut` 与 `into_iter`
+
+迭代器模式允许我们对一个序列中的元素进行某些处理。**迭代器**（*iterator*）负责遍历序列中的每一项，并决定序列何时结束。当使用迭代器时，我们无需重新实现这些遍历逻辑。
+
+# 什么是 Iterator？
+
+在 Rust 中，**迭代器（Iterator）**是一种用于逐个访问一组元素的对象。它负责记录当前迭代的位置，并通过不断获取下一个元素来完成整个序列的遍历。
+
+Rust 中的迭代器是**惰性的（lazy）**。也就是说，创建一个迭代器并不会立即执行遍历操作，只有在真正使用迭代器时，才会逐个获取元素。
+
+例如：
 
 ```rust
 let v1 = vec![1, 2, 3];
+
 let v1_iter = v1.iter();
 ```
 
-迭代器被储存在 `v1_iter` 变量中。一旦创建迭代器之后，可以选择用多种方式利用它。
+这里通过 `iter()` 创建了一个迭代器，并将其保存到 `v1_iter` 中。但是这一步并不会立即访问 `v1` 中的元素。
 
-# 迭代器分类
+要真正获取元素，可以调用迭代器的 `next()` 方法：
 
-Rust 中迭代器根据 `所有权` 可分为 `iter()`、`iter_mut()`、`into_iter()` 三种迭代器，使用场景：
+```rust
+let v1 = vec![1, 2, 3];
 
-- 获取集合元素不可变引用的迭代器，对应方法为 `iter()`
+let mut v1_iter = v1.iter();
 
-- 获取集合元素可变引用的迭代器，对应方法为 `iter_mut()`
-- 获取集合元素所有权的迭代器，对应方法为 `into_iter()`
+println!("{:?}", v1_iter.next()); // Some(&1)
+println!("{:?}", v1_iter.next()); // Some(&2)
+println!("{:?}", v1_iter.next()); // Some(&3)
+println!("{:?}", v1_iter.next()); // None
+```
 
-也就是说当你在 Rust 中看到调用了 `iter()` 方法，则表示这里使用了不可变迭代器，只能读取元素值，无法修改；如果看到 `iter_mut()` 则表示使用了可变迭代器，您可以对原始值进行修改；而如果看到 `into_iter()` 的话，则说明使用了集合元素的所有权引用，当迭代器使用完毕后，就对应的内存将自动根据所有权规则被释放回收。
+Rust 中的 `Iterator` trait 定义了迭代器的基本行为，其中最核心的方法就是 `next()`：
 
-# 不可变引用迭代器 iter()
+```rust
+trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+```
+
+其中：
+
+* `Item` 表示迭代器每次产生的元素类型
+* `next()` 用于获取下一个元素
+* 当还有元素时返回 `Some(value)`
+* 当所有元素都遍历完成后返回 `None`
+
+因此，只要一个类型实现了 `Iterator` trait，它就可以作为迭代器使用。
+
+例如：
+
+```rust
+struct Counter {
+    current: usize,
+    max_limit: usize,
+}
+
+impl Iterator for Counter {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current < self.max_limit {
+            let current = self.current;
+            self.current += 1;
+            Some(current)
+        } else {
+            None
+        }
+    }
+}
+```
+
+这里 `Counter` 实现了 `Iterator` trait，因此 `Counter` 本身就是一个迭代器。
+
+使用时可以直接：
+
+```rust
+let counter = Counter {
+    current: 0,
+    max_limit: 5,
+};
+
+for value in counter {
+    println!("{}", value);
+}
+```
+
+这里 `for value in counter{}` 可以理解为使用 `counter.into_iter()` 获取迭代器后进行遍历，即：
+
+ ```rust
+ for value in counter.into_iter() {
+     println!("{}", value);
+ }
+ ```
+
+输出：
+
+```text
+0
+1
+2
+3
+4
+```
+
+所以，从 Rust 的类型系统来看，**迭代器并不是某一种固定的数据结构，而是实现了 `Iterator` trait 的类型。**
+
+# `iter()`、`iter_mut()` 和 `into_iter()` 是什么？
+
+在 Rust 中，集合类型通常会提供多种获取迭代器的方式，其中最常见的就是：
+
+```rust
+iter()
+iter_mut()
+into_iter()
+```
+
+它们的主要区别在于**迭代过程中如何处理集合元素的所有权和借用关系**。
+
+可以简单概括为：
+
+| 方法            | 迭代器产生的元素 | 集合是否被消费 |
+| ------------- | -------- | ------- |
+| `iter()`      | `&T`     | 否       |
+| `iter_mut()`  | `&mut T` | 否       |
+| `into_iter()` | `T`      | 是       |
+
+例如：
+
+```rust
+let mut v = vec![1, 2, 3];
+```
+
+使用 `iter()`：
+
+```rust
+for value in v.iter() {
+    println!("{}", value);
+}
+```
+
+这里 `value` 是 `&i32`。迭代器只是借用了集合中的元素，并不会取得元素的所有权，因此遍历完成后 `v` 仍然可以使用。
+
+使用 `iter_mut()`：
+
+```rust
+for value in v.iter_mut() {
+    *value += 1;
+}
+```
+
+这里 `value` 是 `&mut i32`，因此可以通过这个可变引用修改 `v` 中的元素。
+
+使用 `into_iter()`：
+
+```rust
+for value in v.into_iter() {
+    println!("{}", value);
+}
+```
+
+这里 `value` 是 `i32`。迭代器直接产生元素本身，并取得元素的所有权。同时，`v` 本身也会被消费，之后不能再使用原来的 `v`。
+
+因此可以简单理解为：
+
+```text
+iter()
+    ↓
+不可变借用
+    ↓
+&T
+```
+```text
+iter_mut()
+    ↓
+可变借用
+    ↓
+&mut T
+```
+```text
+into_iter()
+    ↓
+取得元素所有权
+    ↓
+T
+```
+
+>需要注意的是，`iter()`、`iter_mut()` 和 `into_iter()` **并不是 `Iterator` trait 中定义的三个方法，也不是三种不同的 `Iterator` trait**。
+
+它们只是获取迭代器的不同方式：
+
+* `iter()` 和 `iter_mut()` 通常是集合类型提供的方法
+* `into_iter()` 对应 `IntoIterator` trait，用于将一个对象转换为迭代器
+
+因此，当我们看到：
+
+```rust
+v.iter()
+```
+
+可以理解为：
+
+> 从 `v` 获取一个遍历其元素的迭代器，并以不可变引用的方式访问元素。
+
+看到：
+
+```rust
+v.iter_mut()
+```
+
+可以理解为：
+
+> 从 `v` 获取一个遍历其元素的迭代器，并以可变引用的方式访问元素。
+
+看到：
+
+```rust
+v.into_iter()
+```
+
+则可以理解为：
+
+> 消费 `v`，并获取一个能够逐个取得其元素所有权的迭代器。
+
+接下来分别看三种方式的具体使用。
+
+# 不可变引用迭代器 `iter()`
+
+如果只是读取集合中的元素，而不需要修改元素，可以使用 `iter()`。
 
 ```rust
 fn main() {
     let a = [1, 2, 3];
 
-    // 不可变引用迭代器
     let mut iter = a.iter();
-    println!("{:?}", iter.len()); // 当前集合元素个数
 
-    // A call to next() returns the next value...
+    println!("{:?}", iter.len());
+
     assert_eq!(Some(&1), iter.next());
     println!("{:?}", iter.len());
 
@@ -52,25 +261,20 @@ fn main() {
     assert_eq!(Some(&3), iter.next());
     println!("{:?}", iter.len());
 
-    // 所有值已迭代完毕，从此以后再调用就是 None
+    // 所有值已迭代完毕
     assert_eq!(None, iter.next());
 
-    // More calls may or may not return `None`. Here, they always will.
+    // 之后继续调用 next() 仍然返回 None
     assert_eq!(None, iter.next());
     assert_eq!(None, iter.next());
 
-    // 上面使用了 iter() 获取不可变迭代器，因此可以打印原始变量值
     println!("len={}", iter.len());
     println!("{:?}", iter);
     println!("{:?}", a);
 }
 ```
 
-首先声明一个包含三个元素的数组，然后使用 `iter()` 获取不可变引用迭代器，也就是这种迭代器并不影响原来变量 `a` 的值，这时迭代器元素个数为 `3`。接着调用三次 `iter.next()` 读取出下一个元素，并在每次调用后面打印其元素个数，可以看到其个数为递减，走到为 `0` 为止。
-
->  这里的 `next` 方法的方法被称为 **消费适配器**（*consuming adaptors*），因为调用它们会消耗迭代器
-
-从第四调用 `iter.next()` 开始，后面再调用 `iter.next()` 迭代器则将为 `None`, 同时元素个数将一直为 `0`，执行程序最后输出结果
+执行结果：
 
 ```shell
 3
@@ -82,138 +286,160 @@ Iter([])
 [1, 2, 3]
 ```
 
-方法`iter.next()` 返回的值为引用，因此断言也使用值引用的方式判等。
+这里通过 `iter()` 获取的迭代器，其元素类型为 `&i32`，因此 `next()` 返回的是 `Option<&i32>`。
 
+由于 `iter()` 只是借用 `a` 中的元素，并没有取得元素的所有权，因此迭代完成后，原来的 `a` 仍然可以正常使用。
 
+# 可变引用迭代器 `iter_mut()`
 
-# 可变迭引用代器 iter_mut()
-
-迭代器的读取示例
-
-```rust
-fn main() {
-    let mut a = ["1".to_string(), "2".to_string(), "3".to_string()];
-
-    let mut an_iter = a.iter_mut();
-    println!("len={}", an_iter.len());
-
-    assert_eq!(Some(&mut "1".to_string()), an_iter.next());
-    println!("len={}", an_iter.len());
-
-    assert_eq!(Some(&mut "2".to_string()), an_iter.next());
-    println!("len={}", an_iter.len());
-
-    assert_eq!(Some(&mut "3".to_string()), an_iter.next());
-    println!("len={}", an_iter.len());
-
-    assert_eq!(None, an_iter.next());
-    println!("len={}", an_iter.len());
-
-    println!("{:?}", an_iter);
-    println!("{:?}", a);
-}
-```
-
-执行结果
-
-```shell
-3
-2
-1
-0
-len=0
-Iter([])
-[1, 2, 3]
-```
-
-可以看到对可变引用迭代器元素读取操作，它与不可变迭代器 `iter()` 没有什么不一样；接着我们再看一个对值进行修改的示例
+如果不仅需要读取元素，还需要通过迭代器修改集合中的元素，可以使用 `iter_mut()`。
 
 ```rust
 fn main() {
-    let x = &mut [1, 2, 4];
-    for elem in x.iter_mut() {
+    let mut a = [1, 2, 4];
+
+    for elem in a.iter_mut() {
         *elem += 2;
     }
-    assert_eq!(x, &[3, 4, 6]);
+
+    assert_eq!(a, [3, 4, 6]);
 }
 ```
 
-这里我们通过 `iter_mut()` 来实现一个可变迭代器，接着依次修改每个元素的值，从而达到修改原始变量 `x` 内容的效果，只所有能修改，正是因为它们是对同一个值的引用。
+这里通过 `iter_mut()` 获取了一个可变引用迭代器，其元素类型为 `&mut i32`。
 
-# 所有权的迭代器 into_iter()
+因此：
+
+```rust
+for elem in a.iter_mut()
+```
+
+中的 `elem` 是原数组元素的可变引用。
+
+通过：
+
+```rust
+*elem += 2;
+```
+
+可以修改 `elem` 所引用的原始元素。
+
+之所以能够修改原集合中的元素，是因为 `iter_mut()` 返回的是元素的**可变引用**，这些引用指向的仍然是原集合中的元素。
+
+# 所有权迭代器 `into_iter()`
+
+如果需要在迭代过程中取得集合元素的所有权，可以使用 `into_iter()`。
 
 ```rust
 fn main() {
-    let a = ["1".to_string(), "2".to_string(), "3".to_string()];
+    let a = [
+        "1".to_string(),
+        "2".to_string(),
+        "3".to_string(),
+    ];
 
-    let mut an_iter = a.into_iter(); // 从此以后数组 a 已经被消耗掉
+    let mut iter = a.into_iter();
 
-    assert_eq!(Some("1".to_string()), an_iter.next());
-    assert_eq!(Some("2".to_string()), an_iter.next());
-    assert_eq!(Some("3".to_string()), an_iter.next());
-    assert_eq!(None, an_iter.next());
+    assert_eq!(Some("1".to_string()), iter.next());
+    assert_eq!(Some("2".to_string()), iter.next());
+    assert_eq!(Some("3".to_string()), iter.next());
+    assert_eq!(None, iter.next());
 
-    println!("{:?}", a); // 出错, 调用 into_iter() 导致a所有权被转移
+    println!("{:?}", a); // 编译错误
 }
 ```
 
-编译出错
+编译时会产生类似错误：
 
 ```shell
 error[E0382]: borrow of moved value: `a`
-   --> src/main.rs:11:22
-    |
-2   |     let a = ["1".to_string(), "2".to_string(), "3".to_string()];
-    |         - move occurs because `a` has type `[String; 3]`, which does not implement the `Copy` trait
-3   |
-4   |     let mut an_iter = a.into_iter(); // 从此以后数组 a 已经被消耗掉
-    |                         ----------- `a` moved due to this method call
-...
-11  |     println!("{:?}", a); // 出错
-    |                      ^ value borrowed here after move
-    |
-note: `into_iter` takes ownership of the receiver `self`, which moves `a`
-   --> /Users/sxf/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/library/core/src/iter/traits/collect.rs:267:18
-    |
-267 |     fn into_iter(self) -> Self::IntoIter;
-    |                  ^^^^
-    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
-help: you can `clone` the value and consume it, but this might not be your desired behavior
-    |
-4   |     let mut an_iter = a.clone().into_iter(); // 从此以后数组 a 已经被消耗掉
-    |                        ++++++++
-
-For more information about this error, try `rustc --explain E0382`.
-error: could not compile `my_crate_demo` (bin "my_crate_demo") due to previous error
 ```
 
-根据所有权的转移概念，可以得知当调用  `a.into_iter()` 时，所有权发生了转移，因此最后一行打印变量 `a`的语句将在编译时出错，上面的错误信息证实了这一点。
+这是因为：
 
-上面的示例是针对字符串来讲的，对于整数数组 `[1,2,3]` 而言，调用 `into_iter()` 实际上会将这个数组复制一份，再将复制后的数组转换成迭代器，并消耗掉这个复制后的数组，因此最后的打印语句能把原来那个 a 打印出来。
+```rust
+let mut iter = a.into_iter();
+```
+
+会消费 `a`。
+
+`into_iter()` 获取的是 `a` 的所有权，因此之后不能再使用原来的 `a`。
+
+这里需要注意，`into_iter()` 取得的是**值的所有权**，而不是“所有权引用”。
+
+例如对于：
+
+```rust
+let a = [
+    "1".to_string(),
+    "2".to_string(),
+    "3".to_string(),
+];
+
+let mut iter = a.into_iter();
+```
+
+`a` 的所有权已经转移给了迭代器。之后调用 `iter.next()` 时，迭代器会逐个把元素的所有权交给调用者。
+
+---
+
+对于整数数组：
 
 ```rust
 fn main() {
     let a = [1, 2, 3];
 
-    let mut an_iter = a.into_iter(); // 从此以后数组 a 已经被消耗掉
+    let mut iter = a.into_iter();
 
-    assert_eq!(Some(1), an_iter.next());
-    assert_eq!(Some(2), an_iter.next());
-    assert_eq!(Some(3), an_iter.next());
-    assert_eq!(None, an_iter.next());
+    assert_eq!(Some(1), iter.next());
+    assert_eq!(Some(2), iter.next());
+    assert_eq!(Some(3), iter.next());
+    assert_eq!(None, iter.next());
 
-    println!("{:?}", a); // 正常工作
+    println!("{:?}", a);
 }
 ```
 
+这里最后的 `println!` 可以正常执行。
+
+这并不是因为 `into_iter()` 会自动复制数组，而是因为 `[i32; 3]` 实现了 `Copy` trait。
+
+因此，在发生复制的情况下，原来的 `a` 仍然可以使用。
+
+而前面的 `[String; 3]` 中，`String` 不实现 `Copy`，所以调用 `into_iter()` 后，原来的数组就不能继续使用。
+
 # 总结
 
-如果只是对集合中的值进行一些读取的话，则直接使用不可变引用迭代器 `iter()` 即可；而如果对对原来集合的值进行修改的话，则需要使用可变迭代器 `iter_mut() `；而如果需要获取原来集合的所有权的话，则可以使用所有权迭代器 `into_iter()`
+如果只是读取集合中的元素，可以使用 `iter()` 获取元素的不可变引用：
 
+```text
+iter() → &T
+```
 
+如果需要修改集合中的元素，可以使用 `iter_mut()` 获取元素的可变引用：
+
+```text
+iter_mut() → &mut T
+```
+
+如果需要取得集合元素的所有权，可以使用 `into_iter()`：
+
+```text
+into_iter() → T
+```
+
+因此可以简单记忆为：
+
+```text
+iter()       → &T
+iter_mut()   → &mut T
+into_iter()  → T
+```
+
+需要特别注意的是，**`iter()`、`iter_mut()` 和 `into_iter()` 是获取迭代器的不同方式，而真正定义“迭代器”的是 `Iterator` trait。**
 
 # 参考资料
 
-- [什么是所有权?](https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html)
-- [引用与借用](https://kaisery.github.io/trpl-zh-cn/ch04-02-references-and-borrowing.html#引用与借用)
-- [迭代器](https://kaisery.github.io/trpl-zh-cn/ch13-02-iterators.html)
+* [什么是所有权?](https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html)
+* [引用与借用](https://kaisery.github.io/trpl-zh-cn/ch04-02-references-and-borrowing.html#%E5%BC%95%E7%94%A8%E4%B8%8E%E5%80%9F%E7%94%A8)
+* [迭代器](https://kaisery.github.io/trpl-zh-cn/ch13-02-iterators.html)
