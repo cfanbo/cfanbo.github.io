@@ -1,5 +1,5 @@
 ---
-title: ust 中的迭代器：iter、iter_mut 与 into_iter
+title: Rust 中的迭代器：iter、iter_mut 与 into_iter
 type: post
 toc: true
 date: 2023-11-16T07:31:19+00:00
